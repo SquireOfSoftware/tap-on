@@ -75,8 +75,9 @@ WSGI_APPLICATION = 'check_in.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'check_ins_db',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'PORT': '5432'
     }
 }
 
