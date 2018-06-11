@@ -11,7 +11,6 @@ group 'org.squire'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
-//apply plugin: 'spring-boot'
 apply plugin: 'org.springframework.boot'
 
 sourceCompatibility = 1.8
@@ -23,14 +22,9 @@ repositories {
 
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.0'
-//    compile "org.springframework.boot:spring-context:4.0.3.RELEASE"
-    // JPA Data (We are going to use Repositories, Entities, Hibernate, etc...)
     compile 'org.springframework.boot:spring-boot-starter-data-jpa:2.0.2.RELEASE'
     compile("org.springframework.boot:spring-boot-starter-web:2.0.2.RELEASE")
     compile("io.projectreactor:reactor-core:3.1.7.RELEASE")
-    // Use MySQL Connector-J
     compile 'mysql:mysql-connector-java:8.0.11'
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    // https://mvnrepository.com/artifact/javax.persistence/com.springsource.javax.persistence
-//    provided group: 'javax.persistence', name: 'com.springsource.javax.persistence', version: '2.0.0'
 }

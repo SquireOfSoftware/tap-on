@@ -1,8 +1,12 @@
 package org.squire.checkin.services;
 
-import org.squire.checkin.entities.Person;
-import reactor.core.publisher.Flux;
+import org.squire.checkin.models.PersonObject;
+
+import java.util.List;
 
 public interface PersonService {
-    Flux<Iterable<Person>> getPersons();
+    List<PersonObject> getAllPeople();
+    List<PersonObject> getAllMembers();
+    PersonObject createPerson(PersonObject personObject);
+    boolean removePerson(Integer personId);
 }
