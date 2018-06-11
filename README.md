@@ -12,3 +12,11 @@ The smaller requirements are:
 
 Some would like to haves are:
 1. Custom domain name (as the users are not technical) - perhaps use of BIND - an open source DNS to assist with url redirection on the local network
+
+TODO:
+[x] create db schema
+[ ] test out creation db schema - use inserts, check default values are being set correctly
+[ ] test out update db schema mechanism - use updates, check default values change to time of change
+[ ] test python django api - get some end point tests set up
+[ ] write python django api to get data
+[ ] write front end interaction to python api
