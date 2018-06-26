@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import {MatTableDataSource} from '@angular/material';
+import {Component, ViewChild} from '@angular/core';
+import {MatSort, MatTableDataSource} from '@angular/material';
 import {SelectionModel} from '@angular/cdk/collections';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
@@ -17,9 +17,22 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 })
 
 export class AppComponent {
-  dataSource = ELEMENT_DATA;
+  dataSource = new MatTableDataSource(ELEMENT_DATA);
   columnsToDisplay = ['name', 'weight', 'symbol', 'position'];
   expandedElement: PeriodicElement;
+  // filter;filter
+  @ViewChild(MatSort) sort: MatSort;
+
+  ngOnInit() {
+    // this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+    this.dataSource.filter = filterValue;
+  }
 }
 
 export interface PeriodicElement {
