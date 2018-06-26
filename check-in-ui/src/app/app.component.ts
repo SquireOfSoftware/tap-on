@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatSort, MatTableDataSource} from '@angular/material';
 import {SelectionModel} from '@angular/cdk/collections';
 import {animate, state, style, transition, trigger} from '@angular/animations';
@@ -16,7 +16,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
   ]
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit {
   dataSource = new MatTableDataSource(ELEMENT_DATA);
   columnsToDisplay = ['select', 'name', 'weight', 'symbol', 'position'];
   expandedElement: PeriodicElement;
@@ -46,6 +46,10 @@ export class AppComponent {
     this.isAllSelected() ?
       this.selection.clear() :
       this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  signSelectedIn() {
+    console.log(this.selection.selected);
   }
 }
 
