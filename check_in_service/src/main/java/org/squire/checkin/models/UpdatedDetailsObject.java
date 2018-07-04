@@ -8,13 +8,15 @@ import java.sql.Timestamp;
 
 @Getter
 @Setter
-public class PersonObject {
-    private Integer personId;
+public class UpdatedDetailsObject {
+    @Nullable
     private String givenName;
+    @Nullable
     private String familyName;
     @Nullable
     private Timestamp memberSince;
     @Nullable
     private Timestamp baptisedSince;
-    private Timestamp lastSignIn;
+    @Nullable
+    private AlternativeNameObject alternativeName;
 }

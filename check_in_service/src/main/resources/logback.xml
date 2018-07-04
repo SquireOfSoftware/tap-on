@@ -29,7 +29,7 @@
 
     <appender name="SYSERROR"
               class="ch.qos.logback.core.ConsoleAppender"
-              target="System.err"
+              target="System.out"
               withJansi="true">
 
         <encoder>

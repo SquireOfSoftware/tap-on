@@ -3,15 +3,10 @@ package org.squire.checkin.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.squire.checkin.models.PersonObject;
 import org.squire.checkin.models.SignInObject;
+import org.squire.checkin.models.UpdatedDetailsObject;
 import org.squire.checkin.services.PersonService;
 import org.squire.checkin.services.SignInTimeService;
 
@@ -41,6 +36,23 @@ public class PersonController {
         return ResponseEntity.ok(personService.createPerson(personObject));
     }
 
+    @PutMapping(value = BASE_PATH + "/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity updatePerson(@PathVariable Integer id, @RequestBody UpdatedDetailsObject updatedDetailsObject){
+        if (personService.hasPerson(id)) {
+            boolean hasUpdated = personService.updatePerson(id, updatedDetailsObject);
+            return hasUpdated ? ResponseEntity.ok(true): ResponseEntity.unprocessableEntity().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping(value = BASE_PATH + "/{id}")
+    public ResponseEntity getPerson(@PathVariable Integer id) {
+        if (personService.hasPerson(id)) {
+            return ResponseEntity.ok(personService.getPerson(id));
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @DeleteMapping(value = BASE_PATH + "/{id}")
     public ResponseEntity deletePerson(@PathVariable Integer id) {
         if (personService.removePerson(id)) {
@@ -54,6 +66,13 @@ public class PersonController {
         return personService.getAllMembers();
     }
 
+    /**
+     * Example:
+     * {
+     * 		"personId": 1,
+     * 		"signInTime": "2018-07-04T10:44:57+00:00"
+     * }
+     */
     @PostMapping(value = BASE_PATH + "/signin", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity signInPersons(@RequestBody List<SignInObject> signInObjects) {
         return ResponseEntity.ok(signInTimeService.addSignIns(signInObjects));
