@@ -1,5 +1,6 @@
 package org.squire.checkin.services;
 
+import org.squire.checkin.models.MessageObject;
 import org.squire.checkin.models.PersonObject;
 import org.squire.checkin.models.UpdatedDetailsObject;
 
@@ -12,5 +13,5 @@ public interface PersonService {
     boolean removePerson(Integer personId);
     boolean hasPerson(Integer id);
     PersonObject getPerson(Integer id);
-    boolean updatePerson(Integer id, UpdatedDetailsObject updatedDetailsObject);
+    MessageObject updatePerson(Integer id, UpdatedDetailsObject updatedDetailsObject);
 }

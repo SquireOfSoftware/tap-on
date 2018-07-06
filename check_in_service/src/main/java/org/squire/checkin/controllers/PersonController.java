@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.squire.checkin.models.MessageObject;
 import org.squire.checkin.models.PersonObject;
 import org.squire.checkin.models.SignInObject;
 import org.squire.checkin.models.UpdatedDetailsObject;
@@ -44,8 +45,8 @@ public class PersonController {
     @PutMapping(value = BASE_PATH + "/{id}", consumes = APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity updatePerson(@PathVariable Integer id, @RequestBody UpdatedDetailsObject updatedDetailsObject){
         if (personService.hasPerson(id)) {
-            boolean hasUpdated = personService.updatePerson(id, updatedDetailsObject);
-            return hasUpdated ? ResponseEntity.ok(true): ResponseEntity.unprocessableEntity().build();
+            MessageObject hasUpdated = personService.updatePerson(id, updatedDetailsObject);
+            return hasUpdated.isSuccessful() ? ResponseEntity.ok(hasUpdated): ResponseEntity.unprocessableEntity().body(hasUpdated);
         }
         return ResponseEntity.notFound().build();
     }

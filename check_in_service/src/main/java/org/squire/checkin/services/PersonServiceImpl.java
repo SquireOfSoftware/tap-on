@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.squire.checkin.entities.AlternativeNameDAO;
-import org.squire.checkin.entities.Language;
 import org.squire.checkin.entities.PersonDAO;
 import org.squire.checkin.models.AlternativeNameObject;
+import org.squire.checkin.models.MessageObject;
 import org.squire.checkin.models.PersonObject;
 import org.squire.checkin.models.UpdatedDetailsObject;
 import org.squire.checkin.repository.AlternativeNameRepository;
@@ -106,19 +106,19 @@ public class PersonServiceImpl implements PersonService {
         return hasChanged;
     }
 
-    private boolean updateAlternativeNameDetails(Integer id, UpdatedDetailsObject updatedDetailsObject) {
+    private boolean updateAlternativeNameDetails(Integer personId, UpdatedDetailsObject updatedDetailsObject) {
         AlternativeNameObject updatedAlternativeName = updatedDetailsObject.getAlternativeName();
         boolean hasChanged = false;
         if (updatedAlternativeName != null &&
                 updatedAlternativeName.getAlternativeName() != null) {
-            AlternativeNameDAO alternativeNameDAO = alternativeNameRepository.findByLanguage(id, updatedDetailsObject.getAlternativeName().getLanguage());
+            AlternativeNameDAO alternativeNameDAO = alternativeNameRepository.findByLanguage(personId, updatedAlternativeName.getLanguage());
             if (alternativeNameDAO != null) {
                 alternativeNameDAO.setAlternativeName(updatedAlternativeName.getAlternativeName());
                 hasChanged = true;
             } else if (updatedAlternativeName.getLanguage() != null) {
                 alternativeNameDAO = new AlternativeNameDAO();
                 alternativeNameDAO.setLanguage(updatedAlternativeName.getLanguage());
-                alternativeNameDAO.setPersonId(id);
+                alternativeNameDAO.setPersonId(personId);
                 alternativeNameDAO.setAlternativeName(updatedAlternativeName.getAlternativeName());
                 hasChanged = true;
             }
@@ -131,12 +131,12 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public boolean updatePerson(Integer id, UpdatedDetailsObject updatedDetailsObject) {
+    public MessageObject updatePerson(Integer id, UpdatedDetailsObject updatedDetailsObject) {
         if(personRepository.findById(id).isPresent()) {
             boolean updatedPersonDetails = updatePersonObjectDetails(id, updatedDetailsObject);
             boolean updateAlternativeNameDetails = updateAlternativeNameDetails(id, updatedDetailsObject);
-            return updatedPersonDetails || updateAlternativeNameDetails;
+            return new MessageObject(updatedPersonDetails || updateAlternativeNameDetails, "Details were updated");
         }
-        return false;
+        return new MessageObject(false, "Could not find person with the id");
     }
 }

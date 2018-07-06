@@ -28,9 +28,7 @@
     </appender>
 
     <appender name="SYSERROR"
-              class="ch.qos.logback.core.ConsoleAppender"
-              target="System.out"
-              withJansi="true">
+              class="ch.qos.logback.core.ConsoleAppender">
 
         <encoder>
             <pattern>%blue(%-5level) %green(%logger{35}) - %msg %n</pattern>
