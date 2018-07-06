@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.squire.checkin.models.MessageObject;
 import org.squire.checkin.models.PersonObject;
 import org.squire.checkin.models.SignInObject;
+import org.squire.checkin.models.SignOutObject;
 import org.squire.checkin.models.UpdatedDetailsObject;
 import org.squire.checkin.services.PersonService;
 import org.squire.checkin.services.SignInTimeService;
@@ -82,6 +83,11 @@ public class PersonController {
     @PostMapping(value = BASE_PATH + "/signin", consumes = APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity signInPersons(@RequestBody List<SignInObject> signInObjects) {
         return ResponseEntity.ok(signInTimeService.addSignIns(signInObjects));
+    }
+
+    @PostMapping(value = BASE_PATH + "/signout", consumes = APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity signOutPersons(@RequestBody List<SignOutObject> signOutObjects) {
+        return ResponseEntity.ok(signInTimeService.removeSignIns(signOutObjects));
     }
 
     //https://stackoverflow.com/questions/37307697/scheduled-websocket-push-with-springboot
