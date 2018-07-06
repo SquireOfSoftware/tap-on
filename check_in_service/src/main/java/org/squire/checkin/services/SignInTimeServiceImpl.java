@@ -31,6 +31,8 @@ public class SignInTimeServiceImpl implements SignInTimeService {
 
     @Override
     public boolean addSignIns(List<SignInObject> signIns) {
+        // you have a bunch of signins
+        // return the ones that have failed, use HTTP 409
         AtomicInteger successes = new AtomicInteger();
         signInTimeRepository.saveAll(signIns.stream().map(signInObject -> {
             SignInDAO signInDAO = new SignInDAO();

@@ -115,12 +115,12 @@ public class PersonServiceImpl implements PersonService {
             if (alternativeNameDAO != null) {
                 alternativeNameDAO.setAlternativeName(updatedAlternativeName.getAlternativeName());
                 hasChanged = true;
-//            } else if (updatedAlternativeName.getLanguage() != null) {
-//                alternativeNameDAO = new AlternativeNameDAO();
-//                alternativeNameDAO.setLanguage(updatedAlternativeName.getLanguage());
-//                alternativeNameDAO.setPersonId(id);
-//                alternativeNameDAO.setAlternativeName(updatedAlternativeName.getAlternativeName());
-//                hasChanged = true;
+            } else if (updatedAlternativeName.getLanguage() != null) {
+                alternativeNameDAO = new AlternativeNameDAO();
+                alternativeNameDAO.setLanguage(updatedAlternativeName.getLanguage());
+                alternativeNameDAO.setPersonId(id);
+                alternativeNameDAO.setAlternativeName(updatedAlternativeName.getAlternativeName());
+                hasChanged = true;
             }
             if(hasChanged) {
                 alternativeNameRepository.save(alternativeNameDAO);

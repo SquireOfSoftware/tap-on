@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Table(name = "alternative_name")
 public class AlternativeNameDAO {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "alternative_name_id")
     private Integer id;
     @Column(name = "alternative_name_person_id")

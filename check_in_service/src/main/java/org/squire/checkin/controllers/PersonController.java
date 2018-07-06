@@ -9,10 +9,15 @@ import org.squire.checkin.models.SignInObject;
 import org.squire.checkin.models.UpdatedDetailsObject;
 import org.squire.checkin.services.PersonService;
 import org.squire.checkin.services.SignInTimeService;
+import reactor.core.publisher.Flux;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.stream.Stream;
 
-@CrossOrigin(origins = "http://localhost:8080")
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+
+@CrossOrigin(origins = {"http://localhost:8080", "*"})
 @RestController
 public class PersonController {
     private PersonService personService;
@@ -31,12 +36,12 @@ public class PersonController {
         return personService.getAllPeople();
     }
 
-    @PostMapping(value = BASE_PATH, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = BASE_PATH, consumes = APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity createPerson(@RequestBody PersonObject personObject) {
         return ResponseEntity.ok(personService.createPerson(personObject));
     }
 
-    @PutMapping(value = BASE_PATH + "/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PutMapping(value = BASE_PATH + "/{id}", consumes = APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity updatePerson(@PathVariable Integer id, @RequestBody UpdatedDetailsObject updatedDetailsObject){
         if (personService.hasPerson(id)) {
             boolean hasUpdated = personService.updatePerson(id, updatedDetailsObject);
@@ -73,8 +78,14 @@ public class PersonController {
      * 		"signInTime": "2018-07-04T10:44:57+00:00"
      * }
      */
-    @PostMapping(value = BASE_PATH + "/signin", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = BASE_PATH + "/signin", consumes = APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity signInPersons(@RequestBody List<SignInObject> signInObjects) {
         return ResponseEntity.ok(signInTimeService.addSignIns(signInObjects));
+    }
+
+    //https://stackoverflow.com/questions/37307697/scheduled-websocket-push-with-springboot
+    @GetMapping(value = "/test", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<String> test() {
+        return Flux.fromStream(Stream.of("1", "2", "3", "4"));
     }
 }
