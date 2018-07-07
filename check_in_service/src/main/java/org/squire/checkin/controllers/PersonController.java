@@ -13,7 +13,6 @@ import org.squire.checkin.services.PersonService;
 import org.squire.checkin.services.SignInTimeService;
 import reactor.core.publisher.Flux;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -54,10 +53,10 @@ public class PersonController {
 
     @GetMapping(value = BASE_PATH + "/{id}")
     public ResponseEntity getPerson(@PathVariable Integer id) {
-        if (personService.hasPerson(id)) {
-            return ResponseEntity.ok(personService.getPerson(id));
-        }
-        return ResponseEntity.notFound().build();
+        PersonObject personObject = personService.getPerson(id);
+        return personObject != null ?
+                ResponseEntity.ok(personObject):
+                ResponseEntity.notFound().build();
     }
 
     @DeleteMapping(value = BASE_PATH + "/{id}")
@@ -66,6 +65,12 @@ public class PersonController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping(value = BASE_PATH + "/{id}/latestSignIn")
+    public ResponseEntity getSignIn(@PathVariable Integer id) {
+        SignInObject signIn = signInTimeService.getLatestSignIn(id);
+        return signIn == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(signIn);
     }
 
     @GetMapping(value = BASE_PATH + "/members")
@@ -83,6 +88,11 @@ public class PersonController {
     @PostMapping(value = BASE_PATH + "/signin", consumes = APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity signInPersons(@RequestBody List<SignInObject> signInObjects) {
         return ResponseEntity.ok(signInTimeService.addSignIns(signInObjects));
+    }
+
+    @PostMapping(value = BASE_PATH + "/{id}/signin")
+    public ResponseEntity signInPersons(@PathVariable Integer id) {
+        return ResponseEntity.ok(signInTimeService.signInPersonId(id));
     }
 
     @PostMapping(value = BASE_PATH + "/signout", consumes = APPLICATION_JSON_UTF8_VALUE)

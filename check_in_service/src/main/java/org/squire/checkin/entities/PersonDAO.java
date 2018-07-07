@@ -25,4 +25,6 @@ public class PersonDAO {
     private String familyName;
     @Column(name = "member_since")
     private Timestamp memberSince;
+    @Column(name = "baptised_since")
+    private Timestamp baptisedSince;
 }

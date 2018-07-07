@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.lang.Nullable;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,5 +19,5 @@ public class UpdatedDetailsObject {
     @Nullable
     private Timestamp baptisedSince;
     @Nullable
-    private AlternativeNameObject alternativeName;
+    private List<AlternativeNameObject> alternativeNames;
 }

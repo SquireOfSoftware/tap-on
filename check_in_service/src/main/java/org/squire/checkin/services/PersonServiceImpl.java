@@ -3,9 +3,12 @@ package org.squire.checkin.services;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.squire.checkin.entities.AlternativeNameDAO;
 import org.squire.checkin.entities.PersonDAO;
+import org.squire.checkin.entities.SignInDAO;
 import org.squire.checkin.models.AlternativeNameObject;
 import org.squire.checkin.models.MessageObject;
 import org.squire.checkin.models.PersonObject;
@@ -13,13 +16,17 @@ import org.squire.checkin.models.UpdatedDetailsObject;
 import org.squire.checkin.repository.AlternativeNameRepository;
 import org.squire.checkin.repository.PersonRepository;
 import org.squire.checkin.repository.SignInTimeRepository;
+import org.squire.checkin.utils.AlternativeNameParser;
 import org.squire.checkin.utils.PersonParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static org.squire.checkin.utils.PersonParser.parsePersonObject;
+import static org.squire.checkin.utils.SignInParser.TIME_COLUMN_NAME;
 
 @Slf4j
 @Service
@@ -41,19 +48,26 @@ public class PersonServiceImpl implements PersonService {
     public List<PersonObject> getAllPeople() {
         List<PersonDAO> personList = new ArrayList<>();
         personRepository.findAll().forEach(personList::add);
-        return personList.stream().map(PersonParser::parsePersonDAO).collect(Collectors.toList());
+        return personList.stream()
+                .map(personDAO -> locatePerson(personDAO.getId()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<PersonObject> getAllMembers() {
         return personRepository.findAllByMemberSinceIsNotNull().stream()
-                .map(PersonParser::parsePersonDAO)
+                .map(personDAO -> locatePerson(personDAO.getId()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public PersonObject createPerson(PersonObject personObject) {
         PersonDAO savedPersonDAO = personRepository.save(parsePersonObject(personObject));
+        List<AlternativeNameObject> alternativeNames = personObject.getAlternativeNames();
+        if (!alternativeNames.isEmpty()) {
+            alternativeNameRepository.saveAll(AlternativeNameParser.parseAlternativeNameObjects(personObject.getAlternativeNames(), personObject.getPersonId()));
+        }
+
         personObject.setPersonId(savedPersonDAO.getId());
         return personObject;
     }
@@ -61,6 +75,8 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public boolean removePerson(Integer personId) {
         if(personRepository.findById(personId).isPresent()) {
+            alternativeNameRepository.deleteByPersonId(personId);
+            signInTimeRepository.deleteByPersonId(personId);
             personRepository.deleteById(personId);
             return true;
         }
@@ -72,13 +88,45 @@ public class PersonServiceImpl implements PersonService {
         return personRepository.findById(id).isPresent();
     }
 
+    private void locateAlternativeNames(PersonObject personObject) {
+        List<AlternativeNameObject> alternativeNames =
+                AlternativeNameParser.parseAlternativeNameDAOs(alternativeNameRepository.findByPerson(personObject.getPersonId()));
+        if (!alternativeNames.isEmpty()) {
+            personObject.setAlternativeNames(alternativeNames);
+        }
+    }
+
+    private void locateLatestSignIn(PersonObject personObject) {
+        Optional<SignInDAO> lastSignIn = signInTimeRepository.findLatestSignInTime(
+                personObject.getPersonId(),
+                PageRequest.of(0, 1, Sort.Direction.DESC, TIME_COLUMN_NAME))
+                .stream().findFirst();
+
+        lastSignIn.ifPresent(signInDAO -> personObject.setLastSignIn(signInDAO.getSignInTime()));
+    }
+
+    private PersonObject locatePerson(Integer id) {
+        Optional<PersonDAO> locatedPersonDAO = personRepository.findById(id);
+        if (locatedPersonDAO.isPresent()) {
+            PersonObject personObject = PersonParser.parsePersonDAO(locatedPersonDAO.get());
+
+            locateAlternativeNames(personObject);
+            locateLatestSignIn(personObject);
+
+            return personObject;
+        }
+        return null;
+    }
+
     @Override
     public PersonObject getPerson(Integer id) {
-        PersonObject personObject = PersonParser.parsePersonDAO(personRepository.findById(id).get());
-        if (signInTimeRepository.findById(id).isPresent()) {
-            personObject.setLastSignIn(signInTimeRepository.findById(id).get().getSignInTime());
+        Optional<PersonObject> personObject = PersonParser.parsePersonDAO(personRepository.findById(id));
+        if (personObject.isPresent()) {
+            locateLatestSignIn(personObject.get());
+            locateAlternativeNames(personObject.get());
+            return personObject.get();
         }
-        return personObject;
+        return null;
     }
 
     private boolean updatePersonObjectDetails(Integer id, UpdatedDetailsObject updatedDetailsObject){
@@ -107,27 +155,23 @@ public class PersonServiceImpl implements PersonService {
     }
 
     private boolean updateAlternativeNameDetails(Integer personId, UpdatedDetailsObject updatedDetailsObject) {
-        AlternativeNameObject updatedAlternativeName = updatedDetailsObject.getAlternativeName();
-        boolean hasChanged = false;
-        if (updatedAlternativeName != null &&
-                updatedAlternativeName.getAlternativeName() != null) {
-            AlternativeNameDAO alternativeNameDAO = alternativeNameRepository.findByLanguage(personId, updatedAlternativeName.getLanguage());
-            if (alternativeNameDAO != null) {
-                alternativeNameDAO.setAlternativeName(updatedAlternativeName.getAlternativeName());
-                hasChanged = true;
-            } else if (updatedAlternativeName.getLanguage() != null) {
-                alternativeNameDAO = new AlternativeNameDAO();
-                alternativeNameDAO.setLanguage(updatedAlternativeName.getLanguage());
-                alternativeNameDAO.setPersonId(personId);
-                alternativeNameDAO.setAlternativeName(updatedAlternativeName.getAlternativeName());
-                hasChanged = true;
-            }
-            if(hasChanged) {
+        List<AlternativeNameObject> updatedAlternativeNames = updatedDetailsObject.getAlternativeNames();
+        AtomicBoolean hasChanged = new AtomicBoolean(false);
+
+        if (updatedAlternativeNames != null) {
+            updatedAlternativeNames.forEach(alternativeNameObject -> {
+                AlternativeNameDAO alternativeNameDAO = alternativeNameRepository.findByLanguage(personId, alternativeNameObject.getLanguage());
+                if (alternativeNameDAO == null) {
+                    alternativeNameDAO = AlternativeNameParser.parseAlternativeNameObject(alternativeNameObject, personId);
+                } else {
+                    alternativeNameDAO.setAlternativeName(alternativeNameObject.getAlternativeName());
+                }
+                hasChanged.set(true);
                 alternativeNameRepository.save(alternativeNameDAO);
-            }
+            });
         }
 
-        return hasChanged;
+        return hasChanged.get();
     }
 
     @Override
