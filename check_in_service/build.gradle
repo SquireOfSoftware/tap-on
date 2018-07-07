@@ -5,6 +5,24 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.2.RELEASE")
     }
+
+    def versionPropsFile = file('version.properties')
+
+    if (versionPropsFile.canRead()) {
+        Properties versionProps = new Properties()
+
+        versionProps.load(new FileInputStream(versionPropsFile))
+        def code = versionProps['VERSION_BUILD'].toInteger() + 1
+        def releaseNumber = versionProps['VERSION_RELEASE'].toString()
+        versionProps['VERSION_BUILD']=code.toString()
+        versionProps['PRODUCTION_VERSION']=releaseNumber + "." + code.toString()
+        setVersion(versionProps['PRODUCTION_VERSION'])
+        versionProps.store(versionPropsFile.newWriter(), null)
+        version = versionProps['PRODUCTION_VERSION']
+    }
+    else {
+        throw new GradleException("Could not read version.properties!")
+    }
 }
 
 group 'org.squire'
@@ -21,11 +39,12 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.0'
-    compile 'org.springframework.boot:spring-boot-starter-data-jpa:2.0.2.RELEASE'
+    annotationProcessor("org.projectlombok:lombok:1.18.0")
+    compileOnly('org.projectlombok:lombok:1.18.0')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa:2.0.2.RELEASE')
     compile("org.springframework.boot:spring-boot-starter-web:2.0.2.RELEASE")
     compile("io.projectreactor:reactor-core:3.1.7.RELEASE")
-    compile 'mysql:mysql-connector-java:8.0.11'
-    compile 'com.google.guava:guava:25.1-jre'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile('mysql:mysql-connector-java:8.0.11')
+    compile('com.google.guava:guava:25.1-jre')
+    testCompile('junit:junit:4.12')
 }
