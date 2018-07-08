@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatSort, MatTableDataSource} from '@angular/material';
 import {SelectionModel} from '@angular/cdk/collections';
+import {PersonService} from '../../e2e/app/person.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
@@ -17,15 +18,24 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 })
 
 export class AppComponent implements OnInit {
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
   columnsToDisplay = ['select', 'givenName', 'familyName', 'lastSignIn', 'signInBtn'];
   expandedElement: PeriodicElement;
   selection = new SelectionModel<PeriodicElement>(true, []);
-
+  people: PeriodicElement[];
+  // dataSource = new MatTableDataSource(this.people);
+  dataSource;
   @ViewChild(MatSort) sort: MatSort;
 
+  constructor(private peopleService: PersonService) {}
+
   ngOnInit() {
+    this.getPeople();
     this.dataSource.sort = this.sort;
+  }
+
+  getPeople(): void {
+    this.people = this.peopleService.getPeople();
+    this.dataSource = new MatTableDataSource(this.people);
   }
 
   applyFilter(filterValue: string) {
@@ -78,60 +88,60 @@ export enum Language {
   MALAY
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {
-    personId: 1,
-    givenName: 'Dave',
-    familyName: 'Johnson',
-    'memberSince': null,
-    'baptisedSince': null,
-    'lastSignIn': '2018-07-07T12:35:36.000+0000',
-    'alternativeNames': [
-      {
-        'alternativeName': 'Davey',
-        'language': 'ENGLISH'
-      }
-    ]
-  },
-  {
-    'personId': 2,
-    'givenName': 'Johnson',
-    'familyName': 'Smith',
-    'memberSince': null,
-    'baptisedSince': null,
-    'lastSignIn': null,
-    'alternativeNames': null
-  },
-  {
-    'personId': 14,
-    'givenName': 'Dave',
-    'familyName': 'Johnson',
-    'memberSince': null,
-    'baptisedSince': null,
-    'lastSignIn': '2018-07-07T13:00:09.000+0000',
-    'alternativeNames': [
-      {
-        'alternativeName': 'Mike',
-        'language': 'ENGLISH'
-      }
-    ]
-  },
-  {
-    'personId': 27,
-    'givenName': 'Dave',
-    'familyName': 'Johnson',
-    'memberSince': null,
-    'baptisedSince': null,
-    'lastSignIn': null,
-    'alternativeNames': [
-      {
-        'alternativeName': 'Mike',
-        'language': 'ENGLISH'
-      },
-      {
-        'alternativeName': 'John',
-        'language': 'CHINESE'
-      }
-    ]
-  }
-];
+// const ELEMENT_DATA: PeriodicElement[] = [
+//   {
+//     personId: 1,
+//     givenName: 'Dave',
+//     familyName: 'Johnson',
+//     'memberSince': null,
+//     'baptisedSince': null,
+//     'lastSignIn': '2018-07-07T12:35:36.000+0000',
+//     'alternativeNames': [
+//       {
+//         'alternativeName': 'Davey',
+//         'language': 'ENGLISH'
+//       }
+//     ]
+//   },
+//   {
+//     'personId': 2,
+//     'givenName': 'Johnson',
+//     'familyName': 'Smith',
+//     'memberSince': null,
+//     'baptisedSince': null,
+//     'lastSignIn': null,
+//     'alternativeNames': null
+//   },
+//   {
+//     'personId': 14,
+//     'givenName': 'Dave',
+//     'familyName': 'Johnson',
+//     'memberSince': null,
+//     'baptisedSince': null,
+//     'lastSignIn': '2018-07-07T13:00:09.000+0000',
+//     'alternativeNames': [
+//       {
+//         'alternativeName': 'Mike',
+//         'language': 'ENGLISH'
+//       }
+//     ]
+//   },
+//   {
+//     'personId': 27,
+//     'givenName': 'Dave',
+//     'familyName': 'Johnson',
+//     'memberSince': null,
+//     'baptisedSince': null,
+//     'lastSignIn': null,
+//     'alternativeNames': [
+//       {
+//         'alternativeName': 'Mike',
+//         'language': 'ENGLISH'
+//       },
+//       {
+//         'alternativeName': 'John',
+//         'language': 'CHINESE'
+//       }
+//     ]
+//   }
+// ];
