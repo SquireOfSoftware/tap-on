@@ -37,6 +37,7 @@ import {
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CdkTableModule} from '@angular/cdk/table';
+import {HttpClientModule} from '@angular/common/http';
 
 
 @NgModule({
@@ -45,6 +46,7 @@ import {CdkTableModule} from '@angular/cdk/table';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     CdkTableModule,
     MatAutocompleteModule,

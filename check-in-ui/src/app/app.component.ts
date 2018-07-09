@@ -34,7 +34,8 @@ export class AppComponent implements OnInit {
   }
 
   getPeople(): void {
-    this.people = this.peopleService.getPeople();
+    // this.people =
+    this.peopleService.getPeopleSource().subscribe(element => { this.people = element; this.dataSource = new MatTableDataSource(this.people);});
     this.dataSource = new MatTableDataSource(this.people);
   }
 
@@ -59,6 +60,7 @@ export class AppComponent implements OnInit {
   }
 
   signSelectedIn() {
+    console.log(this.people);
     console.log(this.selection.selected);
   }
 
