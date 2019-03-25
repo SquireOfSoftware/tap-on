@@ -27,4 +27,6 @@ public class PersonDAO {
     private Timestamp memberSince;
     @Column(name = "baptised_since")
     private Timestamp baptisedSince;
+//    @Column(name = "is_active")
+//    private Boolean isActive;
 }
