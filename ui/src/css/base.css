@@ -1,0 +1,46 @@
+body {
+    font-family: "Helvetica";
+}
+
+#body {
+    display: flex;
+    height: 100%;
+}
+
+#menu {
+    color: blue;
+    width: 200px;
+}
+
+.overflow_wrapper {
+    overflow: auto;
+}
+
+#roster_title {
+    position: sticky;
+    top: 0;
+    background-color: white;
+}
+
+#roster {
+    flex-grow: 12;
+}
+
+#roster_table {
+    /*height: 1000px;
+    width: 10000px;
+    display: flex;*/
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+}
+
+.week {
+    overflow: auto;
+    list-style-type: none;
+    display: inline-block;
+}
+
+.service_component {
+    color: red;
+}
