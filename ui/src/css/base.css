@@ -27,20 +27,32 @@ body {
 }
 
 #roster_table {
-    /*height: 1000px;
-    width: 10000px;
-    display: flex;*/
     margin: 0;
     padding: 0;
     white-space: nowrap;
+    display: inline-flex;
 }
 
 .week {
     overflow: auto;
     list-style-type: none;
     display: inline-block;
+    padding: 2px;
+    margin: 2px;
+    min-width: 100px;
 }
 
 .service_component {
-    color: red;
+    border-radius: 5px;
+    background-color: grey;
+    padding: 2px;
+    margin: 2px;
+}
+
+.speaker {
+    background-color: yellow;
+}
+
+.chairperson {
+    background-color: orange;
 }

@@ -1,6 +1,12 @@
 # Check-in
 The Check in System is a system that enables a person to keep track of the total amount of people that have entered into a session or some group activity of some sort.
 
+## Design styling
+
+- Mouseover names - grey the blurbs, takes precendence over any highlighting
+- If it is you that is in the search box, then highlight everything as a green
+- If there is a conflict, highlight conflicts in red (no more than one person in a service, assume that data from the database is good)
+
 ## The use case
 
 More specifically the use case that this system arises from is basically one of a role call system in which it keeps track of who is currently present and who isn't present during a church service.
