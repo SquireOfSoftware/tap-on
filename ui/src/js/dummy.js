@@ -159,20 +159,72 @@ var people = {
         familyName: "Lam",
         isMember: true,
         isBaptise: true
+    },
+    4: {
+        givenName: "Annabel",
+        familyName: "Lam",
+        isMember: true,
+        isBaptise: true
     }
 }
 
-var dummyService = {
-    id: 1,
-    date: "10/27/19",
-    components: [{
-        type: 1,
-        people: [1, 2]
-    }, {
-        type: 2,
-        people: [1]
-    }]
-}
+var dummyWeeks = [
+    {
+        id: 1,
+        date: "10/20/19",
+        service: [
+            {
+                name: "chairperson",
+                people: [1]
+            },
+            {
+                name: "bible_reading",
+                people: [3]
+            },
+            {
+                name: "welcoming",
+                people: [2, 3]
+            },
+            {
+                name: "music",
+                people: [3, 4]
+            },
+            {
+                name: "tech_desk",
+                people: [3]
+            },
+            {
+                name: "prayer_meeting",
+                people: [2]
+            },
+            {
+                name: "tithing",
+                people: [2, 3]
+            },
+            {
+                name: "communion"
+            }
+        ]
+    },
+    {
+        id: 1,
+        date: "10/27/19",
+        service: [
+            {
+                name: "chairperson",
+                people: [1]
+            },
+            {
+                name: "welcoming",
+                people: [2, 3]
+            }
+        ]
+    }
+];
 
 // a service can have many components
 // a component can have many people
+
+var constraints = {
+
+}

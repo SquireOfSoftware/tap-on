@@ -7,7 +7,7 @@ function buildWeek(serviceObject) {
     weekName.innerText = serviceObject.date;
     weekName.id = "week-" + serviceObject.id;
 
-    var serviceComponents = document.createElement("div");
+    var serviceComponents = document.createElement("ul");
     serviceComponents.className = "service";
 
     var serviceModel = createServiceModel(serviceObject);
@@ -24,22 +24,46 @@ function buildWeek(serviceObject) {
 }
 
 function buildServiceComponent(service) {
-    var serviceComponent = document.createElement("div");
+    var serviceComponent = document.createElement("li");
     serviceComponent.className = "service_component " + service.type;
-    buildNames(serviceComponent, service.names);
+    serviceComponent.appendChild(buildServiceName(service.name));
+    serviceComponent.appendChild(buildNames(service.names));
     return serviceComponent;
 }
 
-function buildNames(parentComponent, names) {
-    names.forEach(name => {
-        let nameComponent = document.createElement("div");
-        nameComponent.innerText = name;
-        nameComponent.className = "name_component";
+function buildNames(names) {
+    let peopleComponent = document.createElement("ol");
+    peopleComponent.classList.add("people_component");
+    if (names != undefined &&
+        names != null &&
+        names.length > 0) {
+        names.forEach(name => {
+            let nameComponent = createNameComponent(name);
+            peopleComponent.appendChild(nameComponent);
+        });
+//    } else {
+//        // assume it is null, create a blank spot
+//        peopleComponent.appendChild(createNameComponent(""));
+    }
 
-        parentComponent.appendChild(nameComponent);
-    });
+    return peopleComponent
 }
 
+function createNameComponent(name) {
+    let nameComponent = document.createElement("li");
+    nameComponent.innerText = name;
+    nameComponent.className = "name_component";
+    return nameComponent;
+}
+
+function buildServiceName(serviceType) {
+    let serviceName = document.createElement("div");
+    serviceName.className = "service_name"
+    serviceName.innerText = serviceType;
+    return serviceName;
+}
+
+// creates the json object for services
 function createServiceModel(rawServiceObject) {
     var serviceObject = rawServiceObject;
     var display = [];
@@ -95,42 +119,9 @@ function isDefault(object) {
         object[0] === "default";
 }
 
-var weeks = [
-    {
-        id: 1,
-        date: "10/20/19",
-        service: [
-            {
-                name: "chairperson",
-                people: [1]
-            },
-            {
-                name: "welcoming",
-                people: [2, 3]
-            }
-        ]
-    },
-    {
-        id: 1,
-        date: "10/27/19",
-        service: [
-            {
-                name: "chairperson",
-                people: [1]
-            },
-            {
-                name: "welcoming",
-                people: [2, 3]
-            }
-        ]
-    }
-];
-
-
-
-weeks.forEach(weekObject => {
-var week = buildWeek(weekObject);
-
-document.getElementById("roster_table").appendChild(week);
-
+getWeeksPromise((weeks) => {
+    weeks.forEach(weekObject => {
+        let week = buildWeek(weekObject);
+        document.getElementById("roster_table").appendChild(week);
+    });
 });

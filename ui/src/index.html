@@ -3,32 +3,44 @@
     <link rel="stylesheet"
           type = "text/css"
           href = "css/base.css" />
+    <link href="css/fontawesome-5.11.2/all.css"
+          rel="stylesheet">
+    <meta name="google" content="notranslate">
 </head>
 <body>
     <header id="header">
         <img src="img/logo.png">
     </header>
     <div id="body">
-        <div id="menu">
-            Navigation
-            <ul>
-                <li>View my Roster</li>
-                <li>Edit Roster</li>
-                <li>Person list</li>
+        <nav>
+            <div id="nav-heading">Navigation</div>
+            <ul id="menu">
+                <li class="menu-item" id="selected">View my Roster</li>
+                <li class="menu-item">Edit Roster</li>
+                <li class="menu-item">Person list</li>
+                <li class="menu-item">
+                    <form id="name-searcher">
+                        <div class="subheading">Highlight a person:</div>
+                        <input id="highlighted-name" type="text"/>
+                        <button type="submit" class="fas fa-search" formaction="javascript:highlightMe()"></button>
+                    </form>
+                </li>
             </ul>
-        </div>
+        </nav>
         <div id="roster" class="overflow_wrapper">
-            <div id="roster_title">Test content</div>
+            <div id="roster_title"><i class="icon fas fa-calendar"></i>Test roster</div>
             <div class="overflow_wrapper">
                 <ul id="roster_table">
                 </ul>
-            </di>
+            </div>
         </div>
     </div>
     <footer id="footer">
 
     </footer>
+    <script src="js/datarequester.js"></script>
     <script src="js/dummy.js"></script>
     <script src="js/weekbuilder.js"></script>
+    <script src="js/highlighter.js"></script>
 </body>
 </html>
