@@ -1,11 +1,9 @@
 package com.squireofsoftware.peopleproject.entities;
 
 import lombok.*;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -14,15 +12,14 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "t_service")
-public class Service {
+@Table(name = "t_servicecomponent")
+public class ServiceComponent {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    @Enumerated(EnumType.STRING)
     @NotNull
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(unique=true)
-    private Date time;
-    @OneToMany(targetEntity = ServiceComponent.class)
-    private Set<ServiceComponent> components;
+    private ServiceComponentType type;
+    @OneToMany(targetEntity = Person.class)
+    private Set<Person> people;
 }

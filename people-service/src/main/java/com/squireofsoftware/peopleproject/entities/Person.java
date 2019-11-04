@@ -1,6 +1,5 @@
 package com.squireofsoftware.peopleproject.entities;
 
-
 import lombok.*;
 
 import javax.persistence.*;
