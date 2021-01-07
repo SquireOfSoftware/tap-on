@@ -1,13 +1,13 @@
 package com.squireofsoftware.peopleproject.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "t_namepart")
@@ -18,5 +18,6 @@ public class NamePart {
     private String value;
     @Enumerated(EnumType.STRING)
     private Language type;
+    @JoinColumn(table = "t_person")
     private Integer personId;
 }

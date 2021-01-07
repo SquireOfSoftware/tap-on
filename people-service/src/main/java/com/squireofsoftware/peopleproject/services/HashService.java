@@ -1,11 +1,9 @@
 package com.squireofsoftware.peopleproject.services;
 
-import com.squireofsoftware.peopleproject.entities.Person;
+import com.squireofsoftware.peopleproject.dtos.PersonObject;
 
 public interface HashService {
-    String createHash(Person person);
+    Integer getHash(Integer personId);
 
-    String getHash(Person person);
-
-    Person getPerson(String hash);
+    PersonObject getPerson(Integer hash);
 }

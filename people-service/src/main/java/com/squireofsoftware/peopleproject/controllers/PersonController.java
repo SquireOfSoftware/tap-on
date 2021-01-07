@@ -3,7 +3,6 @@ package com.squireofsoftware.peopleproject.controllers;
 import com.squireofsoftware.peopleproject.dtos.PersonObject;
 import com.squireofsoftware.peopleproject.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -13,7 +12,7 @@ import java.util.Set;
 @RequestMapping("/people")
 public class PersonController {
     @Autowired
-    private PersonService personService;
+    private final PersonService personService;
 
     public PersonController(PersonService personService) {
         this.personService = personService;

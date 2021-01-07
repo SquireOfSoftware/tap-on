@@ -1,6 +1,5 @@
 package com.squireofsoftware.peopleproject.jpas;
 
-import com.squireofsoftware.peopleproject.entities.Person;
 import com.squireofsoftware.peopleproject.entities.PersonHash;
 import org.springframework.data.repository.CrudRepository;
 
