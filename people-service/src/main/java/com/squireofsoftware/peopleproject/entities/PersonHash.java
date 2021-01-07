@@ -4,8 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.Set;
 
 @Entity
 @Builder
@@ -13,15 +11,15 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "t_service")
-public class Service {
+@Table(name = "t_personhash")
+public class PersonHash {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @NotNull
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(unique=true)
-    private Date time;
-    @OneToMany(targetEntity = ServiceComponent.class)
-    private Set<ServiceComponent> components;
+    @OneToOne
+    @JoinColumn(name = "person_id")
+    private Person person;
+    @NotNull
+    private Integer hash;
 }

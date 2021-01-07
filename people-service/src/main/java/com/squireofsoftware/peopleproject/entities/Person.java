@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 
 @Entity
 @Builder
@@ -23,4 +24,6 @@ public class Person {
     private Boolean isBaptised;
     @Column(columnDefinition = "default false")
     private Boolean isMember;
+    private Timestamp creationDate;
+    private Timestamp lastModified;
 }

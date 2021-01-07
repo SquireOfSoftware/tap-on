@@ -24,4 +24,5 @@ public class PersonObject {
     private Boolean isBaptised = false;
     @Builder.Default
     private Boolean isMember = false;
+    private Integer hash;
 }
