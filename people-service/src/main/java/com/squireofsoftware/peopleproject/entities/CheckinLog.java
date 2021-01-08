@@ -30,7 +30,7 @@ public class CheckinLog {
         if (checkinLogObject != null) {
             return CheckinLog.builder()
                     .message(checkinLogObject.getMessage())
-                    .timestamp(checkinLogObject.getTimestamp())
+                    .timestamp(Timestamp.valueOf(checkinLogObject.getTimestamp()))
                     .build();
         }
         return null;

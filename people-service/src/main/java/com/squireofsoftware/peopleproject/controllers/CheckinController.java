@@ -6,8 +6,10 @@ import com.squireofsoftware.peopleproject.dtos.SignInObject;
 import com.squireofsoftware.peopleproject.services.CheckinLogService;
 import com.squireofsoftware.peopleproject.services.HashService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -40,7 +42,17 @@ public class CheckinController {
     }
 
     @GetMapping(value = "/people/log/hash/{hash}")
-    public List<CheckinLogObject> getLogs(@PathVariable Integer hash) {
-        return checkinLogService.getLogs(hash);
+    public List<CheckinLogObject> getLogs(@PathVariable Integer hash,
+                                          @RequestParam(value = "from", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
+                                          @RequestParam(value = "to", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate) {
+        if (fromDate != null && toDate != null) {
+            return checkinLogService.getLogsFromTo(hash, fromDate, toDate);
+        } else if (fromDate == null && toDate != null) {
+            return checkinLogService.getLogsTo(hash, toDate);
+        } else if (fromDate != null) {
+            return checkinLogService.getLogsFrom(hash, fromDate);
+        } else {
+            return checkinLogService.getAllLogs(hash);
+        }
     }
 }

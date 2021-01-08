@@ -6,21 +6,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class CheckinLogObject {
-    private Timestamp timestamp;
+    private LocalDateTime timestamp;
     private String message;
 
     public static CheckinLogObject map(CheckinLog checkinLog) {
         if (checkinLog != null) {
             return CheckinLogObject.builder()
                     .message(checkinLog.getMessage())
-                    .timestamp(checkinLog.getTimestamp())
+                    .timestamp(checkinLog.getTimestamp().toLocalDateTime())
                     .build();
         }
         return null;
