@@ -1,5 +1,6 @@
 package com.squireofsoftware.peopleproject.entities;
 
+import com.squireofsoftware.peopleproject.dtos.PersonObject;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,4 +27,16 @@ public class Person {
     private Boolean isMember;
     private Timestamp creationDate;
     private Timestamp lastModified;
+
+    public static Person map(PersonObject personObject) {
+        if (personObject != null) {
+            return Person.builder()
+                    .familyName(personObject.getFamilyName())
+                    .givenName(personObject.getGivenName())
+                    .isBaptised(personObject.getIsBaptised())
+                    .isMember(personObject.getIsMember())
+                    .build();
+        }
+        return null;
+    }
 }

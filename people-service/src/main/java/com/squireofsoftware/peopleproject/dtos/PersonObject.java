@@ -1,5 +1,6 @@
 package com.squireofsoftware.peopleproject.dtos;
 
+import com.squireofsoftware.peopleproject.entities.Person;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,4 +26,17 @@ public class PersonObject {
     @Builder.Default
     private Boolean isMember = false;
     private Integer hash;
+
+    public static PersonObject map(Person person) {
+        if (person != null) {
+            return PersonObject.builder()
+                    .id(person.getId())
+                    .familyName(person.getFamilyName())
+                    .givenName(person.getGivenName())
+                    .isMember(person.getIsMember())
+                    .isBaptised(person.getIsBaptised())
+                    .build();
+        }
+        return null;
+    }
 }

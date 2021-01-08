@@ -1,5 +1,6 @@
 package com.squireofsoftware.peopleproject.entities;
 
+import com.squireofsoftware.peopleproject.dtos.CheckinLogObject;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,4 +25,14 @@ public class CheckinLog {
     @NotNull
     private Timestamp timestamp;
     private String message;
+
+    public static CheckinLog map(CheckinLogObject checkinLogObject) {
+        if (checkinLogObject != null) {
+            return CheckinLog.builder()
+                    .message(checkinLogObject.getMessage())
+                    .timestamp(checkinLogObject.getTimestamp())
+                    .build();
+        }
+        return null;
+    }
 }

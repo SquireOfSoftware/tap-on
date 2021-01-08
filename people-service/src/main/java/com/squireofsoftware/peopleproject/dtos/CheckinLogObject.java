@@ -1,5 +1,6 @@
 package com.squireofsoftware.peopleproject.dtos;
 
+import com.squireofsoftware.peopleproject.entities.CheckinLog;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,16 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CheckinLogObject {
-    private PersonObject person;
     private Timestamp timestamp;
     private String message;
+
+    public static CheckinLogObject map(CheckinLog checkinLog) {
+        if (checkinLog != null) {
+            return CheckinLogObject.builder()
+                    .message(checkinLog.getMessage())
+                    .timestamp(checkinLog.getTimestamp())
+                    .build();
+        }
+        return null;
+    }
 }
