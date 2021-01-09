@@ -10,6 +10,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/people")
+@CrossOrigin
 public class PersonController {
     @Autowired
     private final PersonService personService;

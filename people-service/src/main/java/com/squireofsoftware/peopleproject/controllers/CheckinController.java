@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/checkin")
+@CrossOrigin
 public class CheckinController {
     @Autowired
     private final HashService hashService;
