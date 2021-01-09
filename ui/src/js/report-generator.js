@@ -148,9 +148,16 @@ function pollSignins(lastDate) {
     }
     continuePollingTimer = window.setTimeout(
         // you need to find a date time library to give you ISO time properly
-        () => getSigninsFrom(lastDate.toISOString(), (evt) => {
+        () => getSigninsFrom(lastDate.format(), (evt) => {
             let events = JSON.parse(evt.target.responseText);
-            let lastEventDate = new Date(events[events.length - 1].timestamp);
+
+            let lastEvent = events[events.length - 1];
+            let lastEventDate;
+            if (lastEvent != undefined) {
+                lastEventDate = new moment(events[events.length - 1].timestamp);
+            } else {
+                lastEventDate = lastDate;
+            }
 
             if (lastPolledTime > lastEventDate) {
                 lastEventDate = lastPolledTime;
@@ -158,6 +165,7 @@ function pollSignins(lastDate) {
             mergeList(events);
             console.log("hello, continued from: " + lastEventDate);
             pollSignins(lastEventDate);
+            lastPolledTime = lastEventDate;
         }), 5000);
 }
 
@@ -169,7 +177,7 @@ getTodaysSignins((evt) => {
         let person = log.person;
         signedInIds.push(person.id);
     });
-    lastPolledTime = new Date();
+    lastPolledTime = new moment();
     pollSignins(lastPolledTime);
 });
 
