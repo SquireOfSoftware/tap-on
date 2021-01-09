@@ -109,11 +109,15 @@ let errorMessageTimeout;
 function displayError(message) {
     document.getElementById("message").innerHTML = message;
     console.error(message);
-    console.log(errorMessageTimeout);
     if (errorMessageTimeout != undefined) {
         window.clearTimeout(errorMessageTimeout);
     }
     errorMessageTimeout = window.setTimeout(() => clearErrorMessage(), 1000);
+}
+
+function displaySuccess(message) {
+    document.getElementById("message").innerHTML = message;
+    console.log(message);
 }
 
 // assume that the scannedData is a hashcode
@@ -125,8 +129,11 @@ function processScan(scannedData) {
         } else if (!signedInPeople.has(scannedData)) {
             // sign in the person
             signInPerson(scannedData, (evt) => {
-                signedInPeople.set(scannedData, {"timestamp": new Date(), "person": JSON.parse(evt.target.responseText)});
+                let checkinLog = JSON.parse(evt.target.responseText);
+                let person = checkinLog.person;
+                signedInPeople.set(scannedData, {"timestamp": new Date(), "person": person});
                 console.log(signedInPeople);
+                displaySuccess(person.givenName + " " + person.familyName + " has signed in!");
             });
             // on success add person to the map
         }
@@ -157,5 +164,5 @@ function onScanFailure(error) {
 //});
 
 let html5QrcodeScanner = new Html5QrcodeScanner(
-	"reader", { fps: 10, qrbox: 300 }, /* verbose= */ false);
+	"reader", { fps: 10, qrbox: 600 }, /* verbose= */ false);
 html5QrcodeScanner.render(onScanSuccess, onScanFailure);
