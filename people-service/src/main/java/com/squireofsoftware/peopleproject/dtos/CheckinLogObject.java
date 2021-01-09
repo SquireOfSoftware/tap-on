@@ -15,12 +15,14 @@ import java.time.LocalDateTime;
 public class CheckinLogObject {
     private LocalDateTime timestamp;
     private String message;
+    private PersonObject person;
 
     public static CheckinLogObject map(CheckinLog checkinLog) {
         if (checkinLog != null) {
             return CheckinLogObject.builder()
                     .message(checkinLog.getMessage())
                     .timestamp(checkinLog.getTimestamp().toLocalDateTime())
+                    .person(PersonObject.map(checkinLog.getPerson()))
                     .build();
         }
         return null;

@@ -1,5 +1,6 @@
 package com.squireofsoftware.peopleproject.dtos;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.squireofsoftware.peopleproject.entities.Person;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +26,7 @@ public class PersonObject {
     private Boolean isBaptised = false;
     @Builder.Default
     private Boolean isMember = false;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer hash;
 
     public static PersonObject map(Person person) {

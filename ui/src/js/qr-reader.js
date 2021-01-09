@@ -7,11 +7,30 @@ let FIVE_MIN=5*60*1000;
 let server = "http://localhost:8080"
 let signInUrl = server + "/checkin/signin"
 let getLogsForPersonUrl = server + "/people/id/";
+let getCsrfTokenUrl = server + "/csrf";
+let CSRF_TOKEN;
 
 function isInt(value) {
   return !isNaN(value) &&
          parseInt(Number(value)) == value &&
          !isNaN(parseInt(value, 10));
+}
+
+function getCsrfToken(callback) {
+    var oReq = new XMLHttpRequest();
+
+    oReq.addEventListener("load", transferComplete);
+
+    function transferComplete(evt) {
+      console.log("The transfer is complete.");
+      console.log(evt);
+      if (evt.target.status === 200) {
+        callback(evt);
+      }
+    }
+
+    oReq.open("GET", getCsrfTokenUrl, true);
+    oReq.send();
 }
 
 function getLogsForPerson(id, callback) {
@@ -77,20 +96,37 @@ function signInPerson(hash, callback) {
     oReq.open("POST", signInUrl, true);
     oReq.setRequestHeader("Access-Control-Allow-Headers", "*");
     oReq.setRequestHeader("Content-Type", "application/json");
-    oReq.send(JSON.stringify({"hash": hash, "message": "hello world"}));
+//    oReq.setRequestHeader(CSRF_TOKEN.headerName, CSRF_TOKEN.token);
+    oReq.send(JSON.stringify({"hash": hash, "message": "signing in today again"}));
+}
+
+function clearErrorMessage() {
+    document.getElementById("message").innerHTML = "";
+}
+
+let errorMessageTimeout;
+
+function displayError(message) {
+    document.getElementById("message").innerHTML = message;
+    console.error(message);
+    console.log(errorMessageTimeout);
+    if (errorMessageTimeout != undefined) {
+        window.clearTimeout(errorMessageTimeout);
+    }
+    errorMessageTimeout = window.setTimeout(() => clearErrorMessage(), 1000);
 }
 
 // assume that the scannedData is a hashcode
 function processScan(scannedData) {
     if (isInt(scannedData)) {
         if (signedInPeople.has(scannedData) &&
-            (new Date() - signedInPeople.get(scannedData) < FIVE_MIN)) {
-            console.log("This person has signed in already");
-        } else {
+            (new Date() - signedInPeople.get(scannedData).timestamp < FIVE_MIN)) {
+            displayError("This person has signed in already, please try again in 5 minutes.");
+        } else if (!signedInPeople.has(scannedData)) {
             // sign in the person
             signInPerson(scannedData, (evt) => {
-                map.set(scannedData, {"timestamp": new Date()});
-                console.log(map);
+                signedInPeople.set(scannedData, {"timestamp": new Date(), "person": JSON.parse(evt.target.responseText)});
+                console.log(signedInPeople);
             });
             // on success add person to the map
         }
@@ -113,6 +149,13 @@ function onScanFailure(error) {
 	//console.warn(`QR error = ${error}`);
 }
 
+//getCsrfToken((event) => {
+//
+//    CSRF_TOKEN = JSON.parse(event.target.responseText);
+//    console.log(CSRF_TOKEN);
+//    document.cookie = "XSRF-TOKEN=" + CSRF_TOKEN.token + ";";
+//});
+
 let html5QrcodeScanner = new Html5QrcodeScanner(
-	"reader", { fps: 10, qrbox: 250 }, /* verbose= */ false);
+	"reader", { fps: 10, qrbox: 300 }, /* verbose= */ false);
 html5QrcodeScanner.render(onScanSuccess, onScanFailure);
