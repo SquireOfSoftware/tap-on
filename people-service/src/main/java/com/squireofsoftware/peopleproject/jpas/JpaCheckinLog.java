@@ -14,4 +14,6 @@ public interface JpaCheckinLog extends CrudRepository<CheckinLog, Integer> {
     List<CheckinLog> findByPersonIdAndTimestampAfter(Integer personId, Timestamp from);
 
     List<CheckinLog> findByPersonIdAndTimestampBefore(Integer personId, Timestamp to);
+
+    List<CheckinLog> findByTimestampAfter(Timestamp from);
 }

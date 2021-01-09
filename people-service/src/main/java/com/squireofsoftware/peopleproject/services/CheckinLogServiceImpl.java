@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,7 +53,7 @@ public class CheckinLogServiceImpl implements CheckinLogService {
     }
 
     @Override
-    public List<CheckinLogObject> getAllLogs(Integer hash) {
+    public List<CheckinLogObject> getAllPersonsLogs(Integer hash) {
         return jpaCheckinLog.findAllByPersonId(getPerson(hash).getId())
                 .stream()
                 .map(CheckinLogObject::map)
@@ -59,7 +61,7 @@ public class CheckinLogServiceImpl implements CheckinLogService {
     }
 
     @Override
-    public List<CheckinLogObject> getLogsFromTo(Integer hash, LocalDateTime from, LocalDateTime to) {
+    public List<CheckinLogObject> getPersonsLogsFromTo(Integer hash, LocalDateTime from, LocalDateTime to) {
         return jpaCheckinLog.findByPersonIdAndTimestampBetween(
                     getPerson(hash).getId(),
                     Timestamp.valueOf(from),
@@ -70,7 +72,7 @@ public class CheckinLogServiceImpl implements CheckinLogService {
     }
 
     @Override
-    public List<CheckinLogObject> getLogsFrom(Integer hash, LocalDateTime from) {
+    public List<CheckinLogObject> getPersonsLogsFrom(Integer hash, LocalDateTime from) {
         return jpaCheckinLog.findByPersonIdAndTimestampAfter(
                     getPerson(hash).getId(),
                 Timestamp.valueOf(from))
@@ -80,11 +82,37 @@ public class CheckinLogServiceImpl implements CheckinLogService {
     }
 
     @Override
-    public List<CheckinLogObject> getLogsTo(Integer hash, LocalDateTime to) {
+    public List<CheckinLogObject> getPersonsLogsTo(Integer hash, LocalDateTime to) {
         return jpaCheckinLog.findByPersonIdAndTimestampBefore(
                     getPerson(hash).getId(),
                 Timestamp.valueOf(to))
                 .stream()
+                .map(CheckinLogObject::map)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CheckinLogObject> getSignInsForToday() {
+        return getSignInsFrom(LocalDate.now().atStartOfDay());
+    }
+
+    @Override
+    public List<CheckinLogObject> getSignInsFrom(LocalDateTime from) {
+        return jpaCheckinLog.findByTimestampAfter(Timestamp.valueOf(from))
+                .stream()
+                .collect(Collectors.toMap(
+                        CheckinLog::getPerson,
+                        checkinLog -> checkinLog,
+                        (existing, replacement) -> {
+                            if (existing.getTimestamp().after(replacement.getTimestamp())) {
+                                return replacement;
+                            } else {
+                                return existing;
+                            }
+                        }))
+                .values()
+                .stream()
+                .sorted(Comparator.comparing(CheckinLog::getTimestamp))
                 .map(CheckinLogObject::map)
                 .collect(Collectors.toList());
     }

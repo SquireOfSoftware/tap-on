@@ -9,11 +9,15 @@ import java.util.List;
 public interface CheckinLogService {
     CheckinLogObject checkin(SignInObject signInLogObject);
 
-    List<CheckinLogObject> getAllLogs(Integer hash);
+    List<CheckinLogObject> getAllPersonsLogs(Integer hash);
 
-    List<CheckinLogObject> getLogsFromTo(Integer hash, LocalDateTime from, LocalDateTime to);
+    List<CheckinLogObject> getPersonsLogsFromTo(Integer hash, LocalDateTime from, LocalDateTime to);
 
-    List<CheckinLogObject> getLogsFrom(Integer hash, LocalDateTime from);
+    List<CheckinLogObject> getPersonsLogsFrom(Integer hash, LocalDateTime from);
 
-    List<CheckinLogObject> getLogsTo(Integer hash, LocalDateTime to);
+    List<CheckinLogObject> getPersonsLogsTo(Integer hash, LocalDateTime to);
+
+    List<CheckinLogObject> getSignInsForToday();
+
+    List<CheckinLogObject> getSignInsFrom(LocalDateTime from);
 }

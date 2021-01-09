@@ -47,13 +47,23 @@ public class CheckinController {
                                           @RequestParam(value = "from", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
                                           @RequestParam(value = "to", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate) {
         if (fromDate != null && toDate != null) {
-            return checkinLogService.getLogsFromTo(hash, fromDate, toDate);
+            return checkinLogService.getPersonsLogsFromTo(hash, fromDate, toDate);
         } else if (fromDate == null && toDate != null) {
-            return checkinLogService.getLogsTo(hash, toDate);
+            return checkinLogService.getPersonsLogsTo(hash, toDate);
         } else if (fromDate != null) {
-            return checkinLogService.getLogsFrom(hash, fromDate);
+            return checkinLogService.getPersonsLogsFrom(hash, fromDate);
         } else {
-            return checkinLogService.getAllLogs(hash);
+            return checkinLogService.getAllPersonsLogs(hash);
         }
+    }
+
+    @GetMapping(value = "/signins/today")
+    public List<CheckinLogObject> getSigninsForToday() {
+        return checkinLogService.getSignInsForToday();
+    }
+
+    @GetMapping(value = "/signins/from/{from}")
+    public List<CheckinLogObject> getSigninsFrom(@PathVariable(value = "from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from) {
+        return checkinLogService.getSignInsFrom(from);
     }
 }
