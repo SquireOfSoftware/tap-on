@@ -138,7 +138,7 @@ function processScan(scannedData) {
             // on success add person to the map
         }
     } else {
-
+        console.error("The scanned data is not an integer value: " + scannedData);
     }
 }
 

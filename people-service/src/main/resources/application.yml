@@ -15,3 +15,5 @@ management:
     jmx:
       exposure:
         include: "health,info,beans,env"
+server:
+  port: 8080
