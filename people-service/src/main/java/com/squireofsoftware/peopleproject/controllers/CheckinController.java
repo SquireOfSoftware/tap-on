@@ -66,9 +66,4 @@ public class CheckinController {
     public List<CheckinLogObject> getSigninsFrom(@PathVariable(value = "from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from) {
         return checkinLogService.getSignInsFrom(from);
     }
-
-    @GetMapping(value= "/test")
-    public String test() {
-        return "我的中文不好。我是意大利人。你知道吗";
-    }
 }

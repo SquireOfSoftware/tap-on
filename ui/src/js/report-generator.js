@@ -4,7 +4,6 @@ let continuePollingTimer;
 let server = "http://localhost:8080";
 let getTodaysSigninsUrl = server + "/checkin/signins/today";
 let getSigninsFromUrl = server + "/checkin/signins/from/";
-let getTestChineseCharactersUrl = server + "/checkin/test";
 
 let lastPolledTime;
 
@@ -180,23 +179,6 @@ function pollSignins(lastDate) {
         }), 5000);
 }
 
-function getTestChineseCharacters() {
-    var oReq = new XMLHttpRequest();
-
-    oReq.addEventListener("load", transferComplete);
-
-    function transferComplete(evt) {
-      console.log("The transfer is complete.");
-      console.log(evt.target);
-      if (evt.target.status === 200) {
-        console.log(evt.target.responseText);
-      }
-    }
-
-    oReq.open("GET", getTestChineseCharactersUrl, true);
-    oReq.send();
-}
-
 getTodaysSignins((evt) => {
     console.log(evt);
     signedInPeople = JSON.parse(evt.target.responseText);
@@ -208,7 +190,5 @@ getTodaysSignins((evt) => {
     lastPolledTime = new moment();
     pollSignins(lastPolledTime);
 });
-
-getTestChineseCharacters();
 
 // TODO: when you have time, try and get it to work with server side events
