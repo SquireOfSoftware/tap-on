@@ -1,7 +1,7 @@
 // poll the sign ins for today
 let continuePollingTimer;
 
-let server = "http://localhost:8080";
+let server = "http://localhost:8080/people-service";
 let getTodaysSigninsUrl = server + "/checkin/signins/today";
 let getSigninsFromUrl = server + "/checkin/signins/from/";
 

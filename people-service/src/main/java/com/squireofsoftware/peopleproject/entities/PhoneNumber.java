@@ -11,15 +11,16 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "t_personhash")
-public class PersonHash {
+@Table(name = "t_phonenumber")
+public class PhoneNumber {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @NotNull
-    @OneToOne
-    @JoinColumn(name = "person_id")
-    private Person person;
+    private String number;
+    private String description;
     @NotNull
-    private Integer hash;
+    @ManyToOne
+    @JoinColumn(name = "personId")
+    private Person person;
 }

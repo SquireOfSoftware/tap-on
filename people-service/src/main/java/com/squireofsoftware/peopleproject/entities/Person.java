@@ -1,11 +1,11 @@
 package com.squireofsoftware.peopleproject.entities;
 
-import com.squireofsoftware.peopleproject.dtos.PersonObject;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Builder
@@ -27,16 +27,19 @@ public class Person {
     private Boolean isMember;
     private Timestamp creationDate;
     private Timestamp lastModified;
+    @NotNull
+    private Integer hash;
 
-    public static Person map(PersonObject personObject) {
-        if (personObject != null) {
-            return Person.builder()
-                    .familyName(personObject.getFamilyName())
-                    .givenName(personObject.getGivenName())
-                    .isBaptised(personObject.getIsBaptised())
-                    .isMember(personObject.getIsMember())
-                    .build();
-        }
-        return null;
-    }
+    @NotNull
+    @OneToMany
+    @JoinColumn(name = "personId")
+    private List<PhoneNumber> phoneNumbers;
+    @NotNull
+    @OneToMany
+    @JoinColumn(name = "personId")
+    private List<EmailAddress> emailAddresses;
+    @NotNull
+    @OneToMany
+    @JoinColumn(name = "personId")
+    private List<NamePart> alternativeNames;
 }

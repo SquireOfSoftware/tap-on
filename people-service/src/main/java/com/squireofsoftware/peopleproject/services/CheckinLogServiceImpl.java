@@ -4,11 +4,9 @@ import com.squireofsoftware.peopleproject.dtos.CheckinLogObject;
 import com.squireofsoftware.peopleproject.dtos.SignInObject;
 import com.squireofsoftware.peopleproject.entities.CheckinLog;
 import com.squireofsoftware.peopleproject.entities.Person;
-import com.squireofsoftware.peopleproject.entities.PersonHash;
 import com.squireofsoftware.peopleproject.exceptions.PersonNotFoundException;
 import com.squireofsoftware.peopleproject.jpas.JpaCheckinLog;
-import com.squireofsoftware.peopleproject.jpas.JpaPersonHash;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.squireofsoftware.peopleproject.jpas.JpaPerson;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -21,23 +19,21 @@ import java.util.stream.Collectors;
 
 @Service
 public class CheckinLogServiceImpl implements CheckinLogService {
-    @Autowired
-    private final JpaPersonHash jpaPersonHash;
-    @Autowired
+    private final JpaPerson jpaPerson;
     private final JpaCheckinLog jpaCheckinLog;
 
-    public CheckinLogServiceImpl(JpaPersonHash jpaPersonHash,
+    public CheckinLogServiceImpl(JpaPerson jpaPerson,
                                  JpaCheckinLog jpaCheckinLog) {
-        this.jpaPersonHash = jpaPersonHash;
+        this.jpaPerson = jpaPerson;
         this.jpaCheckinLog = jpaCheckinLog;
     }
 
     private Person getPerson(Integer hash) {
-        Optional<PersonHash> personHash = jpaPersonHash.findByHash(hash);
-        if (personHash.isEmpty()) {
+        Optional<Person> person = jpaPerson.findByHash(hash);
+        if (person.isEmpty()) {
             throw new PersonNotFoundException();
         }
-        return personHash.get().getPerson();
+        return person.get();
     }
 
     @Override

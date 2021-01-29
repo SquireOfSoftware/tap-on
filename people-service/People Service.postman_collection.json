@@ -12,7 +12,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"hash\": 1450657881,\n    \"message\": \"another sign in\"\n}",
+					"raw": "{\n    \"hash\": 138932330,\n    \"message\": \"friday sign in\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -20,19 +20,112 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/checkin/signin",
+					"raw": "http://localhost:8080/people-service/checkin/signin",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"people-service",
 						"checkin",
 						"signin"
 					]
 				}
 			},
 			"response": [
+				{
+					"name": "Signing in a person",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"hash\": 138932330,\n    \"message\": \"friday sign in\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/people-service/checkin/signin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"people-service",
+								"checkin",
+								"signin"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 29 Jan 2021 09:33:37 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"timestamp\": \"2021-01-29T20:33:36.866\",\n    \"message\": \"friday sign in\",\n    \"person\": {\n        \"id\": 103,\n        \"givenName\": \"Joseph\",\n        \"familyName\": \"人\",\n        \"otherNames\": [\n            {\n                \"name\": \"Joey\",\n                \"language\": \"English\"\n            }\n        ],\n        \"isBaptised\": false,\n        \"isMember\": false,\n        \"emailAddresses\": [\n            {\n                \"email\": \"test@gmail.com\",\n                \"description\": null\n            }\n        ],\n        \"phoneNumbers\": [\n            {\n                \"number\": \"+61234567890\",\n                \"description\": null\n            }\n        ]\n    }\n}"
+				},
 				{
 					"name": "Signing a person",
 					"originalRequest": {
@@ -163,7 +256,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/checkin/people/log/hash/1450657881",
+					"raw": "http://localhost:8080/checkin/people/log/hash/1450657881?to=2021-01-08T10:12:03&from=2021-01-08T10:20:11",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -175,6 +268,16 @@
 						"log",
 						"hash",
 						"1450657881"
+					],
+					"query": [
+						{
+							"key": "to",
+							"value": "2021-01-08T10:12:03"
+						},
+						{
+							"key": "from",
+							"value": "2021-01-08T10:20:11"
+						}
 					]
 				}
 			},
@@ -193,22 +296,209 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "[\n\t{\n\t\t\"givenName\": \"Johnny\",\n\t\t\"familyName\": \"Smith\"\n\t}\n]"
+					"raw": "[\n\t{\n\t\t\"givenName\": \"Joseph\",\n\t\t\"familyName\": \"人\",\n        \"emailAddresses\": [\n            {\n                \"email\": \"test@gmail.com\"\n            }\n        ],\n        \"phoneNumbers\": [\n            {\n                \"number\": \"+61234567890\"\n            }\n        ],\n        \"otherNames\": [\n            {\n                \"name\": \"Joey\",\n                \"language\": \"English\"\n            }\n        ]\n\t}\n]"
 				},
 				"url": {
-					"raw": "http://localhost:8080/people/",
+					"raw": "http://localhost:8080/people-service/people/",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"people-service",
 						"people",
 						""
 					]
 				}
 			},
 			"response": [
+				{
+					"name": "Creating people",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\t{\n\t\t\"givenName\": \"Joseph\",\n\t\t\"familyName\": \"人\",\n        \"emailAddresses\": [\n            {\n                \"email\": \"test@gmail.com\"\n            }\n        ],\n        \"phoneNumbers\": [\n            {\n                \"number\": \"+61234567890\"\n            }\n        ],\n        \"otherNames\": [\n            \n        ]\n\t}\n]"
+						},
+						"url": {
+							"raw": "http://localhost:8080/people-service/people/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"people-service",
+								"people",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 29 Jan 2021 09:08:10 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 101,\n        \"givenName\": \"火腿\",\n        \"familyName\": \"人\",\n        \"otherNames\": [],\n        \"isBaptised\": false,\n        \"isMember\": false,\n        \"emailAddresses\": [\n            {\n                \"email\": \"test@gmail.com\",\n                \"description\": null\n            }\n        ],\n        \"phoneNumbers\": []\n    }\n]"
+				},
+				{
+					"name": "Creating people",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\t{\n\t\t\"givenName\": \"Joseph\",\n\t\t\"familyName\": \"人\",\n        \"emailAddresses\": [\n            {\n                \"email\": \"test@gmail.com\"\n            }\n        ],\n        \"phoneNumbers\": [\n            {\n                \"number\": \"+61234567890\"\n            }\n        ],\n        \"otherNames\": [\n            {\n                \"name\": \"Joey\",\n                \"language\": \"English\"\n            }\n        ]\n\t}\n]"
+						},
+						"url": {
+							"raw": "http://localhost:8080/people-service/people/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"people-service",
+								"people",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 29 Jan 2021 09:16:52 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 103,\n        \"givenName\": \"Joseph\",\n        \"familyName\": \"人\",\n        \"otherNames\": [\n            {\n                \"name\": \"Joey\",\n                \"language\": \"English\"\n            }\n        ],\n        \"isBaptised\": false,\n        \"isMember\": false,\n        \"emailAddresses\": [\n            {\n                \"email\": \"test@gmail.com\",\n                \"description\": null\n            }\n        ],\n        \"phoneNumbers\": [\n            {\n                \"number\": \"+61234567890\",\n                \"description\": null\n            }\n        ]\n    }\n]"
+				},
 				{
 					"name": "Creating people",
 					"originalRequest": {
@@ -286,20 +576,115 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:8080/people/id/9",
+					"raw": "http://localhost:8080/people-service/people/id/103",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"people-service",
 						"people",
 						"id",
-						"9"
+						"103"
 					]
 				}
 			},
 			"response": [
+				{
+					"name": "Person look up",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/people-service/people/id/103",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"people-service",
+								"people",
+								"id",
+								"103"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 29 Jan 2021 09:17:07 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 103,\n    \"givenName\": \"Joseph\",\n    \"familyName\": \"人\",\n    \"otherNames\": [\n        {\n            \"name\": \"Joey\",\n            \"language\": \"English\"\n        }\n    ],\n    \"isBaptised\": false,\n    \"isMember\": false,\n    \"hash\": 138932330,\n    \"emailAddresses\": [\n        {\n            \"email\": \"test@gmail.com\",\n            \"description\": null\n        }\n    ],\n    \"phoneNumbers\": [\n        {\n            \"number\": \"+61234567890\",\n            \"description\": null\n        }\n    ]\n}"
+				},
 				{
 					"name": "Person look up",
 					"originalRequest": {
@@ -358,6 +743,324 @@
 					"body": "{\n    \"id\": 9,\n    \"givenName\": \"John\",\n    \"familyName\": \"Smith\",\n    \"otherNames\": [],\n    \"isBaptised\": false,\n    \"isMember\": false,\n    \"hash\": null\n}"
 				}
 			]
+		},
+		{
+			"name": "Get CSRF Token",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/people-service/csrf",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"people-service",
+						"csrf"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filtering logs",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"hash\": 1450657881\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/people-service/checkin/people/log/hash/1450657881?from=2021-01-09T10:12:03",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"people-service",
+						"checkin",
+						"people",
+						"log",
+						"hash",
+						"1450657881"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "2021-01-09T10:12:03"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Health information",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/people-service/actuator/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"people-service",
+						"actuator",
+						"health"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Health information",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/actuator/health",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actuator",
+								"health"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/vnd.spring-boot.actuator.v3+json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 09 Jan 2021 03:36:05 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"UP\",\n    \"components\": {\n        \"db\": {\n            \"status\": \"UP\",\n            \"details\": {\n                \"database\": \"PostgreSQL\",\n                \"validationQuery\": \"isValid()\"\n            }\n        },\n        \"diskSpace\": {\n            \"status\": \"UP\",\n            \"details\": {\n                \"total\": 250790436864,\n                \"free\": 22593847296,\n                \"threshold\": 10485760,\n                \"exists\": true\n            }\n        },\n        \"ping\": {\n            \"status\": \"UP\"\n        }\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Get today's sign ins",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/people-service/checkin/signins/today",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"people-service",
+						"checkin",
+						"signins",
+						"today"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find person by hash",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/people-service/checkin/hash/138932330",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"people-service",
+						"checkin",
+						"hash",
+						"138932330"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Find person by hash",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/people-service/checkin/hash/138932330",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"people-service",
+								"checkin",
+								"hash",
+								"138932330"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 29 Jan 2021 09:28:28 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 103,\n    \"givenName\": \"Joseph\",\n    \"familyName\": \"人\",\n    \"otherNames\": [\n        {\n            \"name\": \"Joey\",\n            \"language\": \"English\"\n        }\n    ],\n    \"isBaptised\": false,\n    \"isMember\": false,\n    \"hash\": 138932330,\n    \"emailAddresses\": [\n        {\n            \"email\": \"test@gmail.com\",\n            \"description\": null\n        }\n    ],\n    \"phoneNumbers\": [\n        {\n            \"number\": \"+61234567890\",\n            \"description\": null\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Finding checkins from a particular date",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/people-service/checkin/signins/from/2021-01-09T19:39:43.46",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"people-service",
+						"checkin",
+						"signins",
+						"from",
+						"2021-01-09T19:39:43.46"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

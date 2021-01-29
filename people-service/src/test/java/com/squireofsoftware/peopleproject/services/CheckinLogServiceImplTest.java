@@ -5,7 +5,7 @@ import com.squireofsoftware.peopleproject.dtos.PersonObject;
 import com.squireofsoftware.peopleproject.entities.CheckinLog;
 import com.squireofsoftware.peopleproject.entities.Person;
 import com.squireofsoftware.peopleproject.jpas.JpaCheckinLog;
-import com.squireofsoftware.peopleproject.jpas.JpaPersonHash;
+import com.squireofsoftware.peopleproject.jpas.JpaPerson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -24,14 +24,14 @@ class CheckinLogServiceImplTest {
     @Mock
     private JpaCheckinLog mockJpaCheckinLog;
     @Mock
-    private JpaPersonHash mockJpaPersonHash;
+    private JpaPerson mockJpaPerson;
 
     private CheckinLogServiceImpl checkinLogService;
 
     @BeforeEach
     public void setup() {
         openMocks(this);
-        checkinLogService = new CheckinLogServiceImpl(mockJpaPersonHash, mockJpaCheckinLog);
+        checkinLogService = new CheckinLogServiceImpl(mockJpaPerson, mockJpaCheckinLog);
     }
 
     @Test

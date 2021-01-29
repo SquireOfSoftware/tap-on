@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -29,6 +30,13 @@ public class PersonObject {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer hash;
 
+    @Builder.Default
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<EmailAddressObject> emailAddresses = Collections.emptyList();
+    @Builder.Default
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<PhoneNumberObject> phoneNumbers = Collections.emptyList();
+
     public static PersonObject map(Person person) {
         if (person != null) {
             return PersonObject.builder()
@@ -37,6 +45,16 @@ public class PersonObject {
                     .givenName(person.getGivenName())
                     .isMember(person.getIsMember())
                     .isBaptised(person.getIsBaptised())
+                    .otherNames(person.getAlternativeNames()
+                            .stream()
+                            .map(NameObject::mapFrom)
+                            .collect(Collectors.toList()))
+                    .phoneNumbers(person.getPhoneNumbers().stream()
+                            .map(PhoneNumberObject::mapFrom)
+                            .collect(Collectors.toList()))
+                    .emailAddresses(person.getEmailAddresses().stream()
+                            .map(EmailAddressObject::mapFrom)
+                            .collect(Collectors.toList()))
                     .build();
         }
         return null;

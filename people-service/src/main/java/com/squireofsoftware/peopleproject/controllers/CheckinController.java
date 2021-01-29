@@ -4,7 +4,7 @@ import com.squireofsoftware.peopleproject.dtos.CheckinLogObject;
 import com.squireofsoftware.peopleproject.dtos.PersonObject;
 import com.squireofsoftware.peopleproject.dtos.SignInObject;
 import com.squireofsoftware.peopleproject.services.CheckinLogService;
-import com.squireofsoftware.peopleproject.services.HashService;
+import com.squireofsoftware.peopleproject.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -17,24 +17,24 @@ import java.util.List;
 @CrossOrigin
 public class CheckinController {
     @Autowired
-    private final HashService hashService;
+    private final PersonService personService;
     @Autowired
     private final CheckinLogService checkinLogService;
 
-    public CheckinController(HashService hashService,
+    public CheckinController(PersonService personService,
                              CheckinLogService checkinLogService) {
-        this.hashService = hashService;
+        this.personService = personService;
         this.checkinLogService = checkinLogService;
     }
 
     @GetMapping(value = "/hash/{hash}")
     public PersonObject findPersonByHash(@PathVariable Integer hash) {
-        return hashService.getPerson(hash);
+        return personService.findPersonByHash(hash);
     }
 
     @GetMapping(value = "/person/hash/{personId}")
     public Integer getHashByPersonId(@PathVariable Integer personId) {
-        return hashService.getHash(personId);
+        return personService.getPerson(personId).getHash();
     }
 
     @PostMapping(value = "/signin")

@@ -1,37 +1,37 @@
 package com.squireofsoftware.peopleproject.services;
 
+import com.squireofsoftware.peopleproject.dtos.EmailAddressObject;
 import com.squireofsoftware.peopleproject.dtos.NameObject;
 import com.squireofsoftware.peopleproject.dtos.PersonObject;
-import com.squireofsoftware.peopleproject.entities.Language;
-import com.squireofsoftware.peopleproject.entities.NamePart;
-import com.squireofsoftware.peopleproject.entities.Person;
-import com.squireofsoftware.peopleproject.entities.PersonHash;
+import com.squireofsoftware.peopleproject.dtos.PhoneNumberObject;
+import com.squireofsoftware.peopleproject.entities.*;
 import com.squireofsoftware.peopleproject.exceptions.PersonNotFoundException;
+import com.squireofsoftware.peopleproject.jpas.JpaEmailAddress;
 import com.squireofsoftware.peopleproject.jpas.JpaNamePart;
 import com.squireofsoftware.peopleproject.jpas.JpaPerson;
-import com.squireofsoftware.peopleproject.jpas.JpaPersonHash;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.squireofsoftware.peopleproject.jpas.JpaPhoneNumber;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PersonServiceImpl implements PersonService {
-    @Autowired
     private final JpaPerson jpaPerson;
-    @Autowired
     private final JpaNamePart jpaNamePart;
-    @Autowired
-    private final JpaPersonHash jpaPersonHash;
+    private final JpaPhoneNumber jpaPhoneNumber;
+    private final JpaEmailAddress jpaEmailAddress;
 
     public PersonServiceImpl(JpaPerson jpaPerson,
                              JpaNamePart jpaNamePart,
-                             JpaPersonHash jpaPersonHash) {
+                             JpaEmailAddress jpaEmailAddress,
+                             JpaPhoneNumber jpaPhoneNumber) {
         this.jpaPerson = jpaPerson;
         this.jpaNamePart = jpaNamePart;
-        this.jpaPersonHash = jpaPersonHash;
+        this.jpaEmailAddress = jpaEmailAddress;
+        this.jpaPhoneNumber = jpaPhoneNumber;
     }
 
     @Transactional
@@ -45,40 +45,77 @@ public class PersonServiceImpl implements PersonService {
                 .creationDate(new Timestamp(System.currentTimeMillis()))
                 .lastModified(new Timestamp(System.currentTimeMillis()))
                 .build();
+        newPerson.setHash(newPerson.hashCode());
         Person saved = jpaPerson.save(newPerson);
         personObject.setId(saved.getId());
-        PersonHash hash = jpaPersonHash.save(PersonHash.builder()
-                .person(saved)
-                .hash(saved.hashCode())
-                .build());
-        personObject.setHash(hash.getHash());
+
         for(NameObject otherName: personObject.getOtherNames()) {
             jpaNamePart.save(NamePart.builder()
-                .personId(saved.getId())
-                .value(otherName.getValue())
+                .person(saved)
+                .value(otherName.getName())
                 .type(Language.valueOf(otherName.getLanguage()))
                 .build());
         }
+
+        for(PhoneNumberObject phoneNumber: personObject.getPhoneNumbers()) {
+            jpaPhoneNumber.save(PhoneNumber.builder()
+                    .number(phoneNumber.getNumber())
+                    .description(phoneNumber.getDescription())
+                    .person(newPerson)
+                    .build());
+        }
+
+        for(EmailAddressObject emailObject: personObject.getEmailAddresses()) {
+            jpaEmailAddress.save(EmailAddress.builder()
+                    .email(emailObject.getEmail())
+                    .description(emailObject.getDescription())
+                    .person(newPerson)
+                    .build());
+        }
+
         return personObject;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public PersonObject getPerson(Integer id) {
         Optional<Person> found = jpaPerson.findById(id);
-        Optional<PersonHash> foundHash = jpaPersonHash.findByPersonId(id);
-        return found.map(person -> PersonObject.builder()
-                .familyName(person.getFamilyName())
-                .givenName(person.getGivenName())
-                .id(person.getId())
-                .isBaptised(person.getIsBaptised())
-                .isMember(person.getIsMember())
-                .hash(foundHash.map(PersonHash::getHash).orElse(null))
-                .build())
+        return found.map(this::mapTo)
             .orElseThrow(PersonNotFoundException::new);
+    }
+
+    @Override
+    public PersonObject findPersonByHash(Integer hash) {
+        Optional<Person> found = jpaPerson.findByHash(hash);
+        return found.map(this::mapTo)
+                .orElseThrow(PersonNotFoundException::new);
     }
 
     @Override
     public void deletePerson(Integer id) {
         jpaPerson.deleteById(id);
+    }
+
+    private PersonObject mapTo(Person person) {
+        return PersonObject.builder()
+                .familyName(person.getFamilyName())
+                .givenName(person.getGivenName())
+                .id(person.getId())
+                .isBaptised(person.getIsBaptised())
+                .isMember(person.getIsMember())
+                .hash(person.getHash())
+                .emailAddresses(jpaEmailAddress.findByPersonId(person.getId())
+                        .stream()
+                        .map(EmailAddressObject::mapFrom)
+                        .collect(Collectors.toList()))
+                .phoneNumbers(jpaPhoneNumber.findByPersonId(person.getId())
+                        .stream()
+                        .map(PhoneNumberObject::mapFrom)
+                        .collect(Collectors.toList()))
+                .otherNames(jpaNamePart.findByPersonId(person.getId())
+                        .stream()
+                        .map(NameObject::mapFrom)
+                        .collect(Collectors.toList()))
+                .build();
     }
 }

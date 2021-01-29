@@ -4,7 +4,7 @@ let error = {
     message: ""
 };
 let FIVE_MIN=5*60*1000;
-let server = "http://localhost:8080"
+let server = "http://localhost:8080/people-service"
 let signInUrl = server + "/checkin/signin"
 let getLogsForPersonUrl = server + "/people/id/";
 let getCsrfTokenUrl = server + "/csrf";

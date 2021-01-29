@@ -17,3 +17,5 @@ management:
         include: "health,info,beans,env"
 server:
   port: 8080
+  servlet:
+    context-path: /people-service

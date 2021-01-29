@@ -11,14 +11,14 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "t_namepart")
-public class NamePart {
+@Table(name = "t_emailaddress")
+public class EmailAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private String value;
-    @Enumerated(EnumType.STRING)
-    private Language type;
+    @NotNull
+    private String email;
+    private String description;
     @NotNull
     @ManyToOne
     @JoinColumn(name = "personId")
