@@ -1,5 +1,6 @@
 package com.squireofsoftware.peopleproject.services;
 
+import com.squireofsoftware.peopleproject.ProjectConfiguration;
 import com.squireofsoftware.peopleproject.dtos.EmailAddressObject;
 import com.squireofsoftware.peopleproject.dtos.NameObject;
 import com.squireofsoftware.peopleproject.dtos.PersonObject;
@@ -10,40 +11,45 @@ import com.squireofsoftware.peopleproject.jpas.JpaEmailAddress;
 import com.squireofsoftware.peopleproject.jpas.JpaNamePart;
 import com.squireofsoftware.peopleproject.jpas.JpaPerson;
 import com.squireofsoftware.peopleproject.jpas.JpaPhoneNumber;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class PersonServiceImpl implements PersonService {
     private final JpaPerson jpaPerson;
     private final JpaNamePart jpaNamePart;
     private final JpaPhoneNumber jpaPhoneNumber;
     private final JpaEmailAddress jpaEmailAddress;
+    private final ProjectConfiguration projectConfiguration;
 
     public PersonServiceImpl(JpaPerson jpaPerson,
                              JpaNamePart jpaNamePart,
                              JpaEmailAddress jpaEmailAddress,
-                             JpaPhoneNumber jpaPhoneNumber) {
+                             JpaPhoneNumber jpaPhoneNumber,
+                             ProjectConfiguration projectConfiguration) {
         this.jpaPerson = jpaPerson;
         this.jpaNamePart = jpaNamePart;
         this.jpaEmailAddress = jpaEmailAddress;
         this.jpaPhoneNumber = jpaPhoneNumber;
+        this.projectConfiguration = projectConfiguration;
     }
 
     @Transactional
     @Override
     public PersonObject createPerson(PersonObject personObject) {
+        Timestamp now = new Timestamp(System.currentTimeMillis());
         Person newPerson = Person.builder()
                 .givenName(personObject.getGivenName())
                 .familyName(personObject.getFamilyName())
                 .isBaptised(personObject.getIsBaptised())
                 .isMember(personObject.getIsMember())
-                .creationDate(new Timestamp(System.currentTimeMillis()))
-                .lastModified(new Timestamp(System.currentTimeMillis()))
+                .creationDate(now)
+                .lastModified(now)
                 .build();
         newPerson.setHash(newPerson.hashCode());
         Person saved = jpaPerson.save(newPerson);
@@ -80,14 +86,14 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public PersonObject getPerson(Integer id) {
         Optional<Person> found = jpaPerson.findById(id);
-        return found.map(this::mapTo)
+        return found.map(PersonObject::map)
             .orElseThrow(PersonNotFoundException::new);
     }
 
     @Override
     public PersonObject findPersonByHash(Integer hash) {
         Optional<Person> found = jpaPerson.findByHash(hash);
-        return found.map(this::mapTo)
+        return found.map(PersonObject::map)
                 .orElseThrow(PersonNotFoundException::new);
     }
 
@@ -96,26 +102,33 @@ public class PersonServiceImpl implements PersonService {
         jpaPerson.deleteById(id);
     }
 
-    private PersonObject mapTo(Person person) {
-        return PersonObject.builder()
-                .familyName(person.getFamilyName())
-                .givenName(person.getGivenName())
-                .id(person.getId())
-                .isBaptised(person.getIsBaptised())
-                .isMember(person.getIsMember())
-                .hash(person.getHash())
-                .emailAddresses(jpaEmailAddress.findByPersonId(person.getId())
-                        .stream()
-                        .map(EmailAddressObject::mapFrom)
-                        .collect(Collectors.toList()))
-                .phoneNumbers(jpaPhoneNumber.findByPersonId(person.getId())
-                        .stream()
-                        .map(PhoneNumberObject::mapFrom)
-                        .collect(Collectors.toList()))
-                .otherNames(jpaNamePart.findByPersonId(person.getId())
-                        .stream()
-                        .map(NameObject::mapFrom)
-                        .collect(Collectors.toList()))
-                .build();
+    @Transactional
+    @Override
+    public PersonObject recreateHash(Integer id) {
+        return jpaPerson.findById(id)
+                .map(this::updateHash)
+                .orElseThrow(() -> new PersonNotFoundException(id));
+    }
+
+    private PersonObject updateHash(Person person) {
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        person.setLastModified(now);
+        int newHash = now.hashCode();
+        int hashRegenerationCount = 1;
+        // there could be an infinite loop here
+        while(newHash == person.getHash() &&
+                hashRegenerationCount < projectConfiguration.getMaxHashRegenCount()) {
+            now = new Timestamp(System.currentTimeMillis());
+            person.setLastModified(now);
+            newHash = now.hashCode();
+            hashRegenerationCount++;
+        }
+
+        if(hashRegenerationCount == projectConfiguration.getMaxHashRegenCount()) {
+            log.warn("For some strange reason the hash did not change for person: {}", person.getId());
+        }
+
+        person.setHash(newHash);
+        return PersonObject.map(jpaPerson.save(person));
     }
 }

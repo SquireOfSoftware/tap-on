@@ -45,6 +45,7 @@ public class PersonObject {
                     .givenName(person.getGivenName())
                     .isMember(person.getIsMember())
                     .isBaptised(person.getIsBaptised())
+                    .hash(person.getHash())
                     .otherNames(person.getAlternativeNames()
                             .stream()
                             .map(NameObject::mapFrom)

@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -33,13 +34,16 @@ public class Person {
     @NotNull
     @OneToMany
     @JoinColumn(name = "personId")
-    private List<PhoneNumber> phoneNumbers;
+    @Builder.Default
+    private List<PhoneNumber> phoneNumbers = Collections.emptyList();
     @NotNull
     @OneToMany
     @JoinColumn(name = "personId")
-    private List<EmailAddress> emailAddresses;
+    @Builder.Default
+    private List<EmailAddress> emailAddresses = Collections.emptyList();
     @NotNull
     @OneToMany
     @JoinColumn(name = "personId")
-    private List<NamePart> alternativeNames;
+    @Builder.Default
+    private List<NamePart> alternativeNames = Collections.emptyList();
 }

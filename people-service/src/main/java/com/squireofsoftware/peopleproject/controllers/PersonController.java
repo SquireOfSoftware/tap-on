@@ -33,6 +33,11 @@ public class PersonController {
         return createdPersons;
     }
 
+    @PostMapping(value = "id/{id}:recreateHash")
+    public PersonObject recreateHash(@PathVariable Integer id) {
+        return personService.recreateHash(id);
+    }
+
     @DeleteMapping("/id/{id}")
     public void deletePerson(@PathVariable Integer id) {
         personService.deletePerson(id);

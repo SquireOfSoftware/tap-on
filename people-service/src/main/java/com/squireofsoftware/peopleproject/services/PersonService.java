@@ -13,4 +13,6 @@ public interface PersonService {
     PersonObject findPersonByHash(Integer hash);
 
     void deletePerson(Integer id);
+
+    PersonObject recreateHash(Integer id);
 }
