@@ -1063,7 +1063,43 @@
 			"response": []
 		},
 		{
-			"name": "Recreate persons hash",
+			"name": "Get persons qrcode",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"disabled": false
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/people-service/people/id/103/qrcode",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"people-service",
+						"people",
+						"id",
+						"103",
+						"qrcode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Recreate Person's hash",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1245,6 +1281,39 @@
 					"body": "{\n    \"id\": 9,\n    \"givenName\": \"John\",\n    \"familyName\": \"Smith\",\n    \"otherNames\": [],\n    \"isBaptised\": false,\n    \"isMember\": false,\n    \"hash\": null\n}"
 				}
 			]
+		},
+		{
+			"name": "Recreate person's qrcode",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"disabled": false
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/people-service/people/id/103/qrcode:recreate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"people-service",
+						"people",
+						"id",
+						"103",
+						"qrcode:recreate"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

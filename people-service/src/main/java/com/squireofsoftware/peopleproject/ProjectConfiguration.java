@@ -11,4 +11,6 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @Getter
 public class ProjectConfiguration {
     private final int maxHashRegenCount;
+    private final int defaultQrCodeHeight;
+    private final int defaultQrCodeWidth;
 }

@@ -8,6 +8,7 @@ let server = "http://localhost:8080/people-service"
 let signInUrl = server + "/checkin/signin"
 let getLogsForPersonUrl = server + "/people/id/";
 let getCsrfTokenUrl = server + "/csrf";
+let getQrCodeUrl = server + "/people/id/103/qrcode";
 let CSRF_TOKEN;
 
 function isInt(value) {
@@ -166,3 +167,32 @@ function onScanFailure(error) {
 let html5QrcodeScanner = new Html5QrcodeScanner(
 	"reader", { fps: 10, qrbox: 600 }, /* verbose= */ false);
 html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+
+function getQrCode(callback) {
+    let oReq = new XMLHttpRequest();
+
+    oReq.addEventListener("progress", updateProgress);
+    oReq.addEventListener("load", transferComplete);
+
+    // progress on transfers from the server to the client (downloads)
+    function updateProgress (oEvent) {
+      if (oEvent.lengthComputable) {
+        var percentComplete = oEvent.loaded / oEvent.total * 100;
+      } else {
+        // Unable to compute progress information since the total size is unknown
+      }
+    }
+
+    function transferComplete(evt) {
+      console.log("The transfer is complete.");
+      console.log(evt.target);
+      if (evt.target.status === 200) {
+        callback(evt.target);
+      }
+    }
+
+    oReq.open("GET", getQrCodeUrl, true);
+    oReq.send();
+}
+
+document.getElementById("test").src = getQrCodeUrl;
