@@ -16,7 +16,7 @@ class StartButton extends Component {
     this.setState({
       enabled: buttonEnabled,
       startCssName: this.props.startButtonCss + (buttonEnabled ? "" : " " + this.props.startButtonExitCss),
-      modalOverlayCssName: buttonEnabled ? this.props.modalOverlayCss : this.props.hiddenCss
+      modalOverlayCssName: this.props.modalOverlayCss + (buttonEnabled ? "" : " " + this.props.modalOverlayExitCss)
     });
   }
 
@@ -38,7 +38,8 @@ StartButton.defaultProps = {
   startButtonCss: 'startButton',
   modalOverlayCss: 'modalOverlay',
   hiddenCss: 'hidden',
-  startButtonExitCss: 'startButtonExit'
+  startButtonExitCss: 'startButtonExit',
+  modalOverlayExitCss: 'modalOverlayExit'
 }
 
 export default StartButton;
