@@ -1,0 +1,43 @@
+.startButton {
+  height: 1000px;
+  width: 1000px;
+  background-color: red;
+  border-radius: 50%;
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  z-index: 1;
+  line-height: 5;
+  margin-right: -500px;
+}
+
+.startButtonExit {
+  animation-duration: 0.5s;
+  animation-name: slideout;
+  animation-fill-mode: forwards;
+}
+
+@keyframes slideout {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(500px);
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+.modalOverlay {
+  background-color: #8080808c;
+  z-index: 1;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
