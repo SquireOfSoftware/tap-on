@@ -4,14 +4,15 @@ class ScanLog extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      logs: []
+      logs: this.props.logs
     }
   }
 
   render() {
     return (
       <div>
-        ScanLog
+        <p>ScanLog</p>
+        {this.state.logs}
       </div>
     )
   }

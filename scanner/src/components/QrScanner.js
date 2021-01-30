@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import './QrScanner.css'
 
 import QrReader from 'react-qr-reader'
 import StartButton from './StartButton.js'
@@ -8,7 +9,8 @@ class QrScanner extends Component {
       super(props);
       this.state = {
         result: "Test",
-        initialFacingMode: "user"
+        initialFacingMode: "user",
+        opened: false
       };
   }
 
@@ -18,22 +20,31 @@ class QrScanner extends Component {
 
   handleScan = (event) => {
     console.log(event);
+    this.props.onScan(event);
+  }
+
+  onOpen = () => {
+    this.setState({
+      opened: true,
+      scanner: <QrReader
+                  delay={300}
+                  onError={this.handleError}
+                  onScan={this.handleScan}
+                  facingMode={this.state.initialFacingMode}
+                  style={{ width: '500px'}}
+                />
+    });
+
   }
 
   render() {
     return (
       <div>
         <div className="scanner">
-          <QrReader
-               delay={300}
-               onError={this.handleError}
-               onScan={this.handleScan}
-               facingMode={this.state.initialFacingMode}
-               style={{ width: '500px'}}
-             />
+          {this.state.scanner}
           <p>{this.state.result}</p>
         </div>
-        <StartButton />
+        <StartButton onOpen={this.onOpen} />
       </div>
     )
   }

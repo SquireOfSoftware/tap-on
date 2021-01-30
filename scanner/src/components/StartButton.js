@@ -18,16 +18,24 @@ class StartButton extends Component {
       startCssName: this.props.startButtonCss + (buttonEnabled ? "" : " " + this.props.startButtonExitCss),
       modalOverlayCssName: this.props.modalOverlayCss + (buttonEnabled ? "" : " " + this.props.modalOverlayExitCss)
     });
+    this.props.onOpen();
+  }
+
+  hideOverlay = (event) => {
+    this.setState({
+      modalOverlayCssName: this.props.hiddenCss
+    })
   }
 
   render() {
     return (
       <div>
-        <div className={this.state.modalOverlayCssName}>
-        </div>
-        <div className={this.state.startCssName}
-            onClick={this.toggleButton}>
-          START
+        <div className={this.state.modalOverlayCssName}
+            onAnimationEnd={this.hideOverlay}>
+          <div className={this.state.startCssName}
+              onClick={this.toggleButton}>
+            START
+          </div>
         </div>
       </div>
     )
