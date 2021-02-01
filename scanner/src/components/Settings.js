@@ -1,58 +1,43 @@
 import React, {Component} from 'react';
 import './Settings.css'
+import { slide as Menu } from 'react-burger-menu'
+import Select from 'react-select'
 
 class Settings extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      wrapperYPosition: 10 - document.body.clientHeight,
-      lastYPosition: wrapperYPosition,
-      isClicked: false,
-      isMoved: false
+      sliderVisible: true
     }
-  }
-
-  onDrag = (event) => {
-    console.log("clicked");
-    this.setState({
-      isClicked: true
-    })
-  }
-
-  onLetGo = (event) => {
-    console.log("let go");
-    this.setState({
-      isClicked: false
-    })
-  }
-
-  onMove = (event) => {
-    if (this.state.isClicked) {
-      console.log(event.clientY + " " + event.screenY + " " + document.body.clientHeight);
-      this.setState({
-        wrapperYPosition: document.body.clientHeight - event.screenY
-      });
-    }
+    this.handleFacingModeChange = this.props.handleFacingModeChange.bind(this);
   }
 
   render() {
     return (
-      <div className="settingsWrapper"
-          onMouseDown={this.onDrag}
-          onMouseUp={this.onLetGo}
-          onMouseMove={this.onMove}
-          onMouseOut={this.onLetGo}
-          style={{bottom: this.state.wrapperYPosition}}
-          >
-        <div>Settings</div>
-        <div>
-          <p>Camera</p>
-          <p>Scan rate</p>
-          <p>Server name</p>
-        </div>
+      <div>
+        <Menu isOpen={false}>
+          <div>Settings</div>
+          <div>
+            <span>Camera</span>
+            <select
+              value={this.state.facingMode}
+              onChange={this.handleFacingModeChange}
+              >
+              <option value="user">User Camera</option>
+              <option value="environment">Environment Camera</option>
+            </select>
+            <p>Scan rate</p>
+            <p>Server name</p>
+          </div>
+        </Menu>
       </div>
     )
   }
+}
+
+const Cameras = {
+  user: 'user',
+  environment: 'environment'
 }
 
 export default Settings;

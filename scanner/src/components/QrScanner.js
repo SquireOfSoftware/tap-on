@@ -9,7 +9,6 @@ class QrScanner extends Component {
       super(props);
       this.state = {
         result: "Test",
-        initialFacingMode: "user",
         opened: false
       };
   }
@@ -20,7 +19,7 @@ class QrScanner extends Component {
 
   handleScan = (event) => {
     console.log(event);
-    this.props.onScan(event);
+    this.props.addLog(event);
   }
 
   onOpen = () => {
@@ -30,7 +29,7 @@ class QrScanner extends Component {
                   delay={300}
                   onError={this.handleError}
                   onScan={this.handleScan}
-                  facingMode={this.state.initialFacingMode}
+                  facingMode={this.props.currentCamera}
                   style={{ width: '500px'}}
                 />
     });
@@ -43,6 +42,7 @@ class QrScanner extends Component {
         <div className="scanner">
           {this.state.scanner}
           <p>{this.state.result}</p>
+          <p>Now using {this.props.currentCamera} camera</p>
         </div>
         <StartButton onOpen={this.onOpen} />
       </div>

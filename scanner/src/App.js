@@ -12,7 +12,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      logs: []
+      logs: [],
+      currentCamera: 'environment'
     }
   }
 
@@ -24,20 +25,31 @@ class App extends Component {
       logs.shift();
     }
 
-//    console.log(logs);
+    console.log(logs);
 
     this.setState({
-      logs
+      logs: logs
     });
+  }
+
+  handleFacingModeChange = (changedCamera) => {
+    console.log("hello world");
+    let logs = this.state.logs;
+    logs.push("hello");
+    this.setState({
+      currentCamera: changedCamera,
+      logs
+    })
   }
 
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <Settings />
-          <QrScanner onScan={this.addLog}/>
-          <ScanLog onLog={this.state.logs}/>
+          <Settings handleFacingModeChange={this.handleFacingModeChange}/>
+          <QrScanner addLog={this.addLog}
+                      currentCamera={this.state.currentCamera}/>
+          <ScanLog logs={this.state.logs}/>
           <Report />
         </header>
       </div>
