@@ -12,10 +12,27 @@ class App extends Component {
   constructor(props) {
     super(props);
 
+    let currentCamera = window.localStorage.getItem('qrCamera');
+    if (currentCamera === undefined || currentCamera === null) {
+      currentCamera = this.props.currentCamera;
+    }
+
+    let delayRate = window.localStorage.getItem('qrDelayRate');
+    if (delayRate === undefined || delayRate === null) {
+      delayRate = this.props.delayRate;
+    }
+    delayRate = parseInt(delayRate);
+
+    let serverSetting = window.localStorage.getItem('serverSetting');
+    if (serverSetting === undefined || serverSetting === null) {
+      serverSetting = this.props.serverSetting;
+    }
+
     this.state = {
       logs: [],
-      currentCamera: this.props.currentCamera,
-      delayRate: this.props.delayRate
+      currentCamera: currentCamera,
+      delayRate: delayRate,
+      serverSetting: serverSetting
     }
   }
 
@@ -37,28 +54,31 @@ class App extends Component {
   changeCamera = (changedCamera) => {
     this.setState({
       currentCamera: changedCamera
-    })
+    });
+    window.localStorage.setItem("qrCamera", changedCamera);
   }
 
   changeDelayRate = (changedDelayRate) => {
     this.setState({
       delayRate: changedDelayRate
-    })
+    });
+    window.localStorage.setItem("qrDelayRate", changedDelayRate);
   }
 
   changeServerSetting = (changedServerSetting) => {
     this.setState({
       serverSetting: changedServerSetting
-    })
+    });
+    window.localStorage.setItem("serverSetting", changedServerSetting);
   }
 
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <Settings initialCamera={this.props.currentCamera}
-                    initialDelayRate={this.props.delayRate}
-                    initialServerSetting={this.props.serverSetting}
+          <Settings initialCamera={this.state.currentCamera}
+                    initialDelayRate={this.state.delayRate}
+                    initialServerSetting={this.state.serverSetting}
                     changeCamera={this.changeCamera}
                     changeDelayRate={this.changeDelayRate}
                     changeServerSetting={this.changeServerSetting}/>

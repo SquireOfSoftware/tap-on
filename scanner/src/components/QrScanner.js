@@ -8,8 +8,9 @@ class QrScanner extends Component {
   constructor(props) {
       super(props);
       this.state = {
-        result: "Test",
-        opened: false
+        lastReadResult: "Test",
+        opened: false,
+        scanner: null
       };
   }
 
@@ -18,8 +19,13 @@ class QrScanner extends Component {
   }
 
   handleScan = (event) => {
-//    console.log(event);
-    this.props.addLog(event);
+    console.log(event);
+    this.setState({
+      lastReadResult: event
+    });
+    if (event !== null && event !== undefined) {
+      this.props.addLog(event);
+    }
   }
 
   onOpen = () => {
@@ -33,7 +39,7 @@ class QrScanner extends Component {
                   style={{ width: '500px'}}
                 />
     });
-
+    // for some strange reason the qr camera is not redrawn
   }
 
   render() {
@@ -44,7 +50,7 @@ class QrScanner extends Component {
           <div className="scanner_container">
             {this.state.scanner}
           </div>
-          <p>{this.state.result}</p>
+          <p>{this.state.lastReadResult}</p>
           <p>Now using {this.props.currentCamera} camera</p>
           <p>Delay rate is {this.props.delayRate}</p>
         </div>
