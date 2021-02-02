@@ -69,3 +69,18 @@ Note: Beware of modifying this element as it can break the animations - you shou
   top: 0px;
   left: 0px;
 }
+
+.settings_body {
+  display: flex !important;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.camera_settings, .scan_rate_settings, .server_settings {
+  width: 100%;
+  display: flex;
+}
+
+.camera_settings > select, .scan_rate_settings > input, .server_settings > input {
+  flex-grow: 2;
+}

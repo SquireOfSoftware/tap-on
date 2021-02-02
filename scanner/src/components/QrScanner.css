@@ -1,4 +1,7 @@
 .scanner {
   z-index: 0;
-  height: 620px;
+}
+
+.scanner_container {
+  height: 500px;
 }

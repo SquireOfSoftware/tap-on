@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 class ScanLog extends Component {
   render() {
-    console.log("REDRAWING SCANLOG");
+//    console.log("REDRAWING SCANLOG");
 
     let logs = [];
     for (let i = 0; i < this.props.logs.length; i++) {

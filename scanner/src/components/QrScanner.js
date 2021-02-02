@@ -14,11 +14,11 @@ class QrScanner extends Component {
   }
 
   handleError = (event) => {
-    console.log(event);
+//    console.log(event);
   }
 
   handleScan = (event) => {
-    console.log(event);
+//    console.log(event);
     this.props.addLog(event);
   }
 
@@ -26,7 +26,7 @@ class QrScanner extends Component {
     this.setState({
       opened: true,
       scanner: <QrReader
-                  delay={300}
+                  delay={this.props.delayRate}
                   onError={this.handleError}
                   onScan={this.handleScan}
                   facingMode={this.props.currentCamera}
@@ -37,12 +37,16 @@ class QrScanner extends Component {
   }
 
   render() {
+    console.log("redrawing scanner");
     return (
       <div>
         <div className="scanner">
-          {this.state.scanner}
+          <div className="scanner_container">
+            {this.state.scanner}
+          </div>
           <p>{this.state.result}</p>
           <p>Now using {this.props.currentCamera} camera</p>
+          <p>Delay rate is {this.props.delayRate}</p>
         </div>
         <StartButton onOpen={this.onOpen} />
       </div>
