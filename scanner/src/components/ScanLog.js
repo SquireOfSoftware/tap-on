@@ -49,6 +49,10 @@ class ScanLog extends Component {
         });
 //        console.log(scan);
         this.signIn(hash);
+      } else if (this.state.totalScans.has(hash) &&
+              this.state.totalScans.get(hash).state === ScanStates.FAILED) {
+        // then we want to try again
+        this.signIn(hash);
       }
     }
   }
@@ -61,11 +65,13 @@ class ScanLog extends Component {
 
   signIn = (hash) => {
     let signInComplete = (event) => {
-      console.log("The transfer is complete.");
-      console.log(event);
       if (event.target.status === 200) {
-        console.log("success");
+        let checkinLog = JSON.parse(event.target.responseText);
+        console.log(checkinLog);
+        let person = checkinLog.person;
         this.state.totalScans.get(hash).state = ScanStates.SIGNED_IN;
+        this.props.addLog(person.givenName + " has just been signed in.");
+        this.props.addSuccessfulSignIn(checkinLog);
       } else {
         this.state.totalScans.get(hash).state = ScanStates.FAILED;
 
@@ -87,10 +93,12 @@ class ScanLog extends Component {
     signInRequest.addEventListener("load", signInComplete);
     signInRequest.addEventListener("error", signInFailed);
 
-    signInRequest.open("POST", "/people-service/checkin/signin", true);
+    signInRequest.open("POST", this.state.serverUrl + "/people-service/checkin/signin", true);
     signInRequest.setRequestHeader("Access-Control-Allow-Headers", "*");
     signInRequest.setRequestHeader("Content-Type", "application/json");
     signInRequest.send(JSON.stringify({"hash": hash, "message": "signing in today again"}));
+
+    console.log(signInRequest);
   }
 
   render() {
@@ -100,7 +108,7 @@ class ScanLog extends Component {
       if (log === null) {
         log = "null";
       }
-      logs.push(<div prop={i}>{log}</div>);
+      logs.push(<div key={i}>{log}</div>);
     }
 
     return (

@@ -57,6 +57,10 @@ class App extends Component {
     });
   }
 
+  addSuccessfulSignIn = (serverLog) => {
+
+  }
+
   changeCamera = (changedCamera) => {
     this.setState({
       currentCamera: changedCamera
@@ -101,6 +105,8 @@ class App extends Component {
                     initialServerSetting={this.state.serverSetting}
                     processScan={newScan => this.processScan = newScan}
                     updateServerUrl={newUrl => this.updateServerUrl = newUrl}
+                    addLog={this.addLog}
+                    addSuccessfulSignIn={this.addSuccessfulSignIn}
                     />
           <Report />
         </header>
