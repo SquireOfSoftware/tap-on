@@ -72,6 +72,10 @@ class App extends Component {
     window.localStorage.setItem("serverSetting", changedServerSetting);
   }
 
+  processScan = (scannedString) => {
+
+  }
+
   render() {
     return (
       <div className="App">
@@ -84,7 +88,8 @@ class App extends Component {
                     changeServerSetting={this.changeServerSetting}/>
           <QrScanner addLog={this.addLog}
                       currentCamera={this.state.currentCamera}
-                      delayRate={this.state.delayRate}/>
+                      delayRate={this.state.delayRate}
+                      processScan={this.processScan}/>
           <ScanLog logs={this.state.logs}/>
           <Report />
         </header>

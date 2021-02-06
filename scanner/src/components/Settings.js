@@ -81,9 +81,4 @@ class Settings extends Component {
   }
 }
 
-const Cameras = {
-  user: 'user',
-  environment: 'environment'
-}
-
 export default Settings;
