@@ -12,7 +12,8 @@ class ScanLog extends Component {
     this.state = {
       successfulScanCount: 0,
       totalScans: new Map(),
-      serverUrl: this.props.initialServerSetting
+      serverUrl: this.props.initialServerSetting,
+      successLogs: []
     }
     this.addScan = this.addScan.bind(this);
     this.updateServerUrl = this.updateServerUrl.bind(this);
@@ -75,10 +76,6 @@ class ScanLog extends Component {
   signIn = (hash) => {
     let signInComplete = (event) => {
       if (event.target.status === 200) {
-        let successfulScanCount = this.state.successfulScanCount + 1;
-        this.setState({
-          successfulScanCount: successfulScanCount
-        });
         let checkinLog = JSON.parse(event.target.responseText);
 //        console.log(checkinLog);
         let person = checkinLog.person;
@@ -92,8 +89,15 @@ class ScanLog extends Component {
             totalScans: newScans.set(hash, scan)
           }
         });
-
-        this.props.addLog(person.givenName + " has just been signed in.");
+        let successfulScanCount = this.state.successfulScanCount + 1;
+        let successLog = performance.now() + " " + person.givenName + " has just been signed in.";
+        let successLogs = this.state.successLogs;
+        successLogs.unshift(successLog);
+        this.setState({
+          successLogs: successLogs,
+          successfulScanCount: successfulScanCount
+        });
+        this.props.addLog(successLog);
         this.props.addSuccessfulSignIn(checkinLog);
       } else {
         this.setState(prevState => {
@@ -140,7 +144,7 @@ class ScanLog extends Component {
       if (log === null) {
         log = "null";
       }
-      logs.push(<div key={i}>{log}</div>);
+      logs.unshift(<div key={i}>{log}</div>);
     }
 
     let personWord;
