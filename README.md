@@ -17,15 +17,6 @@ The existing system is one of a printed excel word document (not even a spreadsh
 dated and quite cumbersome to keep manually count how many people are currently present and match that against who 
 have checked their names off.
 
-There are also analytics that are required to be performed on the system as well which makes it a bit more 
-annoying to track since monthly copies are almost hidden from us.
-
-I would like this system to be automated, so that this information can be "easily" looked up and maintained as 
-opposed to storing pieces of paper with mistyped names and stuff.
-
-I would also like to have a lot more control over this information since, as a part of the church, not a lot of 
-visibility is given with regards to how people attend the service.
-
 ## Some necessary descriptions
 
 People come in and they "sign" themselves in with a person on the desk keeping count of everyone.
@@ -97,7 +88,7 @@ A welcoming person is typically someone who is familiar with the people who come
 that Darryn has arrived and would tick his name. Ideally the welcoming person will find the person in accordance 
 with the names provided and "sign that person in".
 
-A welcoming person may also on occassion add a new person. Though note that we have had duplicates in the past so 
+A welcoming person may also on occasion add a new person. Though note that we have had duplicates in the past so 
 it is recommended to double check everything before adding a new person to a roster (it is recommended to at least 
 get the first and last name to help with identification).
 
@@ -148,6 +139,6 @@ Performance metrics are:
 
 There are some constraints for example:
 - Chrome disabled the accessibility of cameras if you are serving http content over the http protocol. 
-  This was adjusted in 2019 and will fail to load the user media devices if you do not serve the content 
+  This was adjusted in 2017 and will fail to load the user media devices if you do not serve the content 
   over https, this means that for this process to work, we need an internal self signed SSL certificate
   so that users can use their camera to read things.
