@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import './ScanLog.css'
 
 class ScanLog extends Component {
   constructor(props) {
@@ -9,12 +10,14 @@ class ScanLog extends Component {
     // this will be a hashmap of the hash, with the timestamp and the result
     // the scan will happen quickly so this needs to be a fast look up
     this.state = {
-      uniqueScans: 0,
+      successfulScanCount: 0,
       totalScans: new Map(),
       serverUrl: this.props.initialServerSetting
     }
     this.addScan = this.addScan.bind(this);
     this.updateServerUrl = this.updateServerUrl.bind(this);
+    this.signIn = this.signIn.bind(this);
+    this.scanIsLegit = this.scanIsLegit.bind(this);
   }
 
   componentDidMount() {
@@ -36,23 +39,29 @@ class ScanLog extends Component {
       let scan = {
         hash: hash,
         state: ScanStates.PROCESSING,
-        scanTimestamp: new Date()
+        scanTimestamp: performance.now()
       }
 
       if (!this.state.totalScans.has(hash)) {
         let scans = this.state.totalScans;
-        let scanCount = this.state.uniqueScans + 1;
         scans.set(hash, scan);
         this.setState({
-          uniqueScans: scanCount,
           totalScans: scans
         });
 //        console.log(scan);
         this.signIn(hash);
-      } else if (this.state.totalScans.has(hash) &&
-              this.state.totalScans.get(hash).state === ScanStates.FAILED) {
-        // then we want to try again
-        this.signIn(hash);
+      } else {
+        let existingScan = this.state.totalScans.get(hash);
+        let timeSinceLastSignIn = performance.now() - existingScan.scanTimestamp;
+        if (existingScan.state === ScanStates.FAILED) {
+          // then we want to try again
+          this.signIn(hash);
+        } else if (timeSinceLastSignIn > 300000) {
+          // if 5 mins (300,000ms) have passed
+          // sign the person in again
+          // as most likely its a "new" session
+          this.signIn(hash);
+        }
       }
     }
   }
@@ -66,15 +75,38 @@ class ScanLog extends Component {
   signIn = (hash) => {
     let signInComplete = (event) => {
       if (event.target.status === 200) {
+        let successfulScanCount = this.state.successfulScanCount + 1;
+        this.setState({
+          successfulScanCount: successfulScanCount
+        });
         let checkinLog = JSON.parse(event.target.responseText);
-        console.log(checkinLog);
+//        console.log(checkinLog);
         let person = checkinLog.person;
-        this.state.totalScans.get(hash).state = ScanStates.SIGNED_IN;
+        this.setState(prevState => {
+          const newScans = new Map(prevState.totalScans);
+          const scan = {
+            ...newScans.get(hash),
+            state: ScanStates.SIGNED_IN
+          }
+          return {
+            totalScans: newScans.set(hash, scan)
+          }
+        });
+
         this.props.addLog(person.givenName + " has just been signed in.");
         this.props.addSuccessfulSignIn(checkinLog);
       } else {
-        this.state.totalScans.get(hash).state = ScanStates.FAILED;
-
+        this.setState(prevState => {
+          const newScans = new Map(prevState.totalScans);
+          const scan = {
+            ...newScans.get(hash),
+            state: ScanStates.FAILED,
+            scanTimestamp: performance.now()
+          }
+          return {
+            totalScans: newScans.set(hash, scan)
+          }
+        });
         let scan = this.state.totalScans.get(hash);
         console.log(scan);
       }
@@ -111,9 +143,23 @@ class ScanLog extends Component {
       logs.push(<div key={i}>{log}</div>);
     }
 
+    let personWord;
+    if (this.state.successfulScanCount === 1) {
+      personWord = "person";
+    } else {
+      personWord = "people";
+    }
+
     return (
       <div>
-        <p>Total unique scans: {this.state.uniqueScans}</p>
+        <div>
+          <div className="scanCount">
+            {this.state.successfulScanCount}
+          </div>
+          <div className="scanCountText">
+            {personWord} signed in.
+          </div>
+        </div>
         {logs}
       </div>
     )
