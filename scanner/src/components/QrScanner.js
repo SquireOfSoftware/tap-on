@@ -10,9 +10,17 @@ class QrScanner extends Component {
       this.state = {
         lastReadResult: "Test",
         opened: false,
-        scanner: null,
-        scannedResults: []
+        scannedResults: [],
+        currentCamera: this.props.currentCamera,
+        delayRate: this.props.delayRate
       };
+      this.updateDelayRate = this.updateDelayRate.bind(this);
+      this.updateCamera = this.updateCamera.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.updateDelayRate(this.updateDelayRate);
+    this.props.updateCamera(this.updateCamera)
   }
 
   handleError = (event) => {
@@ -21,7 +29,7 @@ class QrScanner extends Component {
 
   handleScan = (event) => {
     // log the scan attempt
-    console.log(event);
+//    console.log(event);
     let scannedResult = {
       value: event,
       timestamp: new Date()
@@ -45,10 +53,7 @@ class QrScanner extends Component {
     });
 
     if (scanExists) {
-      // updated the scanned results
-      this.setState({
-        scannedResults: scannedResults
-      });
+      // do nothing
     } else {
       // add the scan to the array
       scannedResults.push(scannedResult);
@@ -68,27 +73,54 @@ class QrScanner extends Component {
     this.setState({
       opened: true,
       scanner: <QrReader
-                  delay={this.props.delayRate}
+                  delay={this.state.delayRate}
                   onError={this.handleError}
                   onScan={this.handleScan}
-                  facingMode={this.props.currentCamera}
+                  facingMode={this.state.currentCamera}
                   style={{ width: '500px'}}
                 />
     });
     // for some strange reason the qr camera is not redrawn
   }
 
+  updateDelayRate = (newDelayRate) => {
+    if (this.state.opened) {
+      this.setState({
+        delayRate: newDelayRate,
+        scanner: <QrReader
+                    delay={newDelayRate}
+                    onError={this.handleError}
+                    onScan={this.handleScan}
+                    facingMode={this.state.currentCamera}
+                    style={{ width: '500px'}}
+                  />
+      });
+    }
+  }
+
+  updateCamera = (newCamera) => {
+    if (this.state.opened) {
+      this.setState({
+        currentCamera: newCamera,
+        scanner: <QrReader
+                    delay={this.state.delayRate}
+                    onError={this.handleError}
+                    onScan={this.handleScan}
+                    facingMode={newCamera}
+                    style={{ width: '500px'}}
+                  />
+      });
+    }
+  }
+
   render() {
-    console.log("redrawing scanner");
+//    console.log("redrawing scanner");
     return (
       <div>
         <div className="scanner">
           <div className="scanner_container">
             {this.state.scanner}
           </div>
-          <p>{this.state.lastReadResult}</p>
-          <p>Now using {this.props.currentCamera} camera</p>
-          <p>Delay rate is {this.props.delayRate}</p>
         </div>
         <StartButton onOpen={this.onOpen} />
       </div>

@@ -32,10 +32,16 @@ class App extends Component {
       logs: [],
       currentCamera: currentCamera,
       delayRate: delayRate,
-      serverSetting: serverSetting
+      serverSetting: serverSetting,
+      nextScan: null
     }
-  }
 
+    this.addLog = this.addLog.bind(this);
+    this.changeCamera = this.changeCamera.bind(this);
+    this.changeDelayRate = this.changeDelayRate.bind(this);
+    this.changeServerSetting = this.changeServerSetting.bind(this);
+//    this.processScan = this.processScan.bind(this);
+  }
 
   addLog = (log) => {
     let logs = this.state.logs;
@@ -56,6 +62,7 @@ class App extends Component {
       currentCamera: changedCamera
     });
     window.localStorage.setItem("qrCamera", changedCamera);
+    this.updateCamera(changedCamera);
   }
 
   changeDelayRate = (changedDelayRate) => {
@@ -63,6 +70,7 @@ class App extends Component {
       delayRate: changedDelayRate
     });
     window.localStorage.setItem("qrDelayRate", changedDelayRate);
+    this.updateDelayRate(changedDelayRate);
   }
 
   changeServerSetting = (changedServerSetting) => {
@@ -70,10 +78,7 @@ class App extends Component {
       serverSetting: changedServerSetting
     });
     window.localStorage.setItem("serverSetting", changedServerSetting);
-  }
-
-  processScan = (scannedString) => {
-
+    this.updateServerUrl(changedServerSetting);
   }
 
   render() {
@@ -89,8 +94,14 @@ class App extends Component {
           <QrScanner addLog={this.addLog}
                       currentCamera={this.state.currentCamera}
                       delayRate={this.state.delayRate}
-                      processScan={this.processScan}/>
-          <ScanLog logs={this.state.logs}/>
+                      processScan={this.processScan}
+                      updateDelayRate={newDelayRate => this.updateDelayRate = newDelayRate}
+                      updateCamera={newCamera => this.updateCamera = newCamera}/>
+          <ScanLog logs={this.state.logs}
+                    initialServerSetting={this.state.serverSetting}
+                    processScan={newScan => this.processScan = newScan}
+                    updateServerUrl={newUrl => this.updateServerUrl = newUrl}
+                    />
           <Report />
         </header>
       </div>
