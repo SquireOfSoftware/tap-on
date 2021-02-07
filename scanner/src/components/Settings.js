@@ -3,7 +3,9 @@ import './Settings.css'
 import { slide as Menu } from 'react-burger-menu'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCog } from '@fortawesome/free-solid-svg-icons'
+import { faCog, faSyncAlt } from '@fortawesome/free-solid-svg-icons'
+
+import ServerStates from './ServerStates.js';
 
 class Settings extends Component {
   constructor(props) {
@@ -11,8 +13,17 @@ class Settings extends Component {
     this.state = {
       facingMode: this.props.initialCamera,
       delayRate: this.props.initialDelayRate,
-      serverSetting: this.props.initialServerSetting
+      serverUrl: this.props.initialServerSetting,
+      serverGETState: ServerStates.UNCHECKED
     }
+    this.verifyServerGETRequest = this.verifyServerGETRequest.bind(this);
+
+    this.verifyServerGETRequest();
+  }
+
+  componentDidMount() {
+    this.props.serverIsUp(this.setServerUp);
+    this.props.serverIsDown(this.setServerDown)
   }
 
   changeDelayRate = (event) => {
@@ -37,6 +48,55 @@ class Settings extends Component {
       serverSetting: serverSetting
     });
     this.props.changeServerSetting(serverSetting);
+  }
+
+  setServerUp = () => {
+    this.setState({
+      serverGETState: ServerStates.UP
+    });
+  }
+
+  setServerDown = () => {
+    this.setState({
+      serverGETState: ServerStates.DOWN
+    });
+  }
+
+  verifyServerGETRequest = () => {
+    this.setState({
+      serverGETState: ServerStates.CHECKING
+    });
+
+    let successGET = (event) => {
+      if (event.target.status === 200) {
+        this.setState({
+          serverGETState: ServerStates.UP
+        });
+      } else {
+        this.setState({
+          serverGETState: ServerStates.DOWN
+        });
+      }
+    }
+
+    let failedGET = (event) => {
+      console.error("An error occurred while checking the server health.");
+      this.setState({
+        serverGETState: ServerStates.DOWN
+      });
+    }
+
+    let getRequest = new XMLHttpRequest();
+
+    getRequest.addEventListener("load", successGET);
+    getRequest.addEventListener("error", failedGET);
+
+    getRequest.open("GET", this.state.serverUrl + "/people-service/actuator/health", true);
+    getRequest.setRequestHeader("Access-Control-Allow-Headers", "*");
+    getRequest.setRequestHeader("Content-Type", "application/json");
+    getRequest.send();
+
+    console.log(getRequest);
   }
 
   render() {
@@ -71,8 +131,12 @@ class Settings extends Component {
               <input
                 id="server_setting"
                 type="url"
-                value={this.state.serverSetting}
+                value={this.state.serverUrl}
                 onChange={this.changeServerSetting} />
+            </div>
+            <div onClick={() => this.verifyServerGETRequest()}>
+              Server is: {this.state.serverGETState.name}
+              <FontAwesomeIcon icon={faSyncAlt}/>
             </div>
           </div>
         </Menu>

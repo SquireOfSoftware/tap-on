@@ -3,10 +3,11 @@ import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-import Settings from './components/Settings.js'
-import QrScanner from './components/QrScanner.js'
-import ScanLog from './components/ScanLog.js'
-import Report from './components/Report.js'
+import Settings from './components/Settings.js';
+import QrScanner from './components/QrScanner.js';
+import ScanLog from './components/ScanLog.js';
+import Report from './components/Report.js';
+import ServerStates from './components/ServerStates.js';
 
 class App extends Component {
   constructor(props) {
@@ -33,7 +34,8 @@ class App extends Component {
       currentCamera: currentCamera,
       delayRate: delayRate,
       serverSetting: serverSetting,
-      nextScan: null
+      nextScan: null,
+      serverState: ServerStates.UNCHECKED
     }
 
     this.addLog = this.addLog.bind(this);
@@ -85,6 +87,20 @@ class App extends Component {
     this.updateServerUrl(changedServerSetting);
   }
 
+  serverIsUp = () => {
+    this.setState({
+      serverState: ServerStates.UP
+    });
+    this.setServerSettingUp();
+  }
+
+  serverIsDown = () => {
+    this.setState({
+      serverState: ServerStates.DOWN
+    });
+    this.setServerSettingDown();
+  }
+
   render() {
     return (
       <div className="App">
@@ -94,7 +110,9 @@ class App extends Component {
                     initialServerSetting={this.state.serverSetting}
                     changeCamera={this.changeCamera}
                     changeDelayRate={this.changeDelayRate}
-                    changeServerSetting={this.changeServerSetting}/>
+                    changeServerSetting={this.changeServerSetting}
+                    serverIsDown={serverIsDown => this.setServerSettingDown = serverIsDown}
+                    serverIsUp={serverIsUp => this.setServerSettingUp = serverIsUp}/>
           <QrScanner addLog={this.addLog}
                       currentCamera={this.state.currentCamera}
                       delayRate={this.state.delayRate}
@@ -107,6 +125,8 @@ class App extends Component {
                     updateServerUrl={newUrl => this.updateServerUrl = newUrl}
                     addLog={this.addLog}
                     addSuccessfulSignIn={this.addSuccessfulSignIn}
+                    serverIsUp={this.serverIsUp}
+                    serverIsDown={this.serverIsDown}
                     />
           <Report />
         </header>

@@ -90,7 +90,7 @@ class ScanLog extends Component {
           }
         });
         let successfulScanCount = this.state.successfulScanCount + 1;
-        let successLog = performance.now() + " " + person.givenName + " has just been signed in.";
+        let successLog = person.givenName + " " + person.familyName + " has just been signed in.";
         let successLogs = this.state.successLogs;
         successLogs.unshift(successLog);
         this.setState({
@@ -112,16 +112,24 @@ class ScanLog extends Component {
           }
         });
         let scan = this.state.totalScans.get(hash);
-        console.log(scan);
       }
+      this.props.serverIsUp();
     }
 
     let signInFailed = (event) => {
       console.error("An error occurred while signing in the person.");
-      this.state.totalScans.get(hash).state = ScanStates.FAILED;
-
-      let scan = this.state.totalScans.get(hash);
-      console.log(scan);
+      this.setState(prevState => {
+        const newScans = new Map(prevState.totalScans);
+        const scan = {
+          ...newScans.get(hash),
+          state: ScanStates.FAILED,
+          scanTimestamp: performance.now()
+        }
+        return {
+          totalScans: newScans.set(hash, scan)
+        }
+      });
+      this.props.serverIsDown();
     }
 
     let signInRequest = new XMLHttpRequest();
