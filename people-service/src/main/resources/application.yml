@@ -10,6 +10,10 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+  mvc:
+    media-types:
+      csv: text/csv
+
 management:
   endpoints:
     jmx:
