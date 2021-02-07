@@ -105,6 +105,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
+          <div>Version {process.env.REACT_APP_VERSION}</div>
           <Settings initialCamera={this.state.currentCamera}
                     initialDelayRate={this.state.delayRate}
                     initialServerSetting={this.state.serverSetting}
