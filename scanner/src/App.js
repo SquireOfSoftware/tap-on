@@ -101,11 +101,24 @@ class App extends Component {
     this.setServerSettingDown();
   }
 
+  updateServerState = (newState) => {
+    this.setState({
+      serverState: newState
+    });
+  }
+
   render() {
+    let serverStatus;
+    let serverMessage;
+    if (this.state.serverState === ServerStates.DOWN) {
+      serverStatus = "The checkin service is down.";
+      serverMessage = <div className="server-status server-down">{serverStatus}</div>;
+    }
+
     return (
       <div className="App">
         <header className="App-header">
-          <div>Version {process.env.REACT_APP_VERSION}</div>
+          {serverMessage}
           <Settings initialCamera={this.state.currentCamera}
                     initialDelayRate={this.state.delayRate}
                     initialServerSetting={this.state.serverSetting}
@@ -113,7 +126,8 @@ class App extends Component {
                     changeDelayRate={this.changeDelayRate}
                     changeServerSetting={this.changeServerSetting}
                     serverIsDown={serverIsDown => this.setServerSettingDown = serverIsDown}
-                    serverIsUp={serverIsUp => this.setServerSettingUp = serverIsUp}/>
+                    serverIsUp={serverIsUp => this.setServerSettingUp = serverIsUp}
+                    updateServerState={this.updateServerState}/>
           <QrScanner addLog={this.addLog}
                       currentCamera={this.state.currentCamera}
                       delayRate={this.state.delayRate}

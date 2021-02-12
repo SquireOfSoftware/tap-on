@@ -72,10 +72,12 @@ class Settings extends Component {
         this.setState({
           serverGETState: ServerStates.UP
         });
+        this.props.updateServerState(this.state.serverGETState);
       } else {
         this.setState({
           serverGETState: ServerStates.DOWN
         });
+        this.props.updateServerState(this.state.serverGETState);
       }
     }
 
@@ -84,6 +86,7 @@ class Settings extends Component {
       this.setState({
         serverGETState: ServerStates.DOWN
       });
+      this.props.updateServerState(this.state.serverGETState);
     }
 
     let getRequest = new XMLHttpRequest();
@@ -137,6 +140,9 @@ class Settings extends Component {
             <div onClick={() => this.verifyServerGETRequest()}>
               Server is: {this.state.serverGETState.name}
               <FontAwesomeIcon icon={faSyncAlt}/>
+            </div>
+            <div>
+              Version {process.env.REACT_APP_VERSION}
             </div>
           </div>
         </Menu>
