@@ -1,0 +1,18 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:13.1
+    restart: always
+    env_file:
+      database.env
+    container_name: db
+
+  people-service:
+    image: people-project:0.2.0
+    depends_on:
+      - db
+    ports:
+      - 8080:8080
+    environment:
+      - "SPRING_PROFILES_ACTIVE=production"
