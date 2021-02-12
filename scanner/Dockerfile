@@ -2,30 +2,30 @@
 FROM node:alpine3.10 as builder
 
 # copy the package.json to install dependencies
-COPY package.json ./
+COPY package.json yarn.lock ./
 
 # Install the dependencies and make the folder
-RUN npm install && mkdir /react-ui && mv ./node_modules ./react-ui
+RUN yarn && mkdir /react-ui && mv ./node_modules ./react-ui
 
 WORKDIR /react-ui
 
 COPY . .
 
 # Build the project and copy the files
-RUN npm run build
+RUN yarn run build
 
 
 FROM nginx:alpine
 
 #!/bin/sh
 
-COPY ../nginx.conf /etc/nginx/nginx.conf
+COPY ./nginx.conf /etc/nginx/nginx.conf
 
 ## Remove default nginx index page
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy from the stage 1
-COPY --from=builder /react-ui/build /usr/share/nginx/html
+COPY --from=builder /react-ui/build /usr/share/nginx/html/check-in
 
 EXPOSE 8000 80
 
