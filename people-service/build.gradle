@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.squireofsoftware'
-version = '0.2.0'
+version = '0.3.0'
 sourceCompatibility = '11'
 
 repositories {
@@ -26,4 +26,8 @@ dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
 	implementation 'com.github.kenglxn.QRGen:javase:2.6.0'
 	implementation 'com.opencsv:opencsv:5.3'
+}
+
+bootBuildImage {
+	imageName = "rhinoflower/check-in:${project.version}"
 }

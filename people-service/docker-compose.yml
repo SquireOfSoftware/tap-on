@@ -7,9 +7,11 @@ services:
     env_file:
       database.env
     container_name: db
+    volumes:
+      - /tmp/data:/var/lib/postgresql/data
 
   people-service:
-    image: people-project:0.2.0
+    image: rhinoflower/check-in:0.3.0
     depends_on:
       - db
     ports:
