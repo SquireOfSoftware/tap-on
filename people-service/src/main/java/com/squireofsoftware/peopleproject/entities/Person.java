@@ -22,9 +22,9 @@ public class Person {
     @NotNull
     private String givenName;
     private String familyName;
-    @Column(columnDefinition = "default false")
+    @Column(columnDefinition = "bool default false")
     private Boolean isBaptised;
-    @Column(columnDefinition = "default false")
+    @Column(columnDefinition = "bool default false")
     private Boolean isMember;
     private Timestamp creationDate;
     private Timestamp lastModified;

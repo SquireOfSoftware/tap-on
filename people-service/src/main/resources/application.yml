@@ -1,10 +1,12 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
   jpa:
     show-sql: true
     generate-ddl: true
-    hibernate.ddl-auto: update
+    hibernate.ddl-auto: create
     properties:
       hibernate:
         jdbc:
