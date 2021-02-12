@@ -20,3 +20,7 @@ If the cache is messing up you need to check the following:
 2. Enable public github API tokens here: https://github.com/settings/tokens
    and send in your public token instead of your password and it
    should just work
+   
+## Forming the docker image
+
+I will be following some examples from here: https://medium.com/bb-tutorials-and-thoughts/how-to-serve-react-application-with-nginx-and-docker-9c51ac2c50ba
