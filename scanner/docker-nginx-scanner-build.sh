@@ -1,1 +1,1 @@
-docker build -t rhinoflower/checkin-scanner:0.2.0 .
+docker build -t rhinoflower/checkin-scanner:0.3.0 .

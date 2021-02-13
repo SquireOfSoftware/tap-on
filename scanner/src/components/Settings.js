@@ -93,11 +93,12 @@ class Settings extends Component {
 
     getRequest.addEventListener("load", successGET);
     getRequest.addEventListener("error", failedGET);
-
+    console.log(this.state.serverUrl + "/people-service/actuator/health");
     getRequest.open("GET", this.state.serverUrl + "/people-service/actuator/health", true);
     getRequest.setRequestHeader("Access-Control-Allow-Headers", "*");
     getRequest.setRequestHeader("Content-Type", "application/json");
     getRequest.send();
+    console.log("trying to ping the service");
 
     console.log(getRequest);
   }

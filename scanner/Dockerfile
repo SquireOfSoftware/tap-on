@@ -25,7 +25,11 @@ COPY ./nginx.conf /etc/nginx/nginx.conf
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy from the stage 1
-COPY --from=builder /react-ui/build /usr/share/nginx/html/check-in
+COPY --from=builder /react-ui/build /usr/share/nginx/html/
+
+RUN chown nginx:nginx /usr/share/nginx/html/*
+
+RUN chmod 755 -R /usr/share/nginx/html/
 
 EXPOSE 8000 80
 
