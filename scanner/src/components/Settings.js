@@ -19,6 +19,8 @@ class Settings extends Component {
     this.verifyServerGETRequest = this.verifyServerGETRequest.bind(this);
 
     this.verifyServerGETRequest();
+
+    this.changeServerSetting = this.changeServerSetting.bind(this);
   }
 
   componentDidMount() {
@@ -135,7 +137,7 @@ class Settings extends Component {
               <input
                 id="server_setting"
                 type="url"
-                value={this.state.serverUrl}
+                value={this.props.initialServerSetting}
                 onChange={this.changeServerSetting} />
             </div>
             <div onClick={() => this.verifyServerGETRequest()}>

@@ -7,7 +7,8 @@ services:
       database.env
     container_name: db
     volumes:
-      - /tmp/data:/var/lib/postgresql/data
+      # mac os need to bind to something in the /Users directory
+      - /Users/JarvisWalker/pg_data_test:/var/lib/postgresql/data
 
   person-service:
     image: rhinoflower/check-in:0.3.0
@@ -25,3 +26,8 @@ services:
       - 8000:8000
     depends_on:
       - person-service
+    volumes:
+      - /Users/JarvisWalker/nginx:/etc/nginx
+      # we expect the server.crt and the server.key to be found
+      # here
+      - /Users/JarvisWalker/certs:/etc/certs

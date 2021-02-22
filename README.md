@@ -2,6 +2,25 @@
 The Check in System is a system that enables a person to keep track of the total amount of people that have entered 
 into a session or some group activity of some sort.
 
+## Links
+
+Here is the demo scanner page: https://squireofsoftware.github.io/check-in/
+
+Here is the people-service middleware image: https://hub.docker.com/repository/docker/rhinoflower/check-in/general
+- this is just a spring boot application wrapped up in a docker image
+
+Here is the demo scanner image: https://hub.docker.com/repository/docker/rhinoflower/checkin-scanner
+- this includes nginx with rerouting for the spring boot application
+
+## Docker notes
+
+- On MacOS, you MUST bind your volumes under `/Users/<Username>/...` otherwise docker will not find your host
+  directory to bind your volumes to from:
+  https://stackoverflow.com/questions/36451739/run-postgres-container-with-data-volumes-through-docker-machine
+- On Windows, you MUST run DockerDesktop as Administrator and then run the command prompt as Administrator,
+  this is to enable docker to pull images down and do all the necessary things that docker needs to do like,
+  volume binding etc. without any issues.
+
 ## Design styling
 
 - Mouseover names - grey the blurbs, takes precendence over any highlighting
