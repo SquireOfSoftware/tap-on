@@ -1,23 +1,20 @@
 # stage1 as builder
-FROM node:alpine3.10 as builder
+FROM node:alpine3.10 as qr-builder
 
 # copy the package.json to install dependencies
-COPY package.json yarn.lock ./
+COPY scanner/package.json scanner/yarn.lock ./
 
 # Install the dependencies and make the folder
-RUN yarn && mkdir /react-ui && mv ./node_modules ./react-ui
+RUN yarn && mkdir /qr-scanner
 
-WORKDIR /react-ui
+WORKDIR /qr-scanner
 
-COPY . .
+COPY scanner/ .
 
 # Build the project and copy the files
 RUN yarn run build
 
-
 FROM nginx:alpine
-
-#!/bin/sh
 
 COPY ./nginx.conf /etc/nginx/nginx.conf
 
@@ -25,7 +22,7 @@ COPY ./nginx.conf /etc/nginx/nginx.conf
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy from the stage 1
-COPY --from=builder /react-ui/build /usr/share/nginx/html/
+COPY --from=qr-builder /qr-scanner/build /usr/share/nginx/html/qr-scanner
 
 RUN chown nginx:nginx /usr/share/nginx/html/*
 
