@@ -24,3 +24,6 @@ If the cache is messing up you need to check the following:
 ## Forming the docker image
 
 I will be following some examples from here: https://medium.com/bb-tutorials-and-thoughts/how-to-serve-react-application-with-nginx-and-docker-9c51ac2c50ba
+
+The favicon is from FontAwesome, here is the license:
+https://fontawesome.com/license
