@@ -8,6 +8,11 @@ import org.springframework.hateoas.Link;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 public interface PersonInterface<T> {
+    String SELF_REL = "self";
+    String SIGN_IN_REL = "Sign in post request";
+    String LOG_REL = "All sign in logs for person";
+    String QR_REL = "Qr code for person";
+
     Integer getId();
     String getHash();
     T add(Link link);
@@ -23,7 +28,7 @@ public interface PersonInterface<T> {
         add(linkTo(CheckinController.class)
                 .slash("signin")
                 .slash(getHash())
-                .withRel("Sign in post request"));
+                .withRel(SIGN_IN_REL));
     }
 
     private void addLogReference() {
@@ -32,7 +37,7 @@ public interface PersonInterface<T> {
                 .slash("log")
                 .slash("hash")
                 .slash(getHash())
-                .withRel("All sign in logs for person"));
+                .withRel(LOG_REL));
     }
 
     private void addQrCodeReference() {
@@ -40,7 +45,7 @@ public interface PersonInterface<T> {
                 .slash("id")
                 .slash(getId())
                 .slash("qrcode")
-                .withRel("Qr code for person"));
+                .withRel(QR_REL));
     }
 
     default void addLinks() {

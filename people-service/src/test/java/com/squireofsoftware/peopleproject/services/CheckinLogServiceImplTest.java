@@ -38,6 +38,8 @@ class CheckinLogServiceImplTest {
     public void getSignInsForToday_returnsLogsSortedByDates_inEarliestFirst() {
         // given
         Person dummyPerson1 = Person.builder()
+                .id(1)
+                .hash("hash1")
                 .familyName("One")
                 .givenName("Person")
                 .build();
@@ -46,6 +48,8 @@ class CheckinLogServiceImplTest {
                 .minusHours(1L);
 
         Person dummyPerson2 = Person.builder()
+                .id(2)
+                .hash("hash2")
                 .familyName("Two")
                 .givenName("Person")
                 .build();
@@ -78,6 +82,8 @@ class CheckinLogServiceImplTest {
     public void getSignInsForToday_returnsEarliestTimestamp_whenPersonHasDuplicateSignins() {
         // given
         Person dummyPerson1 = Person.builder()
+                .id(1)
+                .hash("hash1")
                 .familyName("One")
                 .givenName("Person")
                 .build();

@@ -65,9 +65,14 @@ public class PersonObject extends RepresentationModel<PersonObject>
         return null;
     }
 
+    /**
+     * This should not add any links because it has not enough information
+     * from the CSV to generate the required links.
+     * Please use with caution.
+     */
     public static PersonObject map(PersonCSV personCSV) {
         if (personCSV != null) {
-            PersonObject personObject = PersonObject.builder()
+            return PersonObject.builder()
                     .familyName(personCSV.getFamilyName())
                     .givenName(personCSV.getGivenName())
                     .isBaptised(personCSV.isBaptised())
@@ -101,8 +106,6 @@ public class PersonObject extends RepresentationModel<PersonObject>
                             .collect(Collectors.toList())
                     )
                     .build();
-            personObject.addLinks();
-            return personObject;
         }
         return null;
     }

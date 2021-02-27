@@ -1,7 +1,9 @@
 package com.squireofsoftware.peopleproject.services;
 
 import com.squireofsoftware.peopleproject.ProjectConfiguration;
+import com.squireofsoftware.peopleproject.dtos.PersonObject;
 import com.squireofsoftware.peopleproject.entities.Person;
+import com.squireofsoftware.peopleproject.exceptions.DatabaseProcessingException;
 import com.squireofsoftware.peopleproject.jpas.JpaEmailAddress;
 import com.squireofsoftware.peopleproject.jpas.JpaNamePart;
 import com.squireofsoftware.peopleproject.jpas.JpaPerson;
@@ -12,6 +14,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -89,5 +92,154 @@ class PersonServiceImplTest {
         assertNotEquals(dummySavedPerson.getHash(), savedPerson.getHash());
 
         assertTrue(createdTimestamp.before(savedPerson.getLastModified()));
+    }
+
+    @Test
+    public void createPerson_shouldNotUseInputId() {
+        // given
+        PersonObject dummyPerson = PersonObject.builder()
+                .id(1)
+                .givenName("test")
+                .familyName("test")
+                .build();
+
+        Person mockPerson = Person.builder()
+                .id(25) // new id
+                .givenName(dummyPerson.getGivenName())
+                .familyName(dummyPerson.getFamilyName())
+                .hash("some-hash-123")
+                .build();
+
+        when(mockJpaPerson.save(any()))
+                .thenReturn(mockPerson);
+
+        when(mockJpaPerson.findById(eq(mockPerson.getId())))
+                .thenReturn(Optional.of(mockPerson));
+
+        // when
+        PersonObject newPerson = personService.createPerson(dummyPerson);
+
+        // then
+        assertNotNull(newPerson);
+        assertNotEquals(dummyPerson.getId(), newPerson.getId());
+    }
+
+    @Test
+    public void createPerson_shouldThrowException_whenDatabaseFailsToFindNewlyCreatedPerson() {
+        // given
+        PersonObject dummyPerson = PersonObject.builder()
+                .id(1)
+                .givenName("test")
+                .familyName("test")
+                .build();
+
+        Person mockPerson = Person.builder()
+                .id(25) // new id
+                .givenName(dummyPerson.getGivenName())
+                .familyName(dummyPerson.getFamilyName())
+                .hash("some-hash-123")
+                .build();
+
+        when(mockJpaPerson.save(any()))
+                .thenReturn(mockPerson);
+
+        when(mockJpaPerson.findById(eq(mockPerson.getId())))
+                .thenReturn(Optional.empty());
+
+        // when - then
+        assertThrows(DatabaseProcessingException.class, () -> personService.createPerson(dummyPerson));
+    }
+
+    @Test
+    public void createPerson_shouldCreateOtherNames_whenInputOtherNamesAreEmpty() {
+        // given
+        PersonObject dummyPerson = PersonObject.builder()
+                .id(1)
+                .givenName("test")
+                .familyName("test")
+                .build();
+
+        Person mockPerson = Person.builder()
+                .id(25) // new id
+                .givenName(dummyPerson.getGivenName())
+                .familyName(dummyPerson.getFamilyName())
+                .hash("some-hash-123")
+                .build();
+
+        when(mockJpaPerson.save(any()))
+                .thenReturn(mockPerson);
+
+        when(mockJpaPerson.findById(eq(mockPerson.getId())))
+                .thenReturn(Optional.of(mockPerson));
+
+        // when
+        PersonObject newPerson = personService.createPerson(dummyPerson);
+
+        // then
+        assertNotNull(newPerson);
+        assertEquals(Collections.emptyList(), newPerson.getOtherNames());
+        verifyNoInteractions(mockJpaNamePart);
+    }
+
+    @Test
+    public void createPerson_shouldCreatePhoneNumbers_whenPhoneNumbersAreEmpty() {
+        // given
+        PersonObject dummyPerson = PersonObject.builder()
+                .id(1)
+                .givenName("test")
+                .familyName("test")
+                .build();
+
+        Person mockPerson = Person.builder()
+                .id(25) // new id
+                .givenName(dummyPerson.getGivenName())
+                .familyName(dummyPerson.getFamilyName())
+                .hash("some-hash-123")
+                .build();
+
+        when(mockJpaPerson.save(any()))
+                .thenReturn(mockPerson);
+
+        when(mockJpaPerson.findById(eq(mockPerson.getId())))
+                .thenReturn(Optional.of(mockPerson));
+
+        // when
+        PersonObject newPerson = personService.createPerson(dummyPerson);
+
+        // then
+        assertNotNull(newPerson);
+        assertEquals(Collections.emptyList(), newPerson.getPhoneNumbers());
+        verifyNoInteractions(mockJpaPhoneNumber);
+    }
+
+    @Test
+    public void createPerson_shouldCreateEmailAddresses_whenEmailAddressesAreEmpty() {
+        // given
+        PersonObject dummyPerson = PersonObject.builder()
+                .id(1)
+                .givenName("test")
+                .familyName("test")
+                .build();
+
+        Person mockPerson = Person.builder()
+                .id(25) // new id
+                .givenName(dummyPerson.getGivenName())
+                .familyName(dummyPerson.getFamilyName())
+                .hash("some-hash-123")
+                .build();
+
+        when(mockJpaPerson.save(any()))
+                .thenReturn(mockPerson);
+
+        when(mockJpaPerson.findById(eq(mockPerson.getId())))
+                .thenReturn(Optional.of(mockPerson));
+
+        // when
+        PersonObject newPerson = personService.createPerson(dummyPerson);
+
+        // then
+        assertNotNull(newPerson);
+        assertEquals(Collections.emptyList(), newPerson.getEmailAddresses());
+        verifyNoInteractions(mockJpaEmailAddress);
     }
 }

@@ -3,6 +3,7 @@ package com.squireofsoftware.peopleproject.services;
 import com.squireofsoftware.peopleproject.ProjectConfiguration;
 import com.squireofsoftware.peopleproject.dtos.*;
 import com.squireofsoftware.peopleproject.entities.*;
+import com.squireofsoftware.peopleproject.exceptions.DatabaseProcessingException;
 import com.squireofsoftware.peopleproject.exceptions.PersonNotFoundException;
 import com.squireofsoftware.peopleproject.jpas.JpaEmailAddress;
 import com.squireofsoftware.peopleproject.jpas.JpaNamePart;
@@ -43,7 +44,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public PersonObject createPerson(PersonObject personObject) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
-        Person newPerson = Person.builder()
+        Person personToBeSaved = Person.builder()
                 .givenName(personObject.getGivenName())
                 .familyName(personObject.getFamilyName())
                 .isBaptised(personObject.getIsBaptised())
@@ -52,17 +53,15 @@ public class PersonServiceImpl implements PersonService {
                 .lastModified(now)
                 .hash(UUID.randomUUID().toString())
                 .build();
-        Person saved = jpaPerson.save(newPerson);
-        personObject.setId(saved.getId());
-        personObject.setHash(saved.getHash());
+        Person saved = jpaPerson.save(personToBeSaved);
 
         createOtherNames(personObject.getOtherNames(), saved);
         createPhoneNumbers(personObject.getPhoneNumbers(), saved);
         createEmailAddresses(personObject.getEmailAddresses(), saved);
 
-        personObject.addLinks();
-
-        return personObject;
+        return jpaPerson.findById(saved.getId())
+                .map(PersonObject::map)
+                .orElseThrow(DatabaseProcessingException::new);
     }
 
     private void createOtherNames(List<NameObject> otherNames, Person person) {
