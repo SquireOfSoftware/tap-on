@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @Slf4j
@@ -57,33 +56,43 @@ public class PersonServiceImpl implements PersonService {
         personObject.setId(saved.getId());
         personObject.setHash(saved.getHash());
 
-        for(NameObject otherName: personObject.getOtherNames()) {
-            jpaNamePart.save(NamePart.builder()
-                .person(saved)
-                .value(otherName.getName())
-                .type(Language.valueOf(otherName.getLanguage()))
-                .build());
-        }
-
-        for(PhoneNumberObject phoneNumber: personObject.getPhoneNumbers()) {
-            jpaPhoneNumber.save(PhoneNumber.builder()
-                    .number(phoneNumber.getNumber())
-                    .description(phoneNumber.getDescription())
-                    .person(newPerson)
-                    .build());
-        }
-
-        for(EmailAddressObject emailObject: personObject.getEmailAddresses()) {
-            jpaEmailAddress.save(EmailAddress.builder()
-                    .email(emailObject.getEmail())
-                    .description(emailObject.getDescription())
-                    .person(newPerson)
-                    .build());
-        }
+        createOtherNames(personObject.getOtherNames(), saved);
+        createPhoneNumbers(personObject.getPhoneNumbers(), saved);
+        createEmailAddresses(personObject.getEmailAddresses(), saved);
 
         personObject.addLinks();
 
         return personObject;
+    }
+
+    private void createOtherNames(List<NameObject> otherNames, Person person) {
+        for(NameObject otherName: otherNames) {
+            jpaNamePart.saveAndFlush(NamePart.builder()
+                    .person(person)
+                    .value(otherName.getName())
+                    .type(Language.valueOf(otherName.getLanguage()))
+                    .build());
+        }
+    }
+
+    private void createPhoneNumbers(List<PhoneNumberObject> phoneNumbers, Person person) {
+        for(PhoneNumberObject phoneNumber: phoneNumbers) {
+            jpaPhoneNumber.saveAndFlush(PhoneNumber.builder()
+                    .number(phoneNumber.getNumber())
+                    .description(phoneNumber.getDescription())
+                    .person(person)
+                    .build());
+        }
+    }
+
+    private void createEmailAddresses(List<EmailAddressObject> emails, Person person) {
+        for(EmailAddressObject emailObject: emails) {
+            jpaEmailAddress.saveAndFlush(EmailAddress.builder()
+                    .email(emailObject.getEmail())
+                    .description(emailObject.getDescription())
+                    .person(person)
+                    .build());
+        }
     }
 
     @Transactional(readOnly = true)
@@ -116,9 +125,38 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<PersonReferenceObject> getAllPeople() {
-        return StreamSupport.stream(jpaPerson.findAll().spliterator(), false)
+        return jpaPerson.findAll()
+                .stream()
                 .map(PersonReferenceObject::from)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public PersonObject updatePerson(Integer id, PersonObject updatedPerson) {
+        Person personToBeUpdated = jpaPerson.findById(id)
+                .orElseThrow(PersonNotFoundException::new);
+
+        personToBeUpdated.setGivenName(updatedPerson.getGivenName());
+        personToBeUpdated.setFamilyName(updatedPerson.getFamilyName());
+        personToBeUpdated.setIsBaptised(updatedPerson.getIsBaptised());
+        personToBeUpdated.setIsMember(updatedPerson.getIsMember());
+        personToBeUpdated.setLastModified(new Timestamp(System.currentTimeMillis()));
+
+        jpaPerson.save(personToBeUpdated);
+
+        jpaNamePart.deleteAllByPersonId(personToBeUpdated.getId());
+        createOtherNames(updatedPerson.getOtherNames(), personToBeUpdated);
+
+        jpaEmailAddress.deleteAllByPersonId(personToBeUpdated.getId());
+        createPhoneNumbers(updatedPerson.getPhoneNumbers(), personToBeUpdated);
+
+        jpaPhoneNumber.deleteAllByPersonId(personToBeUpdated.getId());
+        createEmailAddresses(updatedPerson.getEmailAddresses(), personToBeUpdated);
+
+        return jpaPerson.findById(id)
+                .map(PersonObject::map)
+                .orElseThrow(PersonNotFoundException::new);
     }
 
     private PersonObject updateHash(Person person) {

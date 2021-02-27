@@ -20,4 +20,22 @@ public interface PersonService {
     PersonObject recreateHash(Integer id);
 
     List<PersonReferenceObject> getAllPeople();
+
+    /**
+     * This will only update the following:
+     * <ul>
+     *  <li>givenName</li>
+     *  <li>familyName</li>
+     *  <li>otherNames <-- it will clear the old details out</li>
+     *  <li>phoneNumbers <-- it will clear the old details out</li>
+     *  <li>emailAddresses <-- it will clear the old details out</li>
+     *  <li>isBaptised</li>
+     *  <li>isAMember</li>
+     *  <li>modifiedDate <-- this is automatic</li>
+     * </ul>
+     * Note that if nothing changed it will still update the object
+     * @return the latest person details
+     * @throws com.squireofsoftware.peopleproject.exceptions.PersonNotFoundException if 'id' not legit
+     */
+    PersonObject updatePerson(Integer id, PersonObject updatedPerson);
 }

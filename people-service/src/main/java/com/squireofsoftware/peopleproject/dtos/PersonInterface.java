@@ -13,43 +13,46 @@ public interface PersonInterface<T> {
     T add(Link link);
 
     private void addSelfReference() {
-        if (getId() != null) {
-            add(linkTo(PersonController.class)
-                    .slash("id")
-                    .slash(getId())
-                    .withSelfRel());
-        } else {
-            throw new NullPointerException("Self rel link id cannot be null");
-        }
+        add(linkTo(PersonController.class)
+                .slash("id")
+                .slash(getId())
+                .withSelfRel());
     }
 
     private void addSignInReference() {
-        if (StringUtils.isNotBlank(getHash())) {
-            add(linkTo(CheckinController.class)
-                    .slash("signin")
-                    .slash(getHash())
-                    .withRel("Sign in post request"));
-        } else {
-            throw new NullPointerException("Sign in hash rel link cannot be null");
-        }
+        add(linkTo(CheckinController.class)
+                .slash("signin")
+                .slash(getHash())
+                .withRel("Sign in post request"));
     }
 
     private void addLogReference() {
-        if (StringUtils.isNotBlank(getHash())) {
-            add(linkTo(CheckinController.class)
-                    .slash("people")
-                    .slash("log")
-                    .slash("hash")
-                    .slash(getHash())
-                    .withRel("All sign in logs for person"));
-        } else {
-            throw new NullPointerException("Sign in hash rel link cannot be null");
-        }
+        add(linkTo(CheckinController.class)
+                .slash("people")
+                .slash("log")
+                .slash("hash")
+                .slash(getHash())
+                .withRel("All sign in logs for person"));
+    }
+
+    private void addQrCodeReference() {
+        add(linkTo(PersonController.class)
+                .slash("id")
+                .slash(getId())
+                .slash("qrcode")
+                .withRel("Qr code for person"));
     }
 
     default void addLinks() {
+        if (getId() == null) {
+            throw new NullPointerException("Self rel link id cannot be null");
+        } else if (StringUtils.isBlank(getHash())) {
+            throw new NullPointerException("Sign in rel link hash cannot be null");
+        }
+
         addSelfReference();
         addSignInReference();
         addLogReference();
+        addQrCodeReference();
     }
 }

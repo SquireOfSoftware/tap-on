@@ -72,6 +72,11 @@ public class PersonController {
         return qrCodeService.recreateQrCode(id);
     }
 
+    @PutMapping("/id/{id}")
+    public PersonObject updatePerson(@PathVariable Integer id, @RequestBody PersonObject updatedPerson) {
+        return personService.updatePerson(id, updatedPerson);
+    }
+
     @DeleteMapping("/id/{id}")
     public void deletePerson(@PathVariable Integer id) {
         personService.deletePerson(id);
