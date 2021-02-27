@@ -1,31 +1,31 @@
 version: '3.1'
 
 services:
-  db:
-    image: postgres:13.1
-    env_file:
-      database.env
-    container_name: db
-    volumes:
-      # mac os need to bind to something in the /Users directory
-      - /Users/JarvisWalker/pg_data_test:/var/lib/postgresql/data
-
-  person-service:
-    image: rhinoflower/check-in:0.3.0
-    container_name: person-service
-    depends_on:
-      - db
-    ports:
-      - 8080:8080
-    environment:
-      - "SPRING_PROFILES_ACTIVE=production"
+#  db:
+#    image: postgres:13.1
+#    env_file:
+#      database.env
+#    container_name: db
+#    volumes:
+#      # mac os need to bind to something in the /Users directory
+#      - /Users/JarvisWalker/pg_data_test:/var/lib/postgresql/data
+#
+#  person-service:
+#    image: rhinoflower/check-in:0.3.0
+#    container_name: person-service
+#    depends_on:
+#      - db
+#    ports:
+#      - 8080:8080
+#    environment:
+#      - "SPRING_PROFILES_ACTIVE=production"
 
   scanner:
-    image: rhinoflower/checkin-scanner:0.6.0
+    image: rhinoflower/checkin-ui:0.7.0
     ports:
       - 8000:8000
-    depends_on:
-      - person-service
+#    depends_on:
+#      - person-service
     volumes:
       - /Users/JarvisWalker/nginx/nginx.conf:/etc/nginx/nginx.conf
       # we expect the server.crt and the server.key to be found

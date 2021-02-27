@@ -5,7 +5,6 @@ import './App.css';
 import Settings from './components/Settings.js';
 import QrScanner from './components/QrScanner.js';
 import ScanLog from './components/ScanLog.js';
-import Report from './components/Report.js';
 import ServerStates from './components/ServerStates.js';
 
 class App extends Component {
@@ -142,7 +141,6 @@ class App extends Component {
                     serverIsUp={this.serverIsUp}
                     serverIsDown={this.serverIsDown}
                     />
-          <Report />
         </header>
       </div>
     );
