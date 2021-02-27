@@ -1,7 +1,6 @@
 package com.squireofsoftware.peopleproject.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.squireofsoftware.peopleproject.controllers.PersonController;
 import com.squireofsoftware.peopleproject.entities.Person;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
@@ -11,14 +10,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PersonObject extends RepresentationModel<PersonObject> {
+public class PersonObject extends RepresentationModel<PersonObject>
+                            implements PersonInterface<PersonObject> {
     private Integer id;
     @NotNull
     private String givenName;
@@ -60,10 +58,7 @@ public class PersonObject extends RepresentationModel<PersonObject> {
                             .collect(Collectors.toList()))
                     .build();
 
-            personObject.add(
-                    linkTo(PersonController.class)
-                            .slash(personObject.getId())
-                            .withSelfRel());
+            personObject.addLinks();
 
             return personObject;
         }
@@ -72,7 +67,7 @@ public class PersonObject extends RepresentationModel<PersonObject> {
 
     public static PersonObject map(PersonCSV personCSV) {
         if (personCSV != null) {
-            return PersonObject.builder()
+            PersonObject personObject = PersonObject.builder()
                     .familyName(personCSV.getFamilyName())
                     .givenName(personCSV.getGivenName())
                     .isBaptised(personCSV.isBaptised())
@@ -106,17 +101,9 @@ public class PersonObject extends RepresentationModel<PersonObject> {
                             .collect(Collectors.toList())
                     )
                     .build();
+            personObject.addLinks();
+            return personObject;
         }
         return null;
-    }
-
-    public void addSelfReference() {
-        if (id != null) {
-            add(linkTo(PersonController.class)
-                        .slash(getId())
-                        .withSelfRel());
-        } else {
-            throw new NullPointerException("Self rel link id cannot be null");
-        }
     }
 }

@@ -1,21 +1,19 @@
 package com.squireofsoftware.peopleproject.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.squireofsoftware.peopleproject.controllers.PersonController;
 import com.squireofsoftware.peopleproject.entities.Person;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.NotNull;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PersonReferenceObject extends RepresentationModel<PersonObject> {
+public class PersonReferenceObject extends RepresentationModel<PersonObject>
+                                    implements PersonInterface<PersonObject> {
     private Integer id;
     @NotNull
     private String givenName;
@@ -33,10 +31,7 @@ public class PersonReferenceObject extends RepresentationModel<PersonObject> {
                     .hash(person.getHash())
                     .build();
 
-            personReference.add(
-                    linkTo(PersonController.class)
-                            .slash(person.getId())
-                            .withSelfRel());
+            personReference.addLinks();
 
             return personReference;
         }

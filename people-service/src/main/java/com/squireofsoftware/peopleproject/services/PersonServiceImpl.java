@@ -55,6 +55,7 @@ public class PersonServiceImpl implements PersonService {
                 .build();
         Person saved = jpaPerson.save(newPerson);
         personObject.setId(saved.getId());
+        personObject.setHash(saved.getHash());
 
         for(NameObject otherName: personObject.getOtherNames()) {
             jpaNamePart.save(NamePart.builder()
@@ -80,7 +81,7 @@ public class PersonServiceImpl implements PersonService {
                     .build());
         }
 
-        personObject.addSelfReference();
+        personObject.addLinks();
 
         return personObject;
     }

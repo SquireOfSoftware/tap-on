@@ -42,6 +42,11 @@ public class CheckinController {
         return checkinLogService.checkin(signInObject);
     }
 
+    @PostMapping(value = "/signin/{hash}")
+    public CheckinLogObject signIn(@PathVariable String hash, @RequestParam(value = "message", required = false) String message) {
+        return checkinLogService.checkin(hash, message);
+    }
+
     @GetMapping(value = "/people/log/hash/{hash}")
     public List<CheckinLogObject> getLogs(@PathVariable String hash,
                                           @RequestParam(value = "from", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,

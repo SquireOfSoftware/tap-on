@@ -49,6 +49,16 @@ public class CheckinLogServiceImpl implements CheckinLogService {
     }
 
     @Override
+    public CheckinLogObject checkin(String hash, String message) {
+        return CheckinLogObject.map(jpaCheckinLog.save(
+                CheckinLog.builder()
+                .timestamp(new Timestamp(System.currentTimeMillis()))
+                .person(getPerson(hash))
+                .message(message)
+                .build()));
+    }
+
+    @Override
     public List<CheckinLogObject> getAllPersonsLogs(String hash) {
         return jpaCheckinLog.findAllByPersonId(getPerson(hash).getId())
                 .stream()

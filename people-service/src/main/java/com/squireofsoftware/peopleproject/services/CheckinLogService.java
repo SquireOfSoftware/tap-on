@@ -9,6 +9,8 @@ import java.util.List;
 public interface CheckinLogService {
     CheckinLogObject checkin(SignInObject signInLogObject);
 
+    CheckinLogObject checkin(String hash, String message);
+
     List<CheckinLogObject> getAllPersonsLogs(String hash);
 
     List<CheckinLogObject> getPersonsLogsFromTo(String hash, LocalDateTime from, LocalDateTime to);
