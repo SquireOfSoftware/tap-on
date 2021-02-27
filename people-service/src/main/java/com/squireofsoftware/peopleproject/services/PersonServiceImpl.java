@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -50,8 +51,8 @@ public class PersonServiceImpl implements PersonService {
                 .isMember(personObject.getIsMember())
                 .creationDate(now)
                 .lastModified(now)
+                .hash(UUID.randomUUID().toString())
                 .build();
-        newPerson.setHash(newPerson.hashCode());
         Person saved = jpaPerson.save(newPerson);
         personObject.setId(saved.getId());
 
@@ -91,7 +92,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public PersonObject findPersonByHash(Integer hash) {
+    public PersonObject findPersonByHash(String hash) {
         Optional<Person> found = jpaPerson.findByHash(hash);
         return found.map(PersonObject::map)
                 .orElseThrow(PersonNotFoundException::new);
@@ -113,14 +114,14 @@ public class PersonServiceImpl implements PersonService {
     private PersonObject updateHash(Person person) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         person.setLastModified(now);
-        int newHash = now.hashCode();
+        String newHash = UUID.randomUUID().toString();
         int hashRegenerationCount = 1;
         // there could be an infinite loop here
-        while(newHash == person.getHash() &&
+        while(newHash.equals(person.getHash()) &&
                 hashRegenerationCount < projectConfiguration.getMaxHashRegenCount()) {
             now = new Timestamp(System.currentTimeMillis());
             person.setLastModified(now);
-            newHash = now.hashCode();
+            newHash = UUID.randomUUID().toString();
             hashRegenerationCount++;
         }
 

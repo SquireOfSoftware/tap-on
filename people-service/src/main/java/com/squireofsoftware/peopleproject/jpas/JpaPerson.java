@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface JpaPerson extends CrudRepository<Person, Integer> {
-    Optional<Person> findByHash(Integer hash);
+    Optional<Person> findByHash(String hash);
 }

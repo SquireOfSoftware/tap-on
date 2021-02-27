@@ -10,7 +10,7 @@ public interface PersonService {
 
     PersonObject getPerson(Integer id);
 
-    PersonObject findPersonByHash(Integer hash);
+    PersonObject findPersonByHash(String hash);
 
     void deletePerson(Integer id);
 

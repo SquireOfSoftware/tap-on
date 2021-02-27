@@ -28,7 +28,7 @@ public class PersonObject {
     @Builder.Default
     private Boolean isMember = false;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Integer hash;
+    private String hash;
 
     @Builder.Default
     @JsonInclude(JsonInclude.Include.NON_NULL)

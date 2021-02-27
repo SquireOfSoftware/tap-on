@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SignInObject {
-    private Integer hash;
+    private String hash;
     private String message;
 }

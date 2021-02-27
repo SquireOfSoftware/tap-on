@@ -35,3 +35,12 @@ In essence, you need to:
 The database schema is maintained by Spring boot itself, so all
 the service really needs is write and read access to the database
 and Spring boot will configure everything else.
+
+## Swagger UI
+
+There is a Swagger UI that is exposed:
+
+```
+http://localhost:8080/people-service/swagger-ui/index.html
+```
+

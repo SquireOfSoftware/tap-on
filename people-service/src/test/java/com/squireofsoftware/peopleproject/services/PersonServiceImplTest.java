@@ -13,6 +13,7 @@ import org.mockito.Mock;
 
 import java.sql.Timestamp;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
@@ -33,7 +34,7 @@ class PersonServiceImplTest {
     @BeforeEach
     public void setup() {
         openMocks(this);
-        ProjectConfiguration dummyConfig = new ProjectConfiguration(10);
+        ProjectConfiguration dummyConfig = new ProjectConfiguration(10, 250, 250);
         personService = new PersonServiceImpl(
                 mockJpaPerson,
                 mockJpaNamePart,
@@ -53,9 +54,8 @@ class PersonServiceImplTest {
                 .familyName("Boy")
                 .creationDate(createdTimestamp)
                 .lastModified(createdTimestamp)
+                .hash(UUID.randomUUID().toString())
                 .build();
-        int dummyHash = mockPerson.hashCode();
-        mockPerson.setHash(dummyHash);
 
         when(mockJpaPerson.findById(eq(mockPerson.getId())))
                 .thenReturn(Optional.of(mockPerson));
@@ -67,8 +67,8 @@ class PersonServiceImplTest {
                 .familyName(mockPerson.getFamilyName())
                 .creationDate(mockPerson.getCreationDate())
                 .lastModified(new Timestamp(System.currentTimeMillis()))
+                .hash(UUID.randomUUID().toString())
                 .build();
-        dummySavedPerson.setHash(dummySavedPerson.hashCode());
 
         when(mockJpaPerson.save(any()))
                 .thenReturn(dummySavedPerson);
@@ -86,7 +86,7 @@ class PersonServiceImplTest {
         Person savedPerson = personArgumentCaptor.getValue();
 
         assertNotNull(savedPerson.getHash());
-        assertNotEquals(dummyHash, savedPerson.getHash());
+        assertNotEquals(dummySavedPerson.getHash(), savedPerson.getHash());
 
         assertTrue(createdTimestamp.before(savedPerson.getLastModified()));
     }

@@ -28,7 +28,7 @@ public class CheckinLogServiceImpl implements CheckinLogService {
         this.jpaCheckinLog = jpaCheckinLog;
     }
 
-    private Person getPerson(Integer hash) {
+    private Person getPerson(String hash) {
         Optional<Person> person = jpaPerson.findByHash(hash);
         if (person.isEmpty()) {
             throw new PersonNotFoundException();
@@ -49,7 +49,7 @@ public class CheckinLogServiceImpl implements CheckinLogService {
     }
 
     @Override
-    public List<CheckinLogObject> getAllPersonsLogs(Integer hash) {
+    public List<CheckinLogObject> getAllPersonsLogs(String hash) {
         return jpaCheckinLog.findAllByPersonId(getPerson(hash).getId())
                 .stream()
                 .map(CheckinLogObject::map)
@@ -57,7 +57,7 @@ public class CheckinLogServiceImpl implements CheckinLogService {
     }
 
     @Override
-    public List<CheckinLogObject> getPersonsLogsFromTo(Integer hash, LocalDateTime from, LocalDateTime to) {
+    public List<CheckinLogObject> getPersonsLogsFromTo(String hash, LocalDateTime from, LocalDateTime to) {
         return jpaCheckinLog.findByPersonIdAndTimestampBetween(
                     getPerson(hash).getId(),
                     Timestamp.valueOf(from),
@@ -68,7 +68,7 @@ public class CheckinLogServiceImpl implements CheckinLogService {
     }
 
     @Override
-    public List<CheckinLogObject> getPersonsLogsFrom(Integer hash, LocalDateTime from) {
+    public List<CheckinLogObject> getPersonsLogsFrom(String hash, LocalDateTime from) {
         return jpaCheckinLog.findByPersonIdAndTimestampAfter(
                     getPerson(hash).getId(),
                 Timestamp.valueOf(from))
@@ -78,7 +78,7 @@ public class CheckinLogServiceImpl implements CheckinLogService {
     }
 
     @Override
-    public List<CheckinLogObject> getPersonsLogsTo(Integer hash, LocalDateTime to) {
+    public List<CheckinLogObject> getPersonsLogsTo(String hash, LocalDateTime to) {
         return jpaCheckinLog.findByPersonIdAndTimestampBefore(
                     getPerson(hash).getId(),
                 Timestamp.valueOf(to))

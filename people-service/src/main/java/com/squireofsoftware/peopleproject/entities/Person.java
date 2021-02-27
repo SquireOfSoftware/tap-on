@@ -29,7 +29,7 @@ public class Person {
     private Timestamp creationDate;
     private Timestamp lastModified;
     @NotNull
-    private Integer hash;
+    private String hash;
 
     @NotNull
     @OneToMany

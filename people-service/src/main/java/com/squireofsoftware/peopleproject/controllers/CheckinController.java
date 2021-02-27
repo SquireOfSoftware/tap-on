@@ -28,12 +28,12 @@ public class CheckinController {
     }
 
     @GetMapping(value = "/hash/{hash}")
-    public PersonObject findPersonByHash(@PathVariable Integer hash) {
+    public PersonObject findPersonByHash(@PathVariable String hash) {
         return personService.findPersonByHash(hash);
     }
 
     @GetMapping(value = "/person/hash/{personId}")
-    public Integer getHashByPersonId(@PathVariable Integer personId) {
+    public String getHashByPersonId(@PathVariable Integer personId) {
         return personService.getPerson(personId).getHash();
     }
 
@@ -43,7 +43,7 @@ public class CheckinController {
     }
 
     @GetMapping(value = "/people/log/hash/{hash}")
-    public List<CheckinLogObject> getLogs(@PathVariable Integer hash,
+    public List<CheckinLogObject> getLogs(@PathVariable String hash,
                                           @RequestParam(value = "from", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
                                           @RequestParam(value = "to", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate) {
         if (fromDate != null && toDate != null) {
