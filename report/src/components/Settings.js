@@ -4,44 +4,23 @@ import { slide as Menu } from 'react-burger-menu'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog, faSyncAlt } from '@fortawesome/free-solid-svg-icons'
-
 import ServerStates from './ServerStates.js';
 
 class Settings extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      facingMode: this.props.initialCamera,
-      delayRate: this.props.initialDelayRate,
-      serverUrl: this.props.initialServerSetting,
-      serverGETState: ServerStates.UNCHECKED
+      serverGETState: ServerStates.UNCHECKED,
+      serverUrl: this.props.initialServerSetting
     }
     this.verifyServerGETRequest = this.verifyServerGETRequest.bind(this);
-
     this.verifyServerGETRequest();
-
     this.changeServerSetting = this.changeServerSetting.bind(this);
   }
 
   componentDidMount() {
     this.props.serverIsUp(this.setServerUp);
     this.props.serverIsDown(this.setServerDown)
-  }
-
-  changeDelayRate = (event) => {
-    let delayRate = event.target.value;
-    this.setState({
-      delayRate: delayRate
-    });
-    this.props.changeDelayRate(delayRate);
-  }
-
-  changeCamera = (event) => {
-    let camera = event.target.value;
-    this.setState({
-      facingMode: camera
-    });
-    this.props.changeCamera(camera);
   }
 
   changeServerSetting = (event) => {
@@ -114,24 +93,6 @@ class Settings extends Component {
             Settings
           </div>
           <div className="settings_body">
-            <div className="camera_settings">
-              <label>Camera</label>
-              <select
-                value={this.state.facingMode}
-                onChange={this.changeCamera}
-                id="camera_option">
-                <option value="user">User Camera</option>
-                <option value="environment">Environment Camera</option>
-              </select>
-            </div>
-            <div className="scan_rate_settings">
-              <label>Scan rate</label>
-              <input
-                id="delay_rate"
-                type="number"
-                value={this.state.delayRate}
-                onChange={this.changeDelayRate} />
-            </div>
             <div className="server_settings">
               <label>Server name</label>
               <input
@@ -145,7 +106,7 @@ class Settings extends Component {
               <FontAwesomeIcon icon={faSyncAlt}/>
             </div>
             <div>
-              <a href="/checkin-report" target="_self">Report</a>
+              <a href="/qr-scanner" target="_self">QR Scanner</a>
             </div>
             <div>
               Version {process.env.REACT_APP_VERSION}
