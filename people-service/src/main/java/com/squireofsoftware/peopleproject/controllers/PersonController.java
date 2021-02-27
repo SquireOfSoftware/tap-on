@@ -7,6 +7,7 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import com.squireofsoftware.peopleproject.dtos.PersonCSV;
 import com.squireofsoftware.peopleproject.dtos.PersonObject;
+import com.squireofsoftware.peopleproject.dtos.PersonReferenceObject;
 import com.squireofsoftware.peopleproject.services.PersonService;
 import com.squireofsoftware.peopleproject.services.QrCodeService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,6 +36,11 @@ public class PersonController {
                             QrCodeService qrCodeService) {
         this.personService = personService;
         this.qrCodeService = qrCodeService;
+    }
+
+    @GetMapping(value = "/")
+    public List<PersonReferenceObject> getPeople() {
+        return personService.getAllPeople();
     }
 
     @GetMapping(value = "/id/{id}")

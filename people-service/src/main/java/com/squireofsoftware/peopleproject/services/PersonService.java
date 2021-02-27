@@ -1,6 +1,9 @@
 package com.squireofsoftware.peopleproject.services;
 
 import com.squireofsoftware.peopleproject.dtos.PersonObject;
+import com.squireofsoftware.peopleproject.dtos.PersonReferenceObject;
+
+import java.util.List;
 
 public interface PersonService {
     /**
@@ -15,4 +18,6 @@ public interface PersonService {
     void deletePerson(Integer id);
 
     PersonObject recreateHash(Integer id);
+
+    List<PersonReferenceObject> getAllPeople();
 }

@@ -1,10 +1,7 @@
 package com.squireofsoftware.peopleproject.services;
 
 import com.squireofsoftware.peopleproject.ProjectConfiguration;
-import com.squireofsoftware.peopleproject.dtos.EmailAddressObject;
-import com.squireofsoftware.peopleproject.dtos.NameObject;
-import com.squireofsoftware.peopleproject.dtos.PersonObject;
-import com.squireofsoftware.peopleproject.dtos.PhoneNumberObject;
+import com.squireofsoftware.peopleproject.dtos.*;
 import com.squireofsoftware.peopleproject.entities.*;
 import com.squireofsoftware.peopleproject.exceptions.PersonNotFoundException;
 import com.squireofsoftware.peopleproject.jpas.JpaEmailAddress;
@@ -16,8 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @Slf4j
@@ -80,6 +80,8 @@ public class PersonServiceImpl implements PersonService {
                     .build());
         }
 
+        personObject.addSelfReference();
+
         return personObject;
     }
 
@@ -109,6 +111,13 @@ public class PersonServiceImpl implements PersonService {
         return jpaPerson.findById(id)
                 .map(this::updateHash)
                 .orElseThrow(() -> new PersonNotFoundException(id));
+    }
+
+    @Override
+    public List<PersonReferenceObject> getAllPeople() {
+        return StreamSupport.stream(jpaPerson.findAll().spliterator(), false)
+                .map(PersonReferenceObject::from)
+                .collect(Collectors.toList());
     }
 
     private PersonObject updateHash(Person person) {

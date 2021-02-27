@@ -1,22 +1,24 @@
 package com.squireofsoftware.peopleproject.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.squireofsoftware.peopleproject.controllers.PersonController;
 import com.squireofsoftware.peopleproject.entities.Person;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PersonObject {
+public class PersonObject extends RepresentationModel<PersonObject> {
     private Integer id;
     @NotNull
     private String givenName;
@@ -39,7 +41,7 @@ public class PersonObject {
 
     public static PersonObject map(Person person) {
         if (person != null) {
-            return PersonObject.builder()
+            PersonObject personObject = PersonObject.builder()
                     .id(person.getId())
                     .familyName(person.getFamilyName())
                     .givenName(person.getGivenName())
@@ -57,6 +59,13 @@ public class PersonObject {
                             .map(EmailAddressObject::mapFrom)
                             .collect(Collectors.toList()))
                     .build();
+
+            personObject.add(
+                    linkTo(PersonController.class)
+                            .slash(personObject.getId())
+                            .withSelfRel());
+
+            return personObject;
         }
         return null;
     }
@@ -99,5 +108,15 @@ public class PersonObject {
                     .build();
         }
         return null;
+    }
+
+    public void addSelfReference() {
+        if (id != null) {
+            add(linkTo(PersonController.class)
+                        .slash(getId())
+                        .withSelfRel());
+        } else {
+            throw new NullPointerException("Self rel link id cannot be null");
+        }
     }
 }
