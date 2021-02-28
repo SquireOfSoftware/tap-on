@@ -5,6 +5,7 @@ import './App.css';
 import Settings from './components/Settings.js';
 import CheckList from './components/CheckList.js';
 import ServerStates from './components/ServerStates.js';
+import moment from 'moment'
 
 class App extends Component {
   constructor(props) {
@@ -14,18 +15,17 @@ class App extends Component {
       serverSetting = this.props.serverSetting;
     }
 
+    let startTime = window.localStorage.getItem('startTime');
+    if (startTime === undefined || startTime === null) {
+      startTime = this.props.startTime;
+    }
+
     this.state = {
       serverSetting: serverSetting,
-      serverState: ServerStates.UNCHECKED
+      serverState: ServerStates.UNCHECKED,
+      startTime: startTime
     }
     this.changeServerSetting = this.changeServerSetting.bind(this);
-  }
-
-  serverIsUp = () => {
-    this.setState({
-      serverState: ServerStates.UP
-    });
-    this.setServerSettingUp();
   }
 
   changeServerSetting = (changedServerSetting) => {
@@ -33,7 +33,20 @@ class App extends Component {
       serverSetting: changedServerSetting
     });
     window.localStorage.setItem("serverSetting", changedServerSetting);
-    this.updateServerUrl(changedServerSetting);
+  }
+
+  changeStartTime = (changedStartTime) => {
+    this.setState({
+      startTime: changedStartTime
+    });
+    window.localStorage.setItem("startTime", changedStartTime);
+  }
+
+  serverIsUp = () => {
+    this.setState({
+      serverState: ServerStates.UP
+    });
+    this.setServerSettingUp();
   }
 
   serverIsDown = () => {
@@ -61,9 +74,15 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           {serverMessage}
-          <CheckList initialServerSetting={this.state.serverSetting}/>
-          <Settings initialServerSetting={this.state.serverSetting}
+          <CheckList initialServerUrl={this.state.serverSetting}
+                      serverIsDown={serverIsDown => this.setServerSettingDown = serverIsDown}
+                      serverIsUp={serverIsUp => this.setServerSettingUp = serverIsUp}
+                      updateServerState={this.updateServerState}
+                      initialStartTime={this.state.startTime}/>
+          <Settings initialServerUrl={this.state.serverSetting}
+                    initialStartTime={this.state.startTime}
                     changeServerSetting={this.changeServerSetting}
+                    changeStartTime={this.changeStartTime}
                     serverIsDown={serverIsDown => this.setServerSettingDown = serverIsDown}
                     serverIsUp={serverIsUp => this.setServerSettingUp = serverIsUp}
                     updateServerState={this.updateServerState}/>
@@ -74,7 +93,8 @@ class App extends Component {
 }
 
 App.defaultProps = {
- serverSetting: 'https://localhost:8000'
+  serverSetting: 'https://localhost:8000',
+  startTime: new moment().format()
 }
 
 export default App;

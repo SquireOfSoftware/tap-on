@@ -3,19 +3,108 @@ import React, {Component} from 'react';
 import { useTable, useRowSelect } from 'react-table'
 
 import './CheckList.css'
+import ServerStates from './ServerStates.js'
 
 class CheckList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      people: []
+      people: [],
+      serverGETState: ServerStates.UNCHECKED,
+      startTime: this.props.initialStartTime,
+      serverUrl: this.props.initialServerUrl
     }
     this.loadPeople = this.loadPeople.bind(this);
     this.loadPeople();
   }
 
-  loadPeople = () => {
+  loadTodaysSignins = () => {
+    this.setState({
+      serverGETState: ServerStates.CHECKING
+    });
 
+    let successGET = (event) => {
+      if (event.target.status === 200) {
+        this.setState({
+          serverGETState: ServerStates.UP
+        });
+        this.props.updateServerState(this.state.serverGETState);
+        console.log(event.target.responseText);
+      } else {
+        this.setState({
+          serverGETState: ServerStates.DOWN
+        });
+        this.props.updateServerState(this.state.serverGETState);
+      }
+    }
+
+    let failedGET = (event) => {
+      console.error("An error occurred while checking the server health.");
+      this.setState({
+        serverGETState: ServerStates.DOWN
+      });
+      this.props.updateServerState(this.state.serverGETState);
+    }
+
+    let getRequest = new XMLHttpRequest();
+
+    getRequest.addEventListener("load", successGET);
+    getRequest.addEventListener("error", failedGET);
+    console.log(this.state.serverUrl + "/people-service/checkin/signins/from/" + this.state.startTime);
+    getRequest.open("GET", this.state.serverUrl + "/people-service/checkin/signins/from/" + this.state.startTime, true);
+    getRequest.setRequestHeader("Access-Control-Allow-Headers", "*");
+    getRequest.setRequestHeader("Content-Type", "application/json");
+    getRequest.send();
+
+    console.log(getRequest);
+  }
+
+  loadPeople = () => {
+    this.setState({
+      serverGETState: ServerStates.CHECKING
+    });
+
+    let successGET = (event) => {
+      if (event.target.status === 200) {
+        this.setState({
+          serverGETState: ServerStates.UP
+        });
+        this.props.updateServerState(this.state.serverGETState);
+        let people = JSON.parse(event.target.responseText);
+        this.setState({
+          people: people
+        });
+        console.log(people);
+        this.loadTodaysSignins();
+      } else {
+        this.setState({
+          serverGETState: ServerStates.DOWN
+        });
+        this.props.updateServerState(this.state.serverGETState);
+      }
+    }
+
+    let failedGET = (event) => {
+      console.error("An error occurred while checking the server health.");
+      this.setState({
+        serverGETState: ServerStates.DOWN
+      });
+      this.props.updateServerState(this.state.serverGETState);
+    }
+
+    let getRequest = new XMLHttpRequest();
+
+    getRequest.addEventListener("load", successGET);
+    getRequest.addEventListener("error", failedGET);
+    console.log(this.state.serverUrl + "/people-service/people/");
+    getRequest.open("GET", this.state.serverUrl + "/people-service/people/", true);
+    getRequest.setRequestHeader("Access-Control-Allow-Headers", "*");
+    getRequest.setRequestHeader("Access-Control-Allow-Origin", "*");
+    getRequest.setRequestHeader("Access-Control-Allow-Methods", "*");
+    getRequest.setRequestHeader("Content-Type", "application/json");
+    getRequest.send();
+
+    console.log(getRequest);
   }
 
   render() {
@@ -48,18 +137,9 @@ class CheckList extends Component {
       },
     ]
 
-    let data = [
-      {
-        givenName: 'Joseph',
-        familyName: 'Tran',
-        isAMember: 'false',
-        hasSignedIn: 'false'
-      }
-    ]
-
     return (
       <div>
-        <Table columns={columns} data={data} />
+        <Table columns={columns} data={this.state.people} />
       </div>
     )
   }

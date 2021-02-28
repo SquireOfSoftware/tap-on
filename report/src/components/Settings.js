@@ -11,11 +11,13 @@ class Settings extends Component {
     super(props);
     this.state = {
       serverGETState: ServerStates.UNCHECKED,
-      serverUrl: this.props.initialServerSetting
+      serverUrl: this.props.initialServerUrl,
+      startTime: this.props.initialStartTime
     }
     this.verifyServerGETRequest = this.verifyServerGETRequest.bind(this);
     this.verifyServerGETRequest();
     this.changeServerSetting = this.changeServerSetting.bind(this);
+    this.changeStartTime = this.changeStartTime.bind(this);
   }
 
   componentDidMount() {
@@ -24,11 +26,22 @@ class Settings extends Component {
   }
 
   changeServerSetting = (event) => {
-    let serverSetting = event.target.value;
+    console.log(event);
+    let serverUrl = event.target.value;
     this.setState({
-      serverSetting: serverSetting
+      serverUrl: serverUrl
     });
-    this.props.changeServerSetting(serverSetting);
+    console.log("Changing the name: " + serverUrl);
+    this.props.changeServerSetting(serverUrl);
+  }
+
+  changeStartTime = (event) => {
+    let startTime = event.target.value;
+    this.setState({
+      startTime: startTime
+    });
+    console.log("Changing the reporting time to: " + startTime);
+    this.props.changeStartTime(startTime);
   }
 
   setServerUp = () => {
@@ -98,8 +111,16 @@ class Settings extends Component {
               <input
                 id="server_setting"
                 type="url"
-                value={this.props.initialServerSetting}
+                value={this.props.initialServerUrl}
                 onChange={this.changeServerSetting} />
+            </div>
+            <div className="server_settings">
+              <label>Start Time of Report</label>
+              <input
+                id="start_time"
+                type="datetime-local"
+                value={this.props.initialStartTime}
+                onChange={this.changeStartTime} />
             </div>
             <div onClick={() => this.verifyServerGETRequest()}>
               Server is: {this.state.serverGETState.name}

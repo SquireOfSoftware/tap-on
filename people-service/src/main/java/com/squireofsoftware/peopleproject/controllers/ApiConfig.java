@@ -17,5 +17,4 @@ public class ApiConfig {
                 .paths(PathSelectors.any())
                 .build();
     }
-
 }

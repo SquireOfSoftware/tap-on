@@ -23,6 +23,11 @@ management:
         include: "health,info,beans,env"
     health:
       show-details: true
+    web:
+      cors:
+        allowed-origins: "*"
+        allowed-methods: "GET"
+        allowed-headers: "*"
 server:
   port: 8080
   servlet:
