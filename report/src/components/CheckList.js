@@ -5,6 +5,9 @@ import { useTable, useRowSelect } from 'react-table'
 import './CheckList.css'
 import ServerStates from './ServerStates.js'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons'
+
 class CheckList extends Component {
   constructor(props) {
     super(props);
@@ -12,10 +15,52 @@ class CheckList extends Component {
       people: [],
       serverGETState: ServerStates.UNCHECKED,
       startTime: this.props.initialStartTime,
-      serverUrl: this.props.initialServerUrl
+      serverUrl: this.props.initialServerUrl,
+      autoRefreshPeople: this.props.initialAutoRefreshPeople
     }
     this.loadPeople = this.loadPeople.bind(this);
     this.loadPeople();
+  }
+
+  componentDidMount() {
+    this.props.disableAutoRefreshPeople(this.disableAutoRefreshPeople);
+    this.props.enableAutoRefreshPeople(this.enableAutoRefreshPeople);
+
+    if (this.state.autoRefreshPeople === true) {
+      this.enableAutoRefreshPeople();
+    } else {
+      this.disableAutoRefreshPeople();
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.timer !== undefined) {
+      clearInterval(this.timer);
+    }
+    this.timer = null;
+  }
+
+  enableAutoRefreshPeople = () => {
+    this.setState({
+      autoRefreshPeople: true
+    });
+    if (this.timer !== undefined) {
+      clearInterval(this.timer);
+    }
+
+    this.timer = setInterval(()=> this.loadPeople(), 5000);
+  }
+
+  disableAutoRefreshPeople = () => {
+    this.setState({
+      autoRefreshPeople: false
+    });
+
+    if (this.timer !== undefined) {
+      clearInterval(this.timer);
+    }
+
+    this.timer = null;
   }
 
   loadTodaysSignins = () => {
@@ -135,6 +180,9 @@ class CheckList extends Component {
 
     return (
       <div>
+        <div className="refreshPeopleButton" onClick={() => this.loadPeople()}>
+          <FontAwesomeIcon icon={faSyncAlt}/>
+        </div>
         <Table columns={columns} data={this.state.people} />
       </div>
     )
@@ -214,7 +262,7 @@ function Table({columns, data}) {
           if (row.isSelected) {
             selectedClassName = "test";
           }
-          console.log(row);
+//          console.log(row);
           return (
             <tr className={selectedClassName} {...row.getRowProps()}>
               {row.cells.map(cell => {

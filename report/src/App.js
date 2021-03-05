@@ -20,10 +20,16 @@ class App extends Component {
       startTime = this.props.startTime;
     }
 
+    let autoRefreshPeople = (window.localStorage.getItem('autoRefreshPeople') == 'true');
+    if (autoRefreshPeople === undefined || autoRefreshPeople === null) {
+      autoRefreshPeople = this.props.autoRefreshPeople;
+    }
+
     this.state = {
       serverSetting: serverSetting,
       serverState: ServerStates.UNCHECKED,
-      startTime: startTime
+      startTime: startTime,
+      autoRefreshPeople: autoRefreshPeople
     }
     this.changeServerSetting = this.changeServerSetting.bind(this);
   }
@@ -62,6 +68,20 @@ class App extends Component {
     });
   }
 
+  updateAutoRefreshPeople = (newAutoRefresh) => {
+    this.setState({
+      autoRefreshPeople: newAutoRefresh
+    });
+
+    window.localStorage.setItem("autoRefreshPeople", newAutoRefresh);
+
+    if (newAutoRefresh === true) {
+      this.enableAutoRefreshPeople();
+    } else {
+      this.disableAutoRefreshPeople();
+    }
+  }
+
   render() {
     let serverStatus;
     let serverMessage;
@@ -75,17 +95,22 @@ class App extends Component {
         <header className="App-header">
           {serverMessage}
           <CheckList initialServerUrl={this.state.serverSetting}
+                      initialStartTime={this.state.startTime}
+                      initialAutoRefreshPeople={this.state.autoRefreshPeople}
                       serverIsDown={serverIsDown => this.setServerSettingDown = serverIsDown}
                       serverIsUp={serverIsUp => this.setServerSettingUp = serverIsUp}
-                      updateServerState={this.updateServerState}
-                      initialStartTime={this.state.startTime}/>
+                      disableAutoRefreshPeople={disableAutoRefreshPeople => this.disableAutoRefreshPeople = disableAutoRefreshPeople}
+                      enableAutoRefreshPeople={enableAutoRefreshPeople => this.enableAutoRefreshPeople = enableAutoRefreshPeople}
+                      updateServerState={this.updateServerState}/>
           <Settings initialServerUrl={this.state.serverSetting}
                     initialStartTime={this.state.startTime}
+                    initialAutoRefreshPeople={this.state.autoRefreshPeople}
                     changeServerSetting={this.changeServerSetting}
                     changeStartTime={this.changeStartTime}
                     serverIsDown={serverIsDown => this.setServerSettingDown = serverIsDown}
                     serverIsUp={serverIsUp => this.setServerSettingUp = serverIsUp}
-                    updateServerState={this.updateServerState}/>
+                    updateServerState={this.updateServerState}
+                    updateAutoRefreshPeople={this.updateAutoRefreshPeople}/>
         </header>
       </div>
     );
@@ -94,7 +119,8 @@ class App extends Component {
 
 App.defaultProps = {
   serverSetting: 'https://localhost:8000',
-  startTime: new moment().format()
+  startTime: new moment().format(),
+  autoRefreshPeople: true
 }
 
 export default App;

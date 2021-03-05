@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import './Settings.css'
 import { slide as Menu } from 'react-burger-menu'
+import Toggle from 'react-toggle'
+import 'react-toggle/style.css'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog, faSyncAlt } from '@fortawesome/free-solid-svg-icons'
@@ -12,7 +14,8 @@ class Settings extends Component {
     this.state = {
       serverGETState: ServerStates.UNCHECKED,
       serverUrl: this.props.initialServerUrl,
-      startTime: this.props.initialStartTime
+      startTime: this.props.initialStartTime,
+      autoRefreshPeople: this.props.initialAutoRefreshPeople
     }
     this.verifyServerGETRequest = this.verifyServerGETRequest.bind(this);
     this.verifyServerGETRequest();
@@ -22,7 +25,7 @@ class Settings extends Component {
 
   componentDidMount() {
     this.props.serverIsUp(this.setServerUp);
-    this.props.serverIsDown(this.setServerDown)
+    this.props.serverIsDown(this.setServerDown);
   }
 
   changeServerSetting = (event) => {
@@ -97,6 +100,13 @@ class Settings extends Component {
     console.log(getRequest);
   }
 
+  handleAutoRefreshPeople = (evt) => {
+    this.setState({
+      autoRefreshPeople: evt.target.checked
+    });
+    this.props.updateAutoRefreshPeople(evt.target.checked);
+  }
+
   render() {
     return (
       <div>
@@ -125,6 +135,13 @@ class Settings extends Component {
             <div onClick={() => this.verifyServerGETRequest()}>
               Server is: {this.state.serverGETState.name}
               <FontAwesomeIcon icon={faSyncAlt}/>
+            </div>
+            <div>
+              <label htmlFor='auto-refresh-people-list'>Auto refresh people</label>
+              <Toggle
+                id='auto-refresh-people-list'
+                defaultChecked={this.state.autoRefreshPeople}
+                onChange={this.handleAutoRefreshPeople} />
             </div>
             <div>
               <a href="/qr-scanner" target="_self">QR Scanner</a>

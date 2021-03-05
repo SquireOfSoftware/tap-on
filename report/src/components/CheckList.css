@@ -1,3 +1,8 @@
 .test {
   background-color: red;
 }
+
+.refreshPeopleButton {
+  position: absolute;
+  right: 5%;
+}
