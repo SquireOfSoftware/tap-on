@@ -20,6 +20,7 @@ class CheckList extends Component {
     }
     this.loadPeople = this.loadPeople.bind(this);
     this.loadTodaysSignins = this.loadTodaysSignins.bind(this);
+    this.queryServer = this.queryServer.bind(this);
     this.loadPeople();
   }
 
@@ -64,7 +65,7 @@ class CheckList extends Component {
     this.timer = null;
   }
 
-  loadTodaysSignins = () => {
+  queryServer = (url, successCallback, failureCallback) => {
     this.setState({
       serverGETState: ServerStates.CHECKING
     });
@@ -75,7 +76,41 @@ class CheckList extends Component {
           serverGETState: ServerStates.UP
         });
         this.props.updateServerState(this.state.serverGETState);
+        successCallback(event);
+      } else {
+        this.setState({
+          serverGETState: ServerStates.DOWN
+        });
+        this.props.updateServerState(this.state.serverGETState);
+      }
+    }
 
+    let failedGET = (event) => {
+      console.error("An error occurred while checking the server health.");
+      this.setState({
+        serverGETState: ServerStates.DOWN
+      });
+      this.props.updateServerState(this.state.serverGETState);
+      failureCallback(event);
+    }
+
+    let getRequest = new XMLHttpRequest();
+
+    getRequest.addEventListener("load", successGET);
+    getRequest.addEventListener("error", failedGET);
+    console.log(url);
+    getRequest.open("GET", url, true);
+    getRequest.setRequestHeader("Access-Control-Allow-Headers", "*");
+    getRequest.setRequestHeader("Content-Type", "application/json");
+    getRequest.send();
+
+    console.log(getRequest);
+  }
+
+  loadTodaysSignins = () => {
+    this.queryServer(
+      this.state.serverUrl + "/people-service/checkin/signins/from/" + this.state.startTime,
+      (event) => {
         // here we want to parse the results and find the right people in the array
         // then set their hasSignedIn to true
         // if no applicable person is found the person is then just left alone
@@ -108,47 +143,13 @@ class CheckList extends Component {
           });
           console.log(this.state.peopleMap);
         }
-
-      } else {
-        this.setState({
-          serverGETState: ServerStates.DOWN
-        });
-        this.props.updateServerState(this.state.serverGETState);
-      }
-    }
-
-    let failedGET = (event) => {
-      console.error("An error occurred while checking the server health.");
-      this.setState({
-        serverGETState: ServerStates.DOWN
       });
-      this.props.updateServerState(this.state.serverGETState);
-    }
-
-    let getRequest = new XMLHttpRequest();
-
-    getRequest.addEventListener("load", successGET);
-    getRequest.addEventListener("error", failedGET);
-    console.log(this.state.serverUrl + "/people-service/checkin/signins/from/" + this.state.startTime);
-    getRequest.open("GET", this.state.serverUrl + "/people-service/checkin/signins/from/" + this.state.startTime, true);
-    getRequest.setRequestHeader("Access-Control-Allow-Headers", "*");
-    getRequest.setRequestHeader("Content-Type", "application/json");
-    getRequest.send();
-
-    console.log(getRequest);
   }
 
   loadPeople = () => {
-    this.setState({
-      serverGETState: ServerStates.CHECKING
-    });
-
-    let successGET = (event) => {
-      if (event.target.status === 200) {
-        this.setState({
-          serverGETState: ServerStates.UP
-        });
-        this.props.updateServerState(this.state.serverGETState);
+    this.queryServer(
+      this.state.serverUrl + "/people-service/people/",
+      (event) => {
         let people = JSON.parse(event.target.responseText);
 
         // need to store this as a map, id -> person
@@ -159,35 +160,7 @@ class CheckList extends Component {
         });
         console.log(people);
         this.loadTodaysSignins();
-      } else {
-        this.setState({
-          serverGETState: ServerStates.DOWN
-        });
-        this.props.updateServerState(this.state.serverGETState);
-      }
-    }
-
-    let failedGET = (event) => {
-      console.error("An error occurred while checking the server health.");
-      this.setState({
-        serverGETState: ServerStates.DOWN
       });
-      this.props.updateServerState(this.state.serverGETState);
-    }
-
-    let getRequest = new XMLHttpRequest();
-
-    getRequest.addEventListener("load", successGET);
-    getRequest.addEventListener("error", failedGET);
-    console.log(this.state.serverUrl + "/people-service/people/");
-    getRequest.open("GET", this.state.serverUrl + "/people-service/people/", true);
-    getRequest.setRequestHeader("Access-Control-Allow-Headers", "*");
-    getRequest.setRequestHeader("Access-Control-Allow-Origin", "*");
-    getRequest.setRequestHeader("Access-Control-Allow-Methods", "*");
-    getRequest.setRequestHeader("Content-Type", "application/json");
-    getRequest.send();
-
-    console.log(getRequest);
   }
 
   render() {
