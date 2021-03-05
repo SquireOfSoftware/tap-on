@@ -12,13 +12,14 @@ class CheckList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      people: [],
+      peopleMap: undefined,
       serverGETState: ServerStates.UNCHECKED,
       startTime: this.props.initialStartTime,
       serverUrl: this.props.initialServerUrl,
       autoRefreshPeople: this.props.initialAutoRefreshPeople
     }
     this.loadPeople = this.loadPeople.bind(this);
+    this.loadTodaysSignins = this.loadTodaysSignins.bind(this);
     this.loadPeople();
   }
 
@@ -74,7 +75,40 @@ class CheckList extends Component {
           serverGETState: ServerStates.UP
         });
         this.props.updateServerState(this.state.serverGETState);
-        console.log(event.target.responseText);
+
+        // here we want to parse the results and find the right people in the array
+        // then set their hasSignedIn to true
+        // if no applicable person is found the person is then just left alone
+
+        // {timestamp:..., person: {}}
+
+        let checkinLogs = JSON.parse(event.target.responseText);
+        this.setState({
+          checkinLogs: checkinLogs
+        });
+
+        let newPeopleMap = this.state.peopleMap;
+
+        if (newPeopleMap !== undefined && newPeopleMap.size > 0) {
+          checkinLogs.forEach(log => {
+            let person = log.person;
+            console.log(person);
+            // find the person in the state via the peopleMap
+            let personEntry = newPeopleMap.get(person.id);
+            if (personEntry !== undefined || personEntry !== null) {
+              personEntry.hasSignedIn = "true";
+              personEntry.firstSignIn = log.timestamp;
+              newPeopleMap[person.id] = personEntry;
+            }
+          });
+
+          this.setState({
+            ...this.state,
+            peopleMap: newPeopleMap
+          });
+          console.log(this.state.peopleMap);
+        }
+
       } else {
         this.setState({
           serverGETState: ServerStates.DOWN
@@ -116,8 +150,12 @@ class CheckList extends Component {
         });
         this.props.updateServerState(this.state.serverGETState);
         let people = JSON.parse(event.target.responseText);
+
+        // need to store this as a map, id -> person
+        let peopleMap = new Map(people.map(person => [person.id, person]));
+
         this.setState({
-          people: people
+          peopleMap: peopleMap
         });
         console.log(people);
         this.loadTodaysSignins();
@@ -171,19 +209,24 @@ class CheckList extends Component {
         Header: 'Info',
         columns: [
           {
-            Header: 'Has Signed In',
-            accessor: 'hasSignedIn'
+            Header: 'Signed In At',
+            accessor: 'firstSignIn'
           }
         ],
       },
     ]
+
+    let table = undefined;
+    if (this.state.peopleMap !== undefined) {
+      table = <Table columns={columns} data={[...this.state.peopleMap.values()]} />
+    }
 
     return (
       <div>
         <div className="refreshPeopleButton" onClick={() => this.loadPeople()}>
           <FontAwesomeIcon icon={faSyncAlt}/>
         </div>
-        <Table columns={columns} data={this.state.people} />
+        {table}
       </div>
     )
   }
