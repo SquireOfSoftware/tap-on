@@ -9,9 +9,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 public interface PersonInterface<T> {
     String SELF_REL = "self";
-    String SIGN_IN_REL = "Sign in post request";
-    String LOG_REL = "All sign in logs for person";
-    String QR_REL = "Qr code for person";
+    String SIGN_IN_REL = "sign_in_request";
+    String LOG_REL = "all_sign_in_logs";
+    String QR_REL = "qr_code";
 
     Integer getId();
     String getHash();

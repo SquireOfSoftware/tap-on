@@ -11,6 +11,7 @@ import com.squireofsoftware.peopleproject.dtos.PersonReferenceObject;
 import com.squireofsoftware.peopleproject.services.PersonService;
 import com.squireofsoftware.peopleproject.services.QrCodeService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -41,6 +43,13 @@ public class PersonController {
     @GetMapping(value = "/")
     public List<PersonReferenceObject> getPeople() {
         return personService.getAllPeople();
+    }
+
+    @GetMapping(value = "/from/{from}")
+    public List<PersonReferenceObject> getPeople(@PathVariable
+                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                                         LocalDateTime from) {
+        return personService.getAllPeopleFrom(from);
     }
 
     @GetMapping(value = "/id/{id}")

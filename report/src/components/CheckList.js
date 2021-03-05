@@ -126,10 +126,6 @@ class CheckList extends Component {
         Header: 'Info',
         columns: [
           {
-            Header: 'Is Member',
-            accessor: 'isAMember'
-          },
-          {
             Header: 'Has Signed In',
             accessor: 'hasSignedIn'
           }

@@ -10,10 +10,12 @@ import com.squireofsoftware.peopleproject.jpas.JpaNamePart;
 import com.squireofsoftware.peopleproject.jpas.JpaPerson;
 import com.squireofsoftware.peopleproject.jpas.JpaPhoneNumber;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -124,7 +126,16 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<PersonReferenceObject> getAllPeople() {
-        return jpaPerson.findAll()
+        return jpaPerson.findAll(Sort.by(Sort.Direction.ASC, "familyName"))
+                .stream()
+                .map(PersonReferenceObject::from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PersonReferenceObject> getAllPeopleFrom(LocalDateTime fromDate) {
+        return jpaPerson.findByCreationDateAfter(Timestamp.valueOf(fromDate),
+                Sort.by(Sort.Direction.ASC, "familyName"))
                 .stream()
                 .map(PersonReferenceObject::from)
                 .collect(Collectors.toList());

@@ -3,6 +3,7 @@ package com.squireofsoftware.peopleproject.services;
 import com.squireofsoftware.peopleproject.dtos.PersonObject;
 import com.squireofsoftware.peopleproject.dtos.PersonReferenceObject;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PersonService {
@@ -20,6 +21,8 @@ public interface PersonService {
     PersonObject recreateHash(Integer id);
 
     List<PersonReferenceObject> getAllPeople();
+
+    List<PersonReferenceObject> getAllPeopleFrom(LocalDateTime fromDate);
 
     /**
      * This will only update the following:
