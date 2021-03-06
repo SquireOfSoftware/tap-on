@@ -161,3 +161,6 @@ There are some constraints for example:
   This was adjusted in 2017 and will fail to load the user media devices if you do not serve the content 
   over https, this means that for this process to work, we need an internal self signed SSL certificate
   so that users can use their camera to read things.
+
+Here is a link on how to create ssl certificates locally:
+https://deliciousbrains.com/ssl-certificate-authority-for-local-https-development/
