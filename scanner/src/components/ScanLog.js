@@ -36,7 +36,7 @@ class ScanLog extends Component {
     // scan should just be a number
     // we add the timestamp when we add it into the state
     if (this.scanIsLegit(newScan)) {
-      let hash = Number.parseInt(newScan);
+      let hash = newScan;
       let scan = {
         hash: hash,
         state: ScanStates.PROCESSING,
@@ -49,7 +49,6 @@ class ScanLog extends Component {
         this.setState({
           totalScans: scans
         });
-//        console.log(scan);
         this.signIn(hash);
       } else {
         let existingScan = this.state.totalScans.get(hash);
@@ -77,7 +76,6 @@ class ScanLog extends Component {
     let signInComplete = (event) => {
       if (event.target.status === 200) {
         let checkinLog = JSON.parse(event.target.responseText);
-//        console.log(checkinLog);
         let person = checkinLog.person;
         this.setState(prevState => {
           const newScans = new Map(prevState.totalScans);
@@ -111,7 +109,6 @@ class ScanLog extends Component {
             totalScans: newScans.set(hash, scan)
           }
         });
-        let scan = this.state.totalScans.get(hash);
       }
       this.props.serverIsUp();
     }

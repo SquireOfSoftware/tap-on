@@ -202,7 +202,21 @@ class CheckList extends Component {
         let people = JSON.parse(event.target.responseText);
 
         // need to store this as a map, id -> person
-        let peopleMap = new Map(people.map(person => [person.id, person]));
+        // also convert all http requests over to https
+        // if the main source is https
+        let peopleMap = new Map(people.map(person => {
+          if (window.location.protocol === 'https:') {
+            let links = person.links.map(link => {
+              return {
+                rel: link.rel,
+                href: link.href.replace("http:", "https:")
+              }
+            });
+            person.links = links;
+          }
+
+          return [person.id, person];
+        }));
 
         this.setState({
           peopleMap: peopleMap

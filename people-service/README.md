@@ -36,6 +36,8 @@ The database schema is maintained by Spring boot itself, so all
 the service really needs is write and read access to the database
 and Spring boot will configure everything else.
 
+You also need to run the ssl profile (if you are running production)
+
 ## Swagger UI
 
 There is a Swagger UI that is exposed:

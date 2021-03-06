@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://db:5432/postgres
+    username: postgres
+    password: postgres
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate.ddl-auto: none
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  mvc:
+    media-types:
+      csv: text/csv
+
+management:
+  endpoints:
+    jmx:
+      exposure:
+        include: "health,info,beans,env"
+    health:
+      show-details: true
+server:
+  port: 443
+  ssl:
+    enabled: true
+    key-store-type: PKCS12
+    #key-store: classpath:keystore/dummy-keystore.p12
+    key-store: /etc/certs/server.p12
+    key-store-password: password
+  servlet:
+    context-path: /people-service
