@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://db:5432/postgres
+    username: postgres
+    password: postgres
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate.ddl-auto: create
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  mvc:
+    media-types:
+      csv: text/csv
+
+management:
+  endpoints:
+    jmx:
+      exposure:
+        include: "health,info,beans,env"
+    health:
+      show-details: true
+server:
+  port: 8080
+  servlet:
+    context-path: /people-service
