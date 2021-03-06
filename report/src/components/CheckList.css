@@ -14,3 +14,7 @@
 .clickable:hover {
   opacity: 80%;
 }
+
+thead {
+  font-size: 10px;
+}

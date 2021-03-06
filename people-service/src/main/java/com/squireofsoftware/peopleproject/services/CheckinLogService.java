@@ -1,5 +1,6 @@
 package com.squireofsoftware.peopleproject.services;
 
+import com.squireofsoftware.peopleproject.dtos.BulkSignInObject;
 import com.squireofsoftware.peopleproject.dtos.CheckinLogObject;
 import com.squireofsoftware.peopleproject.dtos.SignInObject;
 
@@ -22,4 +23,6 @@ public interface CheckinLogService {
     List<CheckinLogObject> getSignInsForToday();
 
     List<CheckinLogObject> getSignInsFrom(LocalDateTime from);
+
+    List<CheckinLogObject> bulkCheckIn(BulkSignInObject bulkSignInObject);
 }

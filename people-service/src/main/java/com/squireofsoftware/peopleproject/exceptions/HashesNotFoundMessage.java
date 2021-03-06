@@ -1,14 +1,18 @@
 package com.squireofsoftware.peopleproject.exceptions;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Singular;
 import lombok.experimental.SuperBuilder;
 
-@SuperBuilder
+import java.util.Set;
+
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class ExceptionMessage {
-    private String message;
+@SuperBuilder
+public class HashesNotFoundMessage extends ExceptionMessage {
+    @Singular
+    private Set<String> missingHashes;
 }

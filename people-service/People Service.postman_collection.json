@@ -12,7 +12,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"hash\": 138932330,\n    \"message\": \"friday sign in\"\n}",
+					"raw": "{\n    \"hash\": \"891b88f8-5f6a-44c6-8082-6e725d2474d7\",\n    \"message\": \"friday sign in\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -785,7 +785,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/people-service/checkin/people/log/hash/1450657881?from=2021-01-09T10:12:03",
+					"raw": "http://localhost:8080/people-service/checkin/people/log/hash/10f6f515-a558-430e-90e6-5ed56818def1?from=2021-01-09T10:12:03",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -797,7 +797,7 @@
 						"people",
 						"log",
 						"hash",
-						"1450657881"
+						"10f6f515-a558-430e-90e6-5ed56818def1"
 					],
 					"query": [
 						{
@@ -1477,6 +1477,105 @@
 			},
 			"response": [
 				{
+					"name": "Look up all people after a certain date time",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/people-service/people/?from=2021-03-05T19:29:51",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"people-service",
+								"people",
+								""
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2021-03-05T19:29:51"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 05 Mar 2021 08:35:06 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 1,\n        \"givenName\": \"Joseph\",\n        \"familyName\": \"Man\",\n        \"hash\": \"3553bfb5-5796-4279-842e-3b9448cb044a\",\n        \"links\": [\n            {\n                \"rel\": \"self\",\n                \"href\": \"http://localhost:8080/people-service/people/id/1\"\n            },\n            {\n                \"rel\": \"sign_in_request\",\n                \"href\": \"http://localhost:8080/people-service/checkin/signin/3553bfb5-5796-4279-842e-3b9448cb044a\"\n            },\n            {\n                \"rel\": \"all_sign_in_logs\",\n                \"href\": \"http://localhost:8080/people-service/checkin/people/log/hash/3553bfb5-5796-4279-842e-3b9448cb044a\"\n            },\n            {\n                \"rel\": \"qr_code\",\n                \"href\": \"http://localhost:8080/people-service/people/id/1/qrcode\"\n            }\n        ]\n    }\n]"
+				},
+				{
 					"name": "Person look up",
 					"originalRequest": {
 						"method": "GET",
@@ -1571,6 +1670,100 @@
 					"body": "{\n    \"id\": 103,\n    \"givenName\": \"Joseph\",\n    \"familyName\": \"人\",\n    \"otherNames\": [\n        {\n            \"name\": \"Joey\",\n            \"language\": \"English\"\n        }\n    ],\n    \"isBaptised\": false,\n    \"isMember\": false,\n    \"hash\": 138932330,\n    \"emailAddresses\": [\n        {\n            \"email\": \"test@gmail.com\",\n            \"description\": null\n        }\n    ],\n    \"phoneNumbers\": [\n        {\n            \"number\": \"+61234567890\",\n            \"description\": null\n        }\n    ]\n}"
 				},
 				{
+					"name": "Look up all people",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/people-service/people/from/2021-03-05T19:45:51",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"people-service",
+								"people",
+								"from",
+								"2021-03-05T19:45:51"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 05 Mar 2021 08:46:15 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 1,\n        \"givenName\": \"Margaret\",\n        \"familyName\": \"Nettles\",\n        \"hash\": \"ba7acb75-f28e-493f-bf48-41847fd14d3b\",\n        \"links\": [\n            {\n                \"rel\": \"self\",\n                \"href\": \"http://localhost:8080/people-service/people/id/1\"\n            },\n            {\n                \"rel\": \"sign_in_request\",\n                \"href\": \"http://localhost:8080/people-service/checkin/signin/ba7acb75-f28e-493f-bf48-41847fd14d3b\"\n            },\n            {\n                \"rel\": \"all_sign_in_logs\",\n                \"href\": \"http://localhost:8080/people-service/checkin/people/log/hash/ba7acb75-f28e-493f-bf48-41847fd14d3b\"\n            },\n            {\n                \"rel\": \"qr_code\",\n                \"href\": \"http://localhost:8080/people-service/people/id/1/qrcode\"\n            }\n        ]\n    }\n]"
+				},
+				{
 					"name": "Person look up",
 					"originalRequest": {
 						"method": "GET",
@@ -1659,6 +1852,227 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Bulk signing people",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"hashes\": [\"10f6f515-a558-430e-90e6-5ed56818def1\", \"2\"],\n    \"message\": \"test sign in\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/people-service/checkin/signin/people/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"people-service",
+						"checkin",
+						"signin",
+						"people",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Bulk signing people",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"hashes\": [\"10f6f515-a558-430e-90e6-5ed56818def1\"],\n    \"message\": \"test sign in\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/people-service/checkin/signin/people/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"people-service",
+								"checkin",
+								"signin",
+								"people",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 06 Mar 2021 02:25:51 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"timestamp\": \"2021-03-06T13:25:51.219\",\n        \"message\": \"test sign in\",\n        \"person\": {\n            \"id\": 2,\n            \"givenName\": \"Margaret\",\n            \"familyName\": \"Bean\",\n            \"otherNames\": [\n                {\n                    \"name\": \"Joey\",\n                    \"language\": \"English\"\n                }\n            ],\n            \"isBaptised\": false,\n            \"isMember\": false,\n            \"hash\": \"10f6f515-a558-430e-90e6-5ed56818def1\",\n            \"emailAddresses\": [\n                {\n                    \"email\": \"test@gmail.com\",\n                    \"description\": null\n                }\n            ],\n            \"phoneNumbers\": [\n                {\n                    \"number\": \"+61234567890\",\n                    \"description\": null\n                }\n            ],\n            \"links\": [\n                {\n                    \"rel\": \"self\",\n                    \"href\": \"http://localhost:8080/people-service/people/id/2\"\n                },\n                {\n                    \"rel\": \"sign_in_request\",\n                    \"href\": \"http://localhost:8080/people-service/checkin/signin/hash/10f6f515-a558-430e-90e6-5ed56818def1\"\n                },\n                {\n                    \"rel\": \"all_sign_in_logs\",\n                    \"href\": \"http://localhost:8080/people-service/checkin/people/log/hash/10f6f515-a558-430e-90e6-5ed56818def1\"\n                },\n                {\n                    \"rel\": \"qr_code\",\n                    \"href\": \"http://localhost:8080/people-service/people/id/2/qrcode\"\n                }\n            ]\n        }\n    }\n]"
+				},
+				{
+					"name": "Bulk signing people [NonExistent hash]",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"hashes\": [\"10f6f515-a558-430e-90e6-5ed56818def1\", \"2\"],\n    \"message\": \"test sign in\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/people-service/checkin/signin/people/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"people-service",
+								"checkin",
+								"signin",
+								"people",
+								""
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 06 Mar 2021 02:26:20 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"The following hashes could not be found: [2]\",\n    \"missingHashes\": [\n        \"2\"\n    ]\n}"
+				}
+			]
 		}
 	]
 }

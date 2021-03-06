@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -39,14 +40,13 @@ public class CheckinController {
     }
 
     @PostMapping(value = "/signin")
-    public CheckinLogObject signIn(@RequestBody SignInObject signInObject) {
+    public CheckinLogObject signIn(@Valid @RequestBody SignInObject signInObject) {
         return checkinLogService.checkin(signInObject);
     }
 
     @PostMapping(value = "/signin/people/")
-    public List<CheckinLogObject> bulkSignIn(@RequestBody BulkSignInObject bulkSignInObject) {
-//        return checkinLogService.bulkCheckIn(bulkSignInObject);
-        return null;
+    public List<CheckinLogObject> bulkSignIn(@Valid @RequestBody BulkSignInObject bulkSignInObject) {
+        return checkinLogService.bulkCheckIn(bulkSignInObject);
     }
 
     @PostMapping(value = "/signin/hash/{hash}")

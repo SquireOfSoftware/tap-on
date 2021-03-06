@@ -1,20 +1,22 @@
 package com.squireofsoftware.peopleproject.services;
 
+import com.squireofsoftware.peopleproject.dtos.BulkSignInObject;
 import com.squireofsoftware.peopleproject.dtos.CheckinLogObject;
 import com.squireofsoftware.peopleproject.dtos.SignInObject;
 import com.squireofsoftware.peopleproject.entities.CheckinLog;
 import com.squireofsoftware.peopleproject.entities.Person;
+import com.squireofsoftware.peopleproject.exceptions.PeopleNotFoundException;
 import com.squireofsoftware.peopleproject.exceptions.PersonNotFoundException;
 import com.squireofsoftware.peopleproject.jpas.JpaCheckinLog;
 import com.squireofsoftware.peopleproject.jpas.JpaPerson;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,7 +51,7 @@ public class CheckinLogServiceImpl implements CheckinLogService {
     }
 
     @Override
-    public CheckinLogObject checkin(String hash, String message) {
+    public CheckinLogObject checkin(@Valid @NotNull String hash, String message) {
         return CheckinLogObject.map(jpaCheckinLog.save(
                 CheckinLog.builder()
                 .timestamp(new Timestamp(System.currentTimeMillis()))
@@ -120,6 +122,26 @@ public class CheckinLogServiceImpl implements CheckinLogService {
                 .stream()
                 .sorted(Comparator.comparing(CheckinLog::getTimestamp))
                 .map(CheckinLogObject::map)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CheckinLogObject> bulkCheckIn(@Valid BulkSignInObject bulkSignInObject) {
+        Set<String> hashes = new HashSet<>(bulkSignInObject.getHashes());
+
+        List<Person> foundPeople = jpaPerson.findAllByHashIn(hashes);
+
+        if (hashes.size() != foundPeople.size()) {
+            Set<String> foundHashes = foundPeople.stream()
+                    .map(Person::getHash)
+                    .collect(Collectors.toSet());
+            hashes.removeAll(foundHashes);
+
+            throw new PeopleNotFoundException(hashes);
+        }
+
+        return foundPeople.stream()
+                .map(person -> checkin(person.getHash(), bulkSignInObject.getMessage()))
                 .collect(Collectors.toList());
     }
 }

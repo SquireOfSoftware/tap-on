@@ -212,6 +212,25 @@ class CheckList extends Component {
       });
   }
 
+  bulkSignInHandler = (selectedHashes) => {
+    this.postToServer(
+        this.state.serverUrl + "/people-service/checkin/signin/people/",
+        (event) => {
+          this.loadTodaysSignins();
+        },
+        (event) => {
+          let error = JSON.parse(event.target.responseText);
+          console.error(error.message);
+          // most likely someones hash got changed
+          console.error("Most likely someone's hash got changed, reload the page and try again");
+        },
+        {
+          hashes: selectedHashes,
+          message: "bulk manual sign in"
+        }
+    )
+  }
+
   render() {
     let columns = [
       {
@@ -268,7 +287,11 @@ class CheckList extends Component {
 
     let table = undefined;
     if (this.state.peopleMap !== undefined) {
-      table = <Table columns={columns} data={[...this.state.peopleMap.values()]} />
+      table = <Table
+        columns={columns}
+        data={[...this.state.peopleMap.values()]}
+        bulkSignInHandler={this.bulkSignInHandler}
+      />
     }
 
     return (
@@ -299,7 +322,7 @@ const IndeterminateCheckbox = React.forwardRef(
   }
 )
 
-function Table({columns, data}) {
+function Table({columns, data, bulkSignInHandler}) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -339,22 +362,13 @@ function Table({columns, data}) {
 
   let bulkSignIn = (event) => {
     console.log(selectedFlatRows);
-    let selectedPeople = undefined;
+    let selectedHashes = undefined;
     if (selectedFlatRows !== undefined && selectedFlatRows.length > 0) {
-      selectedPeople = selectedFlatRows.map(row => row.original);
-      console.log(selectedPeople);
+      selectedHashes = selectedFlatRows.map(row => row.original.hash);
     }
 
-    if (selectedPeople !== undefined) {
-      postToServer(
-        "localhost:3000",
-        (event) => {
-
-        },
-        (event) => {
-
-        },
-      )
+    if (selectedHashes !== undefined) {
+      bulkSignInHandler(selectedHashes);
     }
   }
 
