@@ -1,8 +1,12 @@
-.test {
+.selectedRow {
   background-color: red;
 }
 
 .refreshPeopleButton {
   position: absolute;
   right: 5%;
+}
+
+.clickable {
+  cursor: pointer;
 }

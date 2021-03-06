@@ -6,14 +6,14 @@ import './CheckList.css'
 import ServerStates from './ServerStates.js'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSyncAlt } from '@fortawesome/free-solid-svg-icons'
+import { faSyncAlt, faSignature } from '@fortawesome/free-solid-svg-icons'
 
 class CheckList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       peopleMap: undefined,
-      serverGETState: ServerStates.UNCHECKED,
+      serverState: ServerStates.UNCHECKED,
       startTime: this.props.initialStartTime,
       serverUrl: this.props.initialServerUrl,
       autoRefreshPeople: this.props.initialAutoRefreshPeople
@@ -21,6 +21,7 @@ class CheckList extends Component {
     this.loadPeople = this.loadPeople.bind(this);
     this.loadTodaysSignins = this.loadTodaysSignins.bind(this);
     this.queryServer = this.queryServer.bind(this);
+    this.postToServer = this.postToServer.bind(this);
     this.loadPeople();
   }
 
@@ -65,33 +66,32 @@ class CheckList extends Component {
     this.timer = null;
   }
 
-  queryServer = (url, successCallback, failureCallback) => {
+  queryServer = (url, successCallback) => {
     this.setState({
-      serverGETState: ServerStates.CHECKING
+      serverState: ServerStates.CHECKING
     });
 
     let successGET = (event) => {
       if (event.target.status === 200) {
         this.setState({
-          serverGETState: ServerStates.UP
+          serverState: ServerStates.UP
         });
-        this.props.updateServerState(this.state.serverGETState);
+        this.props.updateServerState(this.state.serverState);
         successCallback(event);
       } else {
         this.setState({
-          serverGETState: ServerStates.DOWN
+          serverState: ServerStates.DOWN
         });
-        this.props.updateServerState(this.state.serverGETState);
+        this.props.updateServerState(this.state.serverState);
       }
     }
 
     let failedGET = (event) => {
       console.error("An error occurred while checking the server health.");
       this.setState({
-        serverGETState: ServerStates.DOWN
+        serverState: ServerStates.DOWN
       });
-      this.props.updateServerState(this.state.serverGETState);
-      failureCallback(event);
+      this.props.updateServerState(this.state.serverState);
     }
 
     let getRequest = new XMLHttpRequest();
@@ -105,6 +105,54 @@ class CheckList extends Component {
     getRequest.send();
 
     console.log(getRequest);
+  }
+
+  postToServer = (url, successCallback, userErrorCallback) => {
+    this.setState({
+      serverState: ServerStates.CHECKING
+    });
+
+    let successPOST = (event) => {
+      if (event.target.status === 200) {
+        this.setState({
+          serverState: ServerStates.UP
+        });
+        this.props.updateServerState(this.state.serverState);
+        successCallback(event);
+      } else if (event.target.status >= 400 || event.target.status < 500) {
+        this.setState({
+          serverState: ServerStates.UP
+        });
+        this.props.updateServerState(this.state.serverState);
+        userErrorCallback(event);
+      } else {
+        this.setState({
+          serverState: ServerStates.DOWN
+        });
+        this.props.updateServerState(this.state.serverState);
+      }
+    }
+
+    let failedPOST = (event) => {
+      console.error("An error occurred while checking the server health.");
+      this.setState({
+        serverState: ServerStates.DOWN
+      });
+      this.props.updateServerState(this.state.serverState);
+    }
+
+    let postRequest = new XMLHttpRequest();
+
+    postRequest.addEventListener("load", successPOST);
+    postRequest.addEventListener("error", failedPOST);
+    console.log(url);
+    postRequest.open("POST", url, true);
+    postRequest.setRequestHeader("Access-Control-Allow-Headers", "*");
+    postRequest.setRequestHeader("Content-Type", "application/json");
+//    postRequest.send(JSON.stringify(postBody));
+    postRequest.send();
+
+    console.log(postRequest);
   }
 
   loadTodaysSignins = () => {
@@ -127,7 +175,6 @@ class CheckList extends Component {
         if (newPeopleMap !== undefined && newPeopleMap.size > 0) {
           checkinLogs.forEach(log => {
             let person = log.person;
-            console.log(person);
             // find the person in the state via the peopleMap
             let personEntry = newPeopleMap.get(person.id);
             if (personEntry !== undefined || personEntry !== null) {
@@ -141,7 +188,6 @@ class CheckList extends Component {
             ...this.state,
             peopleMap: newPeopleMap
           });
-          console.log(this.state.peopleMap);
         }
       });
   }
@@ -184,6 +230,34 @@ class CheckList extends Component {
           {
             Header: 'Signed In At',
             accessor: 'firstSignIn'
+          },
+          {
+            Header: 'Manual sign in',
+            accessor: 'manualSignIn',
+            Cell: ({row}) => {
+              let signInLink = row.original.links.find(link => link.rel === 'sign_in_request');
+
+              let clickPostCallback = (event) => {
+                console.log("CLICK POSTCALLBACK!!");
+                if (signInLink !== undefined ||
+                    signInLink !== null ||
+                    signInLink.length > 0) {
+                  this.postToServer(
+                    signInLink.href + "?message=manual sign in",
+                    (event) => {
+                      console.log(event);
+                      this.loadTodaysSignins();
+                    });
+                }
+              }
+
+              return (
+                <div className="clickable" onClick={clickPostCallback}>
+                  <span>Sign in </span>
+                  <FontAwesomeIcon icon={faSignature}/>
+                </div>
+              );
+            }
           }
         ],
       },
@@ -196,7 +270,7 @@ class CheckList extends Component {
 
     return (
       <div>
-        <div className="refreshPeopleButton" onClick={() => this.loadPeople()}>
+        <div className="refreshPeopleButton clickable" onClick={() => this.loadPeople()}>
           <FontAwesomeIcon icon={faSyncAlt}/>
         </div>
         {table}
@@ -276,7 +350,7 @@ function Table({columns, data}) {
           prepareRow(row)
           let selectedClassName;
           if (row.isSelected) {
-            selectedClassName = "test";
+            selectedClassName = "selectedRow";
           }
 //          console.log(row);
           return (

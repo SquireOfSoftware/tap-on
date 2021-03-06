@@ -140,7 +140,7 @@ class ScanLog extends Component {
     signInRequest.open("POST", this.state.serverUrl + "/people-service/checkin/signin", true);
     signInRequest.setRequestHeader("Access-Control-Allow-Headers", "*");
     signInRequest.setRequestHeader("Content-Type", "application/json");
-    signInRequest.send(JSON.stringify({"hash": hash, "message": "signing in today again"}));
+    signInRequest.send(JSON.stringify({"hash": hash, "message": "qr code sign in"}));
 
     console.log(signInRequest);
   }
