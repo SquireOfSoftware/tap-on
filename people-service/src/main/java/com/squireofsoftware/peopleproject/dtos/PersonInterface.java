@@ -27,6 +27,7 @@ public interface PersonInterface<T> {
     private void addSignInReference() {
         add(linkTo(CheckinController.class)
                 .slash("signin")
+                .slash("hash")
                 .slash(getHash())
                 .withRel(SIGN_IN_REL));
     }

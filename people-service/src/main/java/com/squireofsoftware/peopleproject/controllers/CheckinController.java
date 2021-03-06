@@ -1,5 +1,6 @@
 package com.squireofsoftware.peopleproject.controllers;
 
+import com.squireofsoftware.peopleproject.dtos.BulkSignInObject;
 import com.squireofsoftware.peopleproject.dtos.CheckinLogObject;
 import com.squireofsoftware.peopleproject.dtos.PersonObject;
 import com.squireofsoftware.peopleproject.dtos.SignInObject;
@@ -42,7 +43,13 @@ public class CheckinController {
         return checkinLogService.checkin(signInObject);
     }
 
-    @PostMapping(value = "/signin/{hash}")
+    @PostMapping(value = "/signin/people/")
+    public List<CheckinLogObject> bulkSignIn(@RequestBody BulkSignInObject bulkSignInObject) {
+//        return checkinLogService.bulkCheckIn(bulkSignInObject);
+        return null;
+    }
+
+    @PostMapping(value = "/signin/hash/{hash}")
     public CheckinLogObject signIn(@PathVariable String hash, @RequestParam(value = "message", required = false) String message) {
         return checkinLogService.checkin(hash, message);
     }

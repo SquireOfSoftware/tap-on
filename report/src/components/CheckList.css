@@ -10,3 +10,7 @@
 .clickable {
   cursor: pointer;
 }
+
+.clickable:hover {
+  opacity: 80%;
+}

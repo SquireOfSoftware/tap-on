@@ -107,7 +107,7 @@ class CheckList extends Component {
     console.log(getRequest);
   }
 
-  postToServer = (url, successCallback, userErrorCallback) => {
+  postToServer = (url, successCallback, userErrorCallback, postBody) => {
     this.setState({
       serverState: ServerStates.CHECKING
     });
@@ -149,8 +149,11 @@ class CheckList extends Component {
     postRequest.open("POST", url, true);
     postRequest.setRequestHeader("Access-Control-Allow-Headers", "*");
     postRequest.setRequestHeader("Content-Type", "application/json");
-//    postRequest.send(JSON.stringify(postBody));
-    postRequest.send();
+    if (postBody !== undefined || postBody !== null) {
+      postRequest.send(JSON.stringify(postBody));
+    } else {
+      postRequest.send();
+    }
 
     console.log(postRequest);
   }
@@ -334,35 +337,61 @@ function Table({columns, data}) {
     ])
   })
 
+  let bulkSignIn = (event) => {
+    console.log(selectedFlatRows);
+    let selectedPeople = undefined;
+    if (selectedFlatRows !== undefined && selectedFlatRows.length > 0) {
+      selectedPeople = selectedFlatRows.map(row => row.original);
+      console.log(selectedPeople);
+    }
+
+    if (selectedPeople !== undefined) {
+      postToServer(
+        "localhost:3000",
+        (event) => {
+
+        },
+        (event) => {
+
+        },
+      )
+    }
+  }
+
   return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row, i) => {
-          prepareRow(row)
-          let selectedClassName;
-          if (row.isSelected) {
-            selectedClassName = "selectedRow";
-          }
-//          console.log(row);
-          return (
-            <tr className={selectedClassName} {...row.getRowProps()}>
-              {row.cells.map(cell => {
-                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-              })}
+    <div>
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+              ))}
             </tr>
-          )
-        })}
-      </tbody>
-    </table>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row, i) => {
+            prepareRow(row)
+            let selectedClassName;
+            if (row.isSelected) {
+              selectedClassName = "selectedRow";
+            }
+            return (
+              <tr className={selectedClassName} {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                })}
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+      <div className="clickable bulkSignInButton" onClick={bulkSignIn}>
+        <span>Bulk sign in </span>
+        <FontAwesomeIcon icon={faSignature}/>
+      </div>
+    </div>
   )
 }
 
