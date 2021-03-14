@@ -63,13 +63,14 @@ class ScanLog extends Component {
           this.signIn(hash);
         }
       }
+    } else {
+      console.error("Scan: '" + newScan + "' is not legit");
     }
   }
 
   scanIsLegit = (newScan) => {
     return newScan !== undefined &&
-      newScan !== null &&
-      !Number.isNaN(Number.parseInt(newScan));
+      newScan !== null;
   }
 
   signIn = (hash) => {

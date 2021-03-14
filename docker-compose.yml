@@ -23,8 +23,8 @@ services:
       # this is where the pkcs12 certificate is
 #      - /Users/JarvisWalker/certs/server.p12:/etc/certs/server.p12
 
-  scanner:
-    image: rhinoflower/checkin-ui:0.9.0
+  ui:
+    image: rhinoflower/checkin-ui:0.9.1
     container_name: ui
     ports:
       - 8000:8000

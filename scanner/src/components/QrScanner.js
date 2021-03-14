@@ -16,6 +16,7 @@ class QrScanner extends Component {
       };
       this.updateDelayRate = this.updateDelayRate.bind(this);
       this.updateCamera = this.updateCamera.bind(this);
+      this.handleScan = this.handleScan.bind(this);
   }
 
   componentDidMount() {
@@ -114,7 +115,6 @@ class QrScanner extends Component {
   }
 
   render() {
-//    console.log("redrawing scanner");
     return (
       <div>
         <div className="scanner">
