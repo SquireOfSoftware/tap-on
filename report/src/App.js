@@ -20,6 +20,13 @@ class App extends Component {
       startTime = this.props.startTime;
     }
 
+    let parsedStartDate = moment.utc(startTime).startOf('day');
+    let todaysDate = moment.utc().startOf('day');
+    if (!todaysDate.isSame(parsedStartDate)) {
+      startTime = moment().hour(9).minute(0).second(0).format('YYYY-MM-DDTHH:mm:ss');
+      window.localStorage.setItem("startTime", startTime);
+    }
+
     let autoRefreshPeople = (window.localStorage.getItem('autoRefreshPeople') == 'true');
     if (autoRefreshPeople === undefined || autoRefreshPeople === null) {
       autoRefreshPeople = this.props.autoRefreshPeople;
@@ -119,7 +126,7 @@ class App extends Component {
 
 App.defaultProps = {
   serverSetting: 'https://localhost:8000',
-  startTime: new moment().format(),
+  startTime: new moment().hour(9).minute(0).second(0).format('YYYY-MM-DDTHH:mm:ss'),
   autoRefreshPeople: true
 }
 
