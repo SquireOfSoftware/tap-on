@@ -7,6 +7,7 @@ import ServerStates from './ServerStates.js'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSyncAlt, faSignature } from '@fortawesome/free-solid-svg-icons'
+import moment from 'moment'
 
 class CheckList extends Component {
   constructor(props) {
@@ -182,7 +183,7 @@ class CheckList extends Component {
             let personEntry = newPeopleMap.get(person.id);
             if (personEntry !== undefined || personEntry !== null) {
               personEntry.hasSignedIn = "true";
-              personEntry.firstSignIn = log.timestamp;
+              personEntry.firstSignIn = moment(log.timestamp).format("hh:mm:ss A");
               newPeopleMap[person.id] = personEntry;
             }
           });
@@ -221,7 +222,6 @@ class CheckList extends Component {
         this.setState({
           peopleMap: peopleMap
         });
-        console.log(people);
         this.loadTodaysSignins();
       });
   }
@@ -274,14 +274,12 @@ class CheckList extends Component {
               let signInLink = row.original.links.find(link => link.rel === 'sign_in_request');
 
               let clickPostCallback = (event) => {
-                console.log("CLICK POSTCALLBACK!!");
                 if (signInLink !== undefined ||
                     signInLink !== null ||
                     signInLink.length > 0) {
                   this.postToServer(
                     signInLink.href + "?message=manual sign in",
                     (event) => {
-                      console.log(event);
                       this.loadTodaysSignins();
                     });
                 }
@@ -300,13 +298,16 @@ class CheckList extends Component {
     ]
 
     let table = undefined;
+    let dataArray = [];
     if (this.state.peopleMap !== undefined) {
-      table = <Table
-        columns={columns}
-        data={[...this.state.peopleMap.values()]}
-        bulkSignInHandler={this.bulkSignInHandler}
-      />
+      dataArray = [...this.state.peopleMap.values()];
     }
+
+    table = <Table
+      columns={columns}
+      data={dataArray}
+      bulkSignInHandler={this.bulkSignInHandler}
+    />
 
     return (
       <div>
@@ -375,7 +376,6 @@ function Table({columns, data, bulkSignInHandler}) {
   })
 
   let bulkSignIn = (event) => {
-    console.log(selectedFlatRows);
     let selectedHashes = undefined;
     if (selectedFlatRows !== undefined && selectedFlatRows.length > 0) {
       selectedHashes = selectedFlatRows.map(row => row.original.hash);

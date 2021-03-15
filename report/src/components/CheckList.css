@@ -3,8 +3,9 @@
 }
 
 .refreshPeopleButton {
-  position: absolute;
+  position: fixed;
   right: 5%;
+  top: 0;
 }
 
 .clickable {
@@ -16,5 +17,17 @@
 }
 
 thead {
-  font-size: 10px;
+  font-size: 12px;
+}
+
+tr:last-child > th {
+  position: sticky;
+  top: 0;
+  background: #282c34;
+}
+
+.bulkSignInButton {
+  position: sticky;
+  bottom: 0;
+  background: #282c34;
 }
