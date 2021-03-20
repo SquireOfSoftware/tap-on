@@ -11,7 +11,7 @@ services:
       - /Users/JarvisWalker/pg_data_test:/var/lib/postgresql/data
 
   person-service:
-    image: rhinoflower/checkin-service:0.5.3
+    image: rhinoflower/checkin-service:0.6.0
     container_name: person-service
     depends_on:
       - db
@@ -24,7 +24,7 @@ services:
 #      - /Users/JarvisWalker/certs/server.p12:/etc/certs/server.p12
 
   ui:
-    image: rhinoflower/checkin-ui:0.9.1
+    image: rhinoflower/checkin-ui:0.10.0
     container_name: ui
     ports:
       - 8000:8000
