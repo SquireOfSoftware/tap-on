@@ -64,7 +64,7 @@ class QrScanner extends Component {
     }
 
     if (event !== null && event !== undefined) {
-      this.props.addLog("Scanned in: " + event);
+      this.props.addLog({message: "Scanned in: " + event});
       // process the scan
       this.props.processScan(event);
     }

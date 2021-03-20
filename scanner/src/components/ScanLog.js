@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import './ScanLog.css'
+import ScanLogStates from './ScanLogStates.js'
 
 class ScanLog extends Component {
   constructor(props) {
@@ -61,10 +62,15 @@ class ScanLog extends Component {
           // sign the person in again
           // as most likely its a "new" session
           this.signIn(hash);
+        } else {
+          let alreadySignedInMessage = "'" + hash + "' has signed in already";
+          this.props.addLog({message: alreadySignedInMessage, state: ScanLogStates.WARNING});
         }
       }
     } else {
-      console.error("Scan: '" + newScan + "' is not legit");
+      let invalidScanMessage = "Scan: '" + newScan + "' is not legit";
+      console.error(invalidScanMessage);
+      this.props.addLog({message: invalidScanMessage, state: ScanLogStates.ERROR});
     }
   }
 
@@ -96,9 +102,10 @@ class ScanLog extends Component {
           successLogs: successLogs,
           successfulScanCount: successfulScanCount
         });
-        this.props.addLog(successLog);
+        this.props.addLog({message: successLog, state: ScanLogStates.SUCCESS});
         this.props.addSuccessfulSignIn(checkinLog);
       } else {
+        // every other scan state
         this.setState(prevState => {
           const newScans = new Map(prevState.totalScans);
           const scan = {
@@ -110,6 +117,8 @@ class ScanLog extends Component {
             totalScans: newScans.set(hash, scan)
           }
         });
+        let response = JSON.parse(event.target.responseText);
+        this.props.addLog({message: "Scan failed: " + response.message, state: ScanLogStates.ERROR});
       }
       this.props.serverIsUp();
     }
@@ -147,10 +156,21 @@ class ScanLog extends Component {
     let logs = [];
     for (let i = 0; i < this.props.logs.length; i++) {
       let log = this.props.logs[i];
-      if (log === null) {
-        log = "null";
+      let logCSS = "logLine";
+      if (log === null || log === undefined) {
+        log = {message: "null"};
       }
-      logs.unshift(<div key={i}>{log}</div>);
+      if (this.state.successMessagesOnly &&
+          log.state !== undefined &&
+          log.state === ScanLogStates.SUCCESS) {
+        logCSS += " " + log.state.cssName;
+        logs.unshift(<div className={logCSS} key={i}>{log.message}</div>);
+      } else {
+        if (log.state !== undefined) {
+          logCSS += " " + log.state.cssName;
+        }
+        logs.unshift(<div className={logCSS} key={i}>{log.message}</div>);
+      }
     }
 
     let personWord;
@@ -170,7 +190,9 @@ class ScanLog extends Component {
             {personWord} signed in.
           </div>
         </div>
-        {logs}
+        <div className="rawLogs">
+          {logs}
+        </div>
       </div>
     )
   }

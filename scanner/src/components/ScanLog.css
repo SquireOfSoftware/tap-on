@@ -5,3 +5,25 @@
 .scanCountText {
   font-size: 3vh;
 }
+
+.logLine {
+  border-top: 1px solid white;
+}
+
+.rawLogs {
+  max-height: 200px;
+  overflow-y: scroll;
+}
+
+.successLog {
+  background-color: green;
+}
+
+.warnLog {
+  background-color: yellow;
+  color: black;
+}
+
+.errorLog {
+  background-color: red;
+}

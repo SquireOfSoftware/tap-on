@@ -40,17 +40,14 @@ class App extends Component {
     this.changeCamera = this.changeCamera.bind(this);
     this.changeDelayRate = this.changeDelayRate.bind(this);
     this.changeServerSetting = this.changeServerSetting.bind(this);
-//    this.processScan = this.processScan.bind(this);
   }
 
   addLog = (log) => {
     let logs = this.state.logs;
     logs.push(log);
-    if (logs.length > 10) {
+    if (logs.length > this.props.maxLogs) {
       logs.shift();
     }
-
-//    console.log(logs);
 
     this.setState({
       logs: logs
@@ -150,6 +147,7 @@ class App extends Component {
 App.defaultProps = {
  currentCamera: 'environment',
  delayRate: 300,
+ maxLogs: 100,
  serverSetting: 'https://localhost:8000'
 }
 
