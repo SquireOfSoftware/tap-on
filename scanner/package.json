@@ -1,6 +1,6 @@
 {
   "name": "scanner",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
@@ -18,6 +18,7 @@
     "react-dom": "^17.0.1",
     "react-qr-reader": "^2.2.1",
     "react-scripts": "4.0.1",
+    "react-tabs": "^3.2.1",
     "web-vitals": "^0.2.4"
   },
   "scripts": {

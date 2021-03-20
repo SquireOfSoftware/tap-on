@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import './ScanLog.css'
 import ScanLogStates from './ScanLogStates.js'
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
 
 class ScanLog extends Component {
   constructor(props) {
@@ -14,7 +16,7 @@ class ScanLog extends Component {
       successfulScanCount: 0,
       totalScans: new Map(),
       serverUrl: this.props.initialServerSetting,
-      successLogs: []
+      successfulScans: []
     }
     this.addScan = this.addScan.bind(this);
     this.updateServerUrl = this.updateServerUrl.bind(this);
@@ -96,10 +98,21 @@ class ScanLog extends Component {
         });
         let successfulScanCount = this.state.successfulScanCount + 1;
         let successLog = person.givenName + " " + person.familyName + " has just been signed in.";
-        let successLogs = this.state.successLogs;
-        successLogs.unshift(successLog);
+        let successfulScans = this.state.successfulScans;
+        person.signInTime = checkinLog.timestamp;
+        successfulScans.push(checkinLog);
+        successfulScans.sort((checkinLog1, checkinLog2) => {
+          if (checkinLog1.person.familyName > checkinLog2.person.familyName) {
+            return 1;
+          } else if (checkinLog1.person.familyName < checkinLog2.person.familyName) {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
+
         this.setState({
-          successLogs: successLogs,
+          successfulScans: successfulScans,
           successfulScanCount: successfulScanCount
         });
         this.props.addLog({message: successLog, state: ScanLogStates.SUCCESS});
@@ -160,17 +173,22 @@ class ScanLog extends Component {
       if (log === null || log === undefined) {
         log = {message: "null"};
       }
-      if (this.state.successMessagesOnly &&
-          log.state !== undefined &&
-          log.state === ScanLogStates.SUCCESS) {
+      let key = "rawLog" + i;
+      if (log.state !== undefined) {
         logCSS += " " + log.state.cssName;
-        logs.unshift(<div className={logCSS} key={i}>{log.message}</div>);
-      } else {
-        if (log.state !== undefined) {
-          logCSS += " " + log.state.cssName;
-        }
-        logs.unshift(<div className={logCSS} key={i}>{log.message}</div>);
       }
+      logs.unshift(<div className={logCSS} key={key}>{log.message}</div>);
+    }
+
+    let reportLogs = [];
+    for (let i = 0; i < this.state.successfulScans.length; i++) {
+      let checkinLog = this.state.successfulScans[i];
+      let key = "person" + i;
+      reportLogs.push(<tr>
+                        <td>{checkinLog.person.givenName}</td>
+                        <td>{checkinLog.person.familyName}</td>
+                        <td>{checkinLog.signInTime}</td>
+                      </tr>);
     }
 
     let personWord;
@@ -190,9 +208,35 @@ class ScanLog extends Component {
             {personWord} signed in.
           </div>
         </div>
-        <div className="rawLogs">
-          {logs}
-        </div>
+        <Tabs>
+          <TabList>
+            <Tab>
+              Report
+            </Tab>
+            <Tab>
+              Logs
+            </Tab>
+          </TabList>
+          <TabPanel>
+            <table className="reportLogs">
+              <thead>
+                <tr>
+                  <th>Given Name</th>
+                  <th>Family Name</th>
+                  <th>Sign in time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reportLogs}
+              </tbody>
+            </table>
+          </TabPanel>
+          <TabPanel>
+            <div className="rawLogs">
+              {logs}
+            </div>
+          </TabPanel>
+        </Tabs>
       </div>
     )
   }
