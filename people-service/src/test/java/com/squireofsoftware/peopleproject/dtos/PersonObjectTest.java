@@ -83,7 +83,7 @@ class PersonObjectTest {
         // then
         assertTrue(result.getLink(PersonInterface.SIGN_IN_REL).isPresent());
         Link selfLink = result.getLink(PersonInterface.SIGN_IN_REL).get();
-        assertEquals("/checkin/signin/hash123", selfLink.getHref());
+        assertEquals("/checkin/signin/hash/hash123", selfLink.getHref());
     }
 
     @Test

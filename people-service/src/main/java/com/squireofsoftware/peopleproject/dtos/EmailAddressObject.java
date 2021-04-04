@@ -14,7 +14,7 @@ public class EmailAddressObject {
     private String email;
     private String description;
 
-    public static EmailAddressObject mapFrom(EmailAddress emailAddress) {
+    public static EmailAddressObject map(EmailAddress emailAddress) {
         return EmailAddressObject.builder()
                 .email(emailAddress.getEmail())
                 .description(emailAddress.getDescription())

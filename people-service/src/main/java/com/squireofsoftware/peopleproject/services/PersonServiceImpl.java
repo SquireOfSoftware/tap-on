@@ -128,7 +128,7 @@ public class PersonServiceImpl implements PersonService {
     public List<PersonReferenceObject> getAllPeople() {
         return jpaPerson.findAll(Sort.by(Sort.Direction.ASC, "familyName"))
                 .stream()
-                .map(PersonReferenceObject::from)
+                .map(PersonReferenceObject::map)
                 .collect(Collectors.toList());
     }
 
@@ -137,7 +137,7 @@ public class PersonServiceImpl implements PersonService {
         return jpaPerson.findByCreationDateAfter(Timestamp.valueOf(fromDate),
                 Sort.by(Sort.Direction.ASC, "familyName"))
                 .stream()
-                .map(PersonReferenceObject::from)
+                .map(PersonReferenceObject::map)
                 .collect(Collectors.toList());
     }
 

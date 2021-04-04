@@ -6,6 +6,8 @@ import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -18,16 +20,23 @@ public class PersonReferenceObject extends RepresentationModel<PersonObject>
     @NotNull
     private String givenName;
     private String familyName;
+    private List<NameObject> alternativeNames;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String hash;
 
-    public static PersonReferenceObject from(Person person) {
+    public static PersonReferenceObject map(Person person) {
         if (person != null) {
+            List<NameObject> otherNames = person.getAlternativeNames()
+                    .stream()
+                    .map(NameObject::map)
+                    .collect(Collectors.toList());
+
             PersonReferenceObject personReference = PersonReferenceObject.builder()
                     .id(person.getId())
                     .familyName(person.getFamilyName())
                     .givenName(person.getGivenName())
+                    .alternativeNames(otherNames)
                     .hash(person.getHash())
                     .build();
 

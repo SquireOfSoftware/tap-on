@@ -48,13 +48,13 @@ public class PersonObject extends RepresentationModel<PersonObject>
                     .hash(person.getHash())
                     .otherNames(person.getAlternativeNames()
                             .stream()
-                            .map(NameObject::mapFrom)
+                            .map(NameObject::map)
                             .collect(Collectors.toList()))
                     .phoneNumbers(person.getPhoneNumbers().stream()
-                            .map(PhoneNumberObject::mapFrom)
+                            .map(PhoneNumberObject::map)
                             .collect(Collectors.toList()))
                     .emailAddresses(person.getEmailAddresses().stream()
-                            .map(EmailAddressObject::mapFrom)
+                            .map(EmailAddressObject::map)
                             .collect(Collectors.toList()))
                     .build();
 
