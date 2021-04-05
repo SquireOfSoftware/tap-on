@@ -298,6 +298,7 @@ class CheckList extends Component {
           {
             Header: 'Other Names',
             accessor: 'otherNames',
+            className: 'otherNameColumn',
             Cell: ({row, value}) => {
               let otherNames;
               if (value !== undefined && value.length > 0) {

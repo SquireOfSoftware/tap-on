@@ -41,3 +41,7 @@ tr:last-child > th {
 tr:last-child > th.infoColumn {
   background-color: gray;
 }
+
+.otherNameColumn {
+  width: 150px;
+}

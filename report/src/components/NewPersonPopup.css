@@ -79,12 +79,12 @@
   margin-right: 10px;
 }
 
-.collectedOtherNames {
+.collectedOtherNames, .collectedPhoneNumbers, .collectedEmailAddresses {
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
-.otherNameField {
+.otherNameField, .phoneNumberField, .emailAddressField {
   display: flex;
 }

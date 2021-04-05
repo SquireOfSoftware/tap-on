@@ -24,23 +24,56 @@ class NewPersonPopup extends Component {
   createPerson = () => {
     // extract the values from the form and pass it to the callback
 
+    let otherNames = [];
+    this.state.otherNames.forEach(otherName => {
+      if (otherName.name !== undefined &&
+          otherName.name !== "" &&
+          (otherName.language === "English" ||
+            otherName.language === "Chinese")) {
+        otherNames.push(otherName);
+      }
+    });
+
+    let phoneNumbers = [];
+    this.state.phoneNumbers.forEach(phoneNumber => {
+      if (phoneNumber.number !== undefined &&
+          phoneNumber.number !== "") {
+        phoneNumbers.push(phoneNumber);
+      }
+    });
+
+    let emailAddresses = [];
+    this.state.emailAddresses.forEach(emailAddress => {
+      if (emailAddress.email !== undefined &&
+          emailAddress.email !== "" &&
+          emailAddress.email.indexOf("@") > 0) {
+        emailAddresses.push(emailAddress);
+      }
+    });
+
     let newPerson = {
       givenName: this.state.givenName,
       familyName: this.state.familyName,
-      otherNames: this.state.otherNames,
-      phoneNumbers: this.state.phoneNumbers,
-      emailAddresses: this.state.emailAddresses,
+      otherNames: otherNames,
+      phoneNumbers: phoneNumbers,
+      emailAddresses: emailAddresses,
       isBaptised: this.state.baptised,
       isMember: this.state.member
     };
+
+    // make sure you sanitise the inputs here!!!!
 
     this.props.createPersonCallback(newPerson);
     this.props.closeNewPersonPopupCallback();
   }
 
+  createBlankOtherName = () => {
+    return {name: "", language: "English"};
+  }
+
   addOtherName = () => {
     let otherNames = this.state.otherNames;
-    otherNames.push({name: "", language: "English"});
+    otherNames.push(this.createBlankOtherName());
     this.setState({
       otherNames
     });
@@ -56,7 +89,7 @@ class NewPersonPopup extends Component {
         });
       } else if (otherNames.length === 1) {
         this.setState({
-          otherNames: [{name: "", language: "AU"}]
+          otherNames: [this.createBlankOtherName()]
         });
       }
     }
@@ -75,8 +108,7 @@ class NewPersonPopup extends Component {
     });
   }
 
-  render() {
-    // build a list of other names
+  buildOtherNameList = () => {
     let otherNames = [];
     for (let i = 0; i < this.state.otherNames.length; i++) {
       let id = "other_name" + i;
@@ -84,7 +116,7 @@ class NewPersonPopup extends Component {
       otherNames.push(
             <div key={id} className="otherNameField">
               <input
-                  id={i}
+                  id={id}
                   className="field"
                   name="other_name"
                   type="text"
@@ -98,6 +130,117 @@ class NewPersonPopup extends Component {
             </div>
       );
     }
+    return otherNames;
+  }
+
+  createBlankPhoneNumber = () => {
+    return {number: "", description: ""};
+  }
+
+  addPhoneNumber = () => {
+    let phoneNumbers = this.state.phoneNumbers;
+    phoneNumbers.push(this.createBlankPhoneNumber());
+    this.setState({
+      phoneNumbers
+    });
+  }
+
+  removePhoneNumber = (id) => {
+    let phoneNumbers = this.state.phoneNumbers;
+    if (phoneNumbers !== undefined) {
+      if (phoneNumbers.length > 1) {
+        phoneNumbers.splice(id, 1); // remove one item at id
+        this.setState({
+          phoneNumbers
+        });
+      } else if (phoneNumbers.length === 1) {
+        this.setState({
+          phoneNumbers: [this.createBlankPhoneNumber()]
+        });
+      }
+    }
+  }
+
+  updatePhoneNumber = (id, event) => {
+    let phoneNumbers = this.state.phoneNumbers;
+    phoneNumbers[id].number = event.target.value;
+
+    this.setState({
+      phoneNumbers
+    });
+  }
+
+  updatePhoneNumberDescription = (id, event) => {
+    let phoneNumbers = this.state.phoneNumbers;
+    phoneNumbers[id].description = event.target.value;
+
+    this.setState({
+      phoneNumbers
+    });
+  }
+
+  buildPhoneNumberList = () => {
+    let phoneNumbers = [];
+    for (let i = 0; i < this.state.phoneNumbers.length; i++) {
+      let id = "phone_number" + i;
+      let value = this.state.phoneNumbers[i].name;
+      phoneNumbers.push(
+            <div key={id} className="phoneNumberField">
+              <input
+                  id={id}
+                  className="field"
+                  name="phone_number"
+                  type="text"
+                  value={value}
+                  placeholder="The phone number/s of the person"
+                  onInput={(event) => this.updatePhoneNumber(i, event)}
+                  required/>
+              <input
+                  id={id + "label"}
+                  className="field"
+                  name="phone_number_label"
+                  type="text"
+                  value={value}
+                  placeholder="Description of the number"
+                  onInput={(event) => this.updatePhoneNumberDescription(i, event)}/>
+              <div className="clickable" onClick={() => this.removePhoneNumber(i)}>
+                <FontAwesomeIcon icon={faTimes} />
+              </div>
+            </div>
+      );
+    }
+    return phoneNumbers;
+  }
+
+  createBlankEmailAddress = () => {
+    return {email: "", description: ""};
+  }
+
+  addEmailAddress = () => {
+
+  }
+
+  removeEmailAddress = (id) => {
+
+  }
+
+  updateEmailAddress = (id, event) => {
+
+  }
+
+  updateEmailAddressDescription = (id, event) => {
+
+  }
+
+  buildEmailAddressList = () => {
+    return undefined;
+  }
+
+  render() {
+    // build a list of other names
+    let otherNames = this.buildOtherNameList();
+    let phoneNumbers = this.buildPhoneNumberList();
+    let emailAddresses = this.buildEmailAddressList();
 
     return (
       <div className="overlay">
@@ -144,7 +287,27 @@ class NewPersonPopup extends Component {
               </div>
             </div>
           </div>
-
+          <div className="contactForm formSection">
+            <div className="collapsibleTitle">Contact</div>
+            <div className="inputField">
+              <label htmlFor="phone_number0" className="fieldLabel">Phone Numbers</label>
+              <div className="collectedPhoneNumbers">
+                {phoneNumbers}
+              </div>
+              <div className="clickable" onClick={this.addPhoneNumber}>
+                <FontAwesomeIcon icon={faPlus} />
+              </div>
+            </div>
+            <div className="inputField">
+              <label htmlFor="email_address0" className="fieldLabel">Email Addresses</label>
+              <div className="collectedEmailAddresses">
+                {emailAddresses}
+              </div>
+              <div className="clickable" onClick={this.addEmailAddress}>
+                <FontAwesomeIcon icon={faPlus} />
+              </div>
+            </div>
+          </div>
           <div className="createButton"
                onClick={this.createPerson}>
             <FontAwesomeIcon icon={faCheck}/> Create
