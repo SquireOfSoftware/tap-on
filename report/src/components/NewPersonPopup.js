@@ -4,6 +4,9 @@ import './NewPersonPopup.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faWindowClose, faCheck, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons'
 
+import Toggle from 'react-toggle'
+import 'react-toggle/style.css'
+
 class NewPersonPopup extends Component {
   constructor(props) {
     super(props);
@@ -19,6 +22,8 @@ class NewPersonPopup extends Component {
     this.createPerson = this.createPerson.bind(this);
     this.addOtherName = this.addOtherName.bind(this);
     this.removeOtherName = this.removeOtherName.bind(this);
+    this.toggleMember = this.toggleMember.bind(this);
+    this.toggleBaptised = this.toggleBaptised.bind(this);
   }
 
   createPerson = () => {
@@ -192,7 +197,7 @@ class NewPersonPopup extends Component {
                   name="phone_number"
                   type="text"
                   value={value}
-                  placeholder="The phone number/s of the person"
+                  placeholder="The phone number of the person"
                   onInput={(event) => this.updatePhoneNumber(i, event)}
                   required/>
               <input
@@ -217,23 +222,90 @@ class NewPersonPopup extends Component {
   }
 
   addEmailAddress = () => {
-
+    let emailAddresses = this.state.emailAddresses;
+    emailAddresses.push(this.createBlankEmailAddress());
+    this.setState({
+      emailAddresses
+    });
   }
 
   removeEmailAddress = (id) => {
-
+    let emailAddresses = this.state.emailAddresses;
+    if (emailAddresses !== undefined) {
+      if (emailAddresses.length > 1) {
+        emailAddresses.splice(id, 1); // remove one item at id
+        this.setState({
+          emailAddresses
+        });
+      } else if (emailAddresses.length === 1) {
+        this.setState({
+          emailAddresses: [this.createBlankEmailAddress()]
+        });
+      }
+    }
   }
 
   updateEmailAddress = (id, event) => {
+    let emailAddresses = this.state.emailAddresses;
+    emailAddresses[id].email = event.target.value;
 
+    this.setState({
+      emailAddresses
+    });
   }
 
   updateEmailAddressDescription = (id, event) => {
+    let emailAddresses = this.state.emailAddresses;
+    emailAddresses[id].description = event.target.value;
 
+    this.setState({
+      emailAddresses
+    });
   }
 
   buildEmailAddressList = () => {
-    return undefined;
+    let emailAddresses = [];
+    for (let i = 0; i < this.state.emailAddresses.length; i++) {
+      let id = "email_address" + i;
+      let value = this.state.emailAddresses[i].name;
+      emailAddresses.push(
+            <div key={id} className="emailAddressField">
+              <input
+                  id={id}
+                  className="field"
+                  name="email_address"
+                  type="text"
+                  value={value}
+                  placeholder="The email address of the person"
+                  onInput={(event) => this.updateEmailAddress(i, event)}
+                  required/>
+              <input
+                  id={id + "label"}
+                  className="field"
+                  name="email_address_label"
+                  type="text"
+                  value={value}
+                  placeholder="Description of the email"
+                  onInput={(event) => this.updateEmailAddressDescription(i, event)}/>
+              <div className="clickable" onClick={() => this.removeEmailAddress(i)}>
+                <FontAwesomeIcon icon={faTimes} />
+              </div>
+            </div>
+      );
+    }
+    return emailAddresses;
+  }
+
+  toggleBaptised = () => {
+    this.setState({
+      baptised: !this.state.baptised
+    });
+  }
+
+  toggleMember = () => {
+    this.setState({
+      member: !this.state.member
+    });
   }
 
   render() {
@@ -241,6 +313,9 @@ class NewPersonPopup extends Component {
     let otherNames = this.buildOtherNameList();
     let phoneNumbers = this.buildPhoneNumberList();
     let emailAddresses = this.buildEmailAddressList();
+
+    let isBaptised = this.state.baptised ? "baptised" : "not baptised";
+    let isMember = this.state.member ? "a member" : "not a member";
 
     return (
       <div className="overlay">
@@ -308,6 +383,24 @@ class NewPersonPopup extends Component {
               </div>
             </div>
           </div>
+          <div className="contactForm formSection">
+            <div className="collapsibleTitle">Other</div>
+            <div className="inputField baptisedField">
+              <label htmlFor="baptised_status" className="fieldLabel">Is Baptised?</label>
+              <Toggle id="baptised_status"
+                    defaultChecked={this.state.baptised}
+                    onChange={() => this.toggleBaptised()}/>
+              <label htmlFor="baptised_status" className="toggleLabel">This person is {isBaptised}</label>
+            </div>
+            <div className="inputField memberField">
+              <label htmlFor="member_status" className="fieldLabel">Is a Member?</label>
+              <Toggle id="member_status"
+                    defaultChecked={this.state.member}
+                    onChange={() => this.toggleMember()}/>
+              <label htmlFor="member_status" className="toggleLabel">This person is {isMember}</label>
+            </div>
+          </div>
+
           <div className="createButton"
                onClick={this.createPerson}>
             <FontAwesomeIcon icon={faCheck}/> Create

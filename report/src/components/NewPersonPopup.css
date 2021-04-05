@@ -88,3 +88,11 @@
 .otherNameField, .phoneNumberField, .emailAddressField {
   display: flex;
 }
+
+.baptisedField {
+  align-items: center;
+}
+
+.toggleLabel {
+  margin-left: 10px;
+}
