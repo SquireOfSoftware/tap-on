@@ -46,7 +46,7 @@ public class PersonObject extends RepresentationModel<PersonObject>
                     .isMember(person.getIsMember())
                     .isBaptised(person.getIsBaptised())
                     .hash(person.getHash())
-                    .otherNames(person.getAlternativeNames()
+                    .otherNames(person.getOtherNames()
                             .stream()
                             .map(NameObject::map)
                             .collect(Collectors.toList()))

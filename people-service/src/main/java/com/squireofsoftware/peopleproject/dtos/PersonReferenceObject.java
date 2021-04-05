@@ -20,14 +20,14 @@ public class PersonReferenceObject extends RepresentationModel<PersonObject>
     @NotNull
     private String givenName;
     private String familyName;
-    private List<NameObject> alternativeNames;
+    private List<NameObject> otherNames;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String hash;
 
     public static PersonReferenceObject map(Person person) {
         if (person != null) {
-            List<NameObject> otherNames = person.getAlternativeNames()
+            List<NameObject> otherNames = person.getOtherNames()
                     .stream()
                     .map(NameObject::map)
                     .collect(Collectors.toList());
@@ -36,7 +36,7 @@ public class PersonReferenceObject extends RepresentationModel<PersonObject>
                     .id(person.getId())
                     .familyName(person.getFamilyName())
                     .givenName(person.getGivenName())
-                    .alternativeNames(otherNames)
+                    .otherNames(otherNames)
                     .hash(person.getHash())
                     .build();
 

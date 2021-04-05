@@ -25,7 +25,7 @@ class PersonReferenceObjectTest {
 
         // then
         assertNotNull(result);
-        assertEquals(Collections.emptyList(), result.getAlternativeNames());
+        assertEquals(Collections.emptyList(), result.getOtherNames());
     }
 
     @Test
@@ -37,7 +37,7 @@ class PersonReferenceObjectTest {
                 .givenName("test")
                 .id(1)
                 .hash(UUID.randomUUID().toString())
-                .alternativeNames(Collections.singletonList(
+                .otherNames(Collections.singletonList(
                         NamePart.builder()
                                 .value(alternativeName)
                                 .type(Language.English)
@@ -49,7 +49,7 @@ class PersonReferenceObjectTest {
 
         // then
         assertNotNull(result);
-        assertEquals(1, result.getAlternativeNames().size());
-        assertEquals(alternativeName, result.getAlternativeNames().get(0).getName());
+        assertEquals(1, result.getOtherNames().size());
+        assertEquals(alternativeName, result.getOtherNames().get(0).getName());
     }
 }

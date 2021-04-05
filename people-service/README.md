@@ -46,3 +46,19 @@ There is a Swagger UI that is exposed:
 http://localhost:8080/people-service/swagger-ui/index.html
 ```
 
+## JiB and docker image build notes
+
+JiB is the docker-less docker image build from Google
+
+I have added it in, but it may not work since it requires credentials
+to be put into the gradle file. As such I have opted for the default
+docker image builder provided by spring boot (but it does require that
+docker is running on your machine to do the build).
+
+To build an image with the paketo builder just run:
+```
+./gradlew bootBuildImage
+```
+
+Also if your images come out like "created 40 years ago" this article
+explains why: https://medium.com/buildpacks/time-travel-with-pack-e0efd8bf05db

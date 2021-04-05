@@ -45,5 +45,5 @@ public class Person {
     @OneToMany
     @JoinColumn(name = "personId")
     @Builder.Default
-    private List<NamePart> alternativeNames = Collections.emptyList();
+    private List<NamePart> otherNames = Collections.emptyList();
 }

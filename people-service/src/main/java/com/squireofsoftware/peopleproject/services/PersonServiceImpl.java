@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -67,33 +68,42 @@ public class PersonServiceImpl implements PersonService {
     }
 
     private void createOtherNames(List<NameObject> otherNames, Person person) {
+        List<NamePart> createdNames = new ArrayList<>();
         for(NameObject otherName: otherNames) {
-            jpaNamePart.saveAndFlush(NamePart.builder()
+            NamePart newName = NamePart.builder()
                     .person(person)
                     .value(otherName.getName())
                     .type(Language.valueOf(otherName.getLanguage()))
-                    .build());
+                    .build();
+            createdNames.add(jpaNamePart.saveAndFlush(newName));
         }
+        person.setOtherNames(createdNames);
     }
 
     private void createPhoneNumbers(List<PhoneNumberObject> phoneNumbers, Person person) {
+        List<PhoneNumber> createPhoneNumbers = new ArrayList<>();
         for(PhoneNumberObject phoneNumber: phoneNumbers) {
-            jpaPhoneNumber.saveAndFlush(PhoneNumber.builder()
+            PhoneNumber newPhoneNumber = PhoneNumber.builder()
                     .number(phoneNumber.getNumber())
                     .description(phoneNumber.getDescription())
                     .person(person)
-                    .build());
+                    .build();
+            createPhoneNumbers.add(jpaPhoneNumber.saveAndFlush(newPhoneNumber));
         }
+        person.setPhoneNumbers(createPhoneNumbers);
     }
 
     private void createEmailAddresses(List<EmailAddressObject> emails, Person person) {
+        List<EmailAddress> createdEmails = new ArrayList<>();
         for(EmailAddressObject emailObject: emails) {
-            jpaEmailAddress.saveAndFlush(EmailAddress.builder()
+            EmailAddress newEmail = EmailAddress.builder()
                     .email(emailObject.getEmail())
                     .description(emailObject.getDescription())
                     .person(person)
-                    .build());
+                    .build();
+            createdEmails.add(jpaEmailAddress.saveAndFlush(newEmail));
         }
+        person.setEmailAddresses(createdEmails);
     }
 
     @Transactional(readOnly = true)
