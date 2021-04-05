@@ -111,16 +111,10 @@ class NewPersonPopup extends Component {
   removeOtherName = (id) => {
     let otherNames = this.state.otherNames;
     if (otherNames !== undefined) {
-      if (otherNames.length > 1) {
-        otherNames.splice(id, 1); // remove one item at id
-        this.setState({
-          otherNames
-        });
-      } else if (otherNames.length === 1) {
-        this.setState({
-          otherNames: [this.createBlankOtherName()]
-        });
-      }
+      otherNames.splice(id, 1); // remove one item at id
+      this.setState({
+        otherNames
+      });
     }
   }
 
@@ -177,16 +171,10 @@ class NewPersonPopup extends Component {
   removePhoneNumber = (id) => {
     let phoneNumbers = this.state.phoneNumbers;
     if (phoneNumbers !== undefined) {
-      if (phoneNumbers.length > 1) {
-        phoneNumbers.splice(id, 1); // remove one item at id
-        this.setState({
-          phoneNumbers
-        });
-      } else if (phoneNumbers.length === 1) {
-        this.setState({
-          phoneNumbers: [this.createBlankPhoneNumber()]
-        });
-      }
+      phoneNumbers.splice(id, 1); // remove one item at id
+      this.setState({
+        phoneNumbers
+      });
     }
   }
 
@@ -256,16 +244,10 @@ class NewPersonPopup extends Component {
   removeEmailAddress = (id) => {
     let emailAddresses = this.state.emailAddresses;
     if (emailAddresses !== undefined) {
-      if (emailAddresses.length > 1) {
-        emailAddresses.splice(id, 1); // remove one item at id
-        this.setState({
-          emailAddresses
-        });
-      } else if (emailAddresses.length === 1) {
-        this.setState({
-          emailAddresses: [this.createBlankEmailAddress()]
-        });
-      }
+      emailAddresses.splice(id, 1); // remove one item at id
+      this.setState({
+        emailAddresses
+      });
     }
   }
 
