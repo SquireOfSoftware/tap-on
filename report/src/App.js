@@ -27,7 +27,7 @@ class App extends Component {
       window.localStorage.setItem("startTime", startTime);
     }
 
-    let autoRefreshPeople = (window.localStorage.getItem('autoRefreshPeople') == 'true');
+    let autoRefreshPeople = (window.localStorage.getItem('autoRefreshPeople') === 'true');
     if (autoRefreshPeople === undefined || autoRefreshPeople === null) {
       autoRefreshPeople = this.props.autoRefreshPeople;
     }

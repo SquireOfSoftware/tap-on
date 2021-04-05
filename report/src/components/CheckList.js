@@ -6,7 +6,7 @@ import './CheckList.css'
 import ServerStates from './ServerStates.js'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSyncAlt, faSignature } from '@fortawesome/free-solid-svg-icons'
+import { faSyncAlt, faSignature, faUserEdit, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
 
 class CheckList extends Component {
@@ -99,13 +99,13 @@ class CheckList extends Component {
 
     getRequest.addEventListener("load", successGET);
     getRequest.addEventListener("error", failedGET);
-    console.log(url);
+    console.debug(url);
     getRequest.open("GET", url, true);
     getRequest.setRequestHeader("Access-Control-Allow-Headers", "*");
     getRequest.setRequestHeader("Content-Type", "application/json");
     getRequest.send();
 
-    console.log(getRequest);
+    console.debug(getRequest);
   }
 
   postToServer = (url, successCallback, userErrorCallback, postBody) => {
@@ -146,7 +146,7 @@ class CheckList extends Component {
 
     postRequest.addEventListener("load", successPOST);
     postRequest.addEventListener("error", failedPOST);
-    console.log(url);
+    console.debug(url);
     postRequest.open("POST", url, true);
     postRequest.setRequestHeader("Access-Control-Allow-Headers", "*");
     postRequest.setRequestHeader("Content-Type", "application/json");
@@ -156,7 +156,7 @@ class CheckList extends Component {
       postRequest.send();
     }
 
-    console.log(postRequest);
+    console.debug(postRequest);
   }
 
   loadTodaysSignins = () => {
@@ -258,6 +258,24 @@ class CheckList extends Component {
             Header: 'Family Name',
             accessor: 'familyName',
           },
+          {
+            Header: 'Other Names',
+            accessor: 'otherNames',
+            Cell: ({row, value}) => {
+              let otherNames;
+              if (value !== undefined && value.length > 0) {
+                 otherNames = value
+                    .map(name => name.name)
+                    .join(', ');
+              }
+
+              return (
+                <div>
+                  {otherNames}
+                </div>
+              );
+            }
+          },
         ],
       },
       {
@@ -265,11 +283,13 @@ class CheckList extends Component {
         columns: [
           {
             Header: 'Signed In At',
-            accessor: 'firstSignIn'
+            accessor: 'firstSignIn',
+            className: "infoColumn"
           },
           {
             Header: 'Manual sign in',
             accessor: 'manualSignIn',
+            className: "infoColumn",
             Cell: ({row}) => {
               let signInLink = row.original.links.find(link => link.rel === 'sign_in_request');
 
@@ -292,6 +312,17 @@ class CheckList extends Component {
                 </div>
               );
             }
+          },
+          {
+            Header: 'Account',
+            className: "infoColumn",
+            Cell: ({row}) => {
+              return (
+                <div className="clickable" onClick={() => console.error("This has not been implemented yet")}>
+                  <FontAwesomeIcon icon={faUserEdit}/>
+                </div>
+              );
+            }
           }
         ],
       },
@@ -311,8 +342,16 @@ class CheckList extends Component {
 
     return (
       <div>
-        <div className="refreshPeopleButton clickable" onClick={() => this.loadPeople()}>
-          <FontAwesomeIcon icon={faSyncAlt}/>
+        <div className="adminBar">
+          <div className="infoTime">
+            Info from: {moment(this.state.startTime).format("hh:mm A")}
+          </div>
+          <div className="clickable adminButton" onClick={() => console.error("This has not been implemented yet")}>
+            <FontAwesomeIcon icon={faUserPlus}/>
+          </div>
+          <div className="clickable adminButton" onClick={() => this.loadPeople()}>
+            <FontAwesomeIcon icon={faSyncAlt}/>
+          </div>
         </div>
         {table}
       </div>
@@ -393,7 +432,7 @@ function Table({columns, data, bulkSignInHandler}) {
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                <th className={column.className} {...column.getHeaderProps()}>{column.render('Header')}</th>
               ))}
             </tr>
           ))}

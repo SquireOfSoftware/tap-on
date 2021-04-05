@@ -2,10 +2,16 @@
   background-color: red;
 }
 
-.refreshPeopleButton {
-  position: fixed;
-  right: 5%;
-  top: 0;
+.adminBar {
+  display: flex;
+}
+
+.infoTime {
+  flex: 2;
+}
+
+.adminButton {
+  padding-right: 10px;
 }
 
 .clickable {
@@ -30,4 +36,8 @@ tr:last-child > th {
   position: sticky;
   bottom: 0;
   background: #282c34;
+}
+
+tr:last-child > th.infoColumn {
+  background-color: gray;
 }
