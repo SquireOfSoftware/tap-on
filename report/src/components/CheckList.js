@@ -4,6 +4,7 @@ import { useTable, useRowSelect } from 'react-table'
 
 import './CheckList.css'
 import ServerStates from './ServerStates.js'
+import NewPersonPopup from './NewPersonPopup.js'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSyncAlt, faSignature, faUserEdit, faUserPlus } from '@fortawesome/free-solid-svg-icons'
@@ -17,12 +18,16 @@ class CheckList extends Component {
       serverState: ServerStates.UNCHECKED,
       startTime: this.props.initialStartTime,
       serverUrl: this.props.initialServerUrl,
-      autoRefreshPeople: this.props.initialAutoRefreshPeople
+      autoRefreshPeople: this.props.initialAutoRefreshPeople,
+      showNewPersonPopup: false
     }
     this.loadPeople = this.loadPeople.bind(this);
     this.loadTodaysSignins = this.loadTodaysSignins.bind(this);
     this.queryServer = this.queryServer.bind(this);
     this.postToServer = this.postToServer.bind(this);
+    this.showNewPersonPopup = this.showNewPersonPopup.bind(this);
+    this.closeNewPersonPopupCallback = this.closeNewPersonPopupCallback.bind(this);
+    this.createPersonCallback = this.createPersonCallback.bind(this);
     this.loadPeople();
   }
 
@@ -245,6 +250,38 @@ class CheckList extends Component {
     )
   }
 
+  showNewPersonPopup = () => {
+    this.setState({
+      showNewPersonPopup: true
+    });
+  }
+
+  closeNewPersonPopupCallback = () => {
+    this.setState({
+      showNewPersonPopup: false
+    });
+  }
+
+  createPersonCallback = (personToBeCreated) => {
+    console.log(personToBeCreated);
+    // submit the actual call to create the person
+    // then reload the whole table
+    // people-service/people
+    this.postToServer(
+      this.state.serverUrl + "/people-service/people/",
+      (event) => {
+        this.loadPeople();
+      },
+      (event) => {
+        let error = JSON.parse(event.target.responseText);
+        console.error(error.message);
+        // most likely someones hash got changed
+        console.error("Failed to create the person");
+      },
+      [personToBeCreated]
+    )
+  }
+
   render() {
     let columns = [
       {
@@ -328,17 +365,22 @@ class CheckList extends Component {
       },
     ]
 
-    let table = undefined;
     let dataArray = [];
     if (this.state.peopleMap !== undefined) {
       dataArray = [...this.state.peopleMap.values()];
     }
 
-    table = <Table
+    let table = <Table
       columns={columns}
       data={dataArray}
       bulkSignInHandler={this.bulkSignInHandler}
     />
+
+    let newPersonPopup = undefined;
+    if (this.state.showNewPersonPopup) {
+      newPersonPopup = <NewPersonPopup createPersonCallback={this.createPersonCallback}
+                                    closeNewPersonPopupCallback={this.closeNewPersonPopupCallback}/>
+    }
 
     return (
       <div>
@@ -346,7 +388,7 @@ class CheckList extends Component {
           <div className="infoTime">
             Info from: {moment(this.state.startTime).format("hh:mm A")}
           </div>
-          <div className="clickable adminButton" onClick={() => console.error("This has not been implemented yet")}>
+          <div className="clickable adminButton" onClick={() => this.showNewPersonPopup()}>
             <FontAwesomeIcon icon={faUserPlus}/>
           </div>
           <div className="clickable adminButton" onClick={() => this.loadPeople()}>
@@ -354,6 +396,7 @@ class CheckList extends Component {
           </div>
         </div>
         {table}
+        {newPersonPopup}
       </div>
     )
   }
