@@ -13,11 +13,12 @@ class NewPersonPopup extends Component {
     this.state = {
       givenName: "",
       familyName: "",
-      otherNames: [{name: "", language: "English"}],
-      phoneNumbers: [{number: "", description: ""}],
-      emailAddresses: [{email: "", description: ""}],
+      otherNames: [],
+      phoneNumbers: [],
+      emailAddresses: [],
       baptised: false,
-      member: false
+      member: false,
+      errors: []
     }
     this.createPerson = this.createPerson.bind(this);
     this.addOtherName = this.addOtherName.bind(this);
@@ -30,7 +31,7 @@ class NewPersonPopup extends Component {
     // extract the values from the form and pass it to the callback
 
     let otherNames = [];
-    this.state.otherNames.forEach(otherName => {
+    this.state.otherNames.forEach((otherName, index) => {
       if (otherName.name !== undefined &&
           otherName.name !== "" &&
           (otherName.language === "English" ||
@@ -67,9 +68,32 @@ class NewPersonPopup extends Component {
     };
 
     // make sure you sanitise the inputs here!!!!
+    let isGivenNameValid = this.nameIsValid(this.state.givenName);
+    let isFamilyNameValid = this.nameIsValid(this.state.familyName);
 
-    this.props.createPersonCallback(newPerson);
-    this.props.closeNewPersonPopupCallback();
+    if (isGivenNameValid && isFamilyNameValid) {
+      this.props.createPersonCallback(newPerson);
+      this.props.closeNewPersonPopupCallback();
+    } else {
+      let givenNameError;
+      let familyNameError;
+      if (!isGivenNameValid) {
+        givenNameError = "The given name must have at least one character.";
+      }
+      if (!isFamilyNameValid) {
+        familyNameError = "The family name must have at least one character.";
+      }
+      this.setState({
+        errors: [givenNameError, familyNameError]
+      });
+      console.error("Please review your inputs before proceeding");
+    }
+  }
+
+  nameIsValid = (name) => {
+    return name !== undefined &&
+        name !== "" &&
+        name.length > 0;
   }
 
   createBlankOtherName = () => {
@@ -308,6 +332,26 @@ class NewPersonPopup extends Component {
     });
   }
 
+  buildErrors = () => {
+    if (this.state.errors.length > 0) {
+      let errors = [];
+      for (let i = 0; i < this.state.errors.length; i++) {
+        errors.push(
+          <div key={i}>
+            {this.state.errors[i]}
+          </div>
+        );
+      }
+      return (
+        <div className="errorMessage">
+          <div>Please review your errors before proceeding</div>
+          {errors}
+        </div>
+      );
+    }
+    return undefined;
+  }
+
   render() {
     // build a list of other names
     let otherNames = this.buildOtherNameList();
@@ -316,6 +360,11 @@ class NewPersonPopup extends Component {
 
     let isBaptised = this.state.baptised ? "baptised" : "not baptised";
     let isMember = this.state.member ? "a member" : "not a member";
+
+    let isGivenNameFieldValid = this.nameIsValid(this.state.givenName);
+    let isFamilyNameFieldValid = this.nameIsValid(this.state.familyName);
+
+    let errors = this.buildErrors();
 
     return (
       <div className="overlay">
@@ -332,24 +381,26 @@ class NewPersonPopup extends Component {
             <div className="inputField">
               <label htmlFor="given_name" className="fieldLabel">Given Name</label>
               <input
-                  className="field"
+                  className={"field" + (isGivenNameFieldValid ? "" : " fieldError")}
                   id="given_name"
                   name="given_name"
                   type="text"
                   placeholder="The first/given name of the person"
-                  onInput={event => this.setState({givenName: event.target.value})}
+                  onInput={event =>
+                      this.setState({givenName: event.target.value, errors: []})}
                   required
                   autoFocus/>
             </div>
             <div className="inputField">
               <label htmlFor="family_name" className="fieldLabel">Family Name</label>
               <input
-                  className="field"
+                  className={"field" + (isFamilyNameFieldValid ? "" : " fieldError")}
                   id="family_name"
                   name="family_name"
                   type="text"
                   placeholder="The last/family name of the person"
-                  onInput={event => this.setState({familyName: event.target.value})}
+                  onInput={event =>
+                      this.setState({familyName: event.target.value, errors: []})}
                   required/>
             </div>
             <div className="inputField">
@@ -400,7 +451,7 @@ class NewPersonPopup extends Component {
               <label htmlFor="member_status" className="toggleLabel">This person is {isMember}</label>
             </div>
           </div>
-
+          {errors}
           <div className="createButton"
                onClick={this.createPerson}>
             <FontAwesomeIcon icon={faCheck}/> Create

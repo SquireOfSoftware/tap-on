@@ -73,6 +73,10 @@
   border-bottom: 1px solid white;
 }
 
+.fieldError {
+  border: 1px solid red;
+}
+
 .fieldLabel {
   text-align: left;
   width: 200px;
@@ -95,4 +99,8 @@
 
 .toggleLabel {
   margin-left: 10px;
+}
+
+.errorMessage {
+  background-color: red;
 }
