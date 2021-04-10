@@ -5,6 +5,7 @@ import { useTable, useRowSelect } from 'react-table'
 import './CheckList.css'
 import ServerStates from './ServerStates.js'
 import NewPersonPopup from './NewPersonPopup.js'
+import EditPersonPopup from './EditPersonPopup.js'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSyncAlt, faSignature, faUserEdit, faUserPlus } from '@fortawesome/free-solid-svg-icons'
@@ -19,7 +20,8 @@ class CheckList extends Component {
       startTime: this.props.initialStartTime,
       serverUrl: this.props.initialServerUrl,
       autoRefreshPeople: this.props.initialAutoRefreshPeople,
-      showNewPersonPopup: false
+      showNewPersonPopup: false,
+      showEditPersonPopup: false
     }
     this.loadPeople = this.loadPeople.bind(this);
     this.loadTodaysSignins = this.loadTodaysSignins.bind(this);
@@ -282,6 +284,55 @@ class CheckList extends Component {
     )
   }
 
+  getSelfLink = (partialPerson) => {
+    return this.getLink(partialPerson, "self");
+  }
+
+  getQrCodeLink = (partialPerson) => {
+    return this.getLink(partialPerson, "qr_code");
+  }
+
+  getLink = (partialPerson, linkName) => {
+    if (partialPerson !== undefined &&
+        partialPerson.links !== undefined &&
+        partialPerson.links.length > 0) {
+      for (let i = 0; i < partialPerson.links.length; i++) {
+        let link = partialPerson.links[i];
+        if (link !== undefined &&
+            link.rel === linkName) {
+          return link.href;
+        }
+      }
+    }
+    return undefined;
+  }
+
+  showEditPersonPopup = (partialPerson) => {
+    let selfLink = this.getSelfLink(partialPerson);
+    let qrCodeLink = this.getQrCodeLink(partialPerson);
+    if (selfLink !== undefined) {
+      this.queryServer(
+          selfLink,
+          (event) => {
+            let person = JSON.parse(event.target.responseText);
+            if (person !== undefined) {
+              this.setState({
+                showEditPersonPopup: true,
+                personToBeEdited: person,
+                qrCodeLink: qrCodeLink
+              });
+            }
+          });
+    }
+  }
+
+  closeEditPersonPopupCallback = () => {
+    this.setState({
+      showEditPersonPopup: false,
+      personToBeEdited: undefined
+    });
+  }
+
   render() {
     let columns = [
       {
@@ -356,7 +407,7 @@ class CheckList extends Component {
             className: "infoColumn",
             Cell: ({row}) => {
               return (
-                <div className="clickable" onClick={() => console.error("This has not been implemented yet")}>
+                <div className="clickable" onClick={() => this.showEditPersonPopup(row.original)}>
                   <FontAwesomeIcon icon={faUserEdit}/>
                 </div>
               );
@@ -377,10 +428,14 @@ class CheckList extends Component {
       bulkSignInHandler={this.bulkSignInHandler}
     />
 
-    let newPersonPopup = undefined;
+    let personPopup = undefined;
     if (this.state.showNewPersonPopup) {
-      newPersonPopup = <NewPersonPopup createPersonCallback={this.createPersonCallback}
+      personPopup = <NewPersonPopup createPersonCallback={this.createPersonCallback}
                                     closeNewPersonPopupCallback={this.closeNewPersonPopupCallback}/>
+    } else if (this.state.showEditPersonPopup) {
+      personPopup = <EditPersonPopup person={this.state.personToBeEdited}
+                                     qrCodeLink={this.state.qrCodeLink}
+                                     closeEditPersonPopupCallback={this.closeEditPersonPopupCallback} />
     }
 
     return (
@@ -397,7 +452,7 @@ class CheckList extends Component {
           </div>
         </div>
         {table}
-        {newPersonPopup}
+        {personPopup}
       </div>
     )
   }

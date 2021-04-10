@@ -7,17 +7,20 @@ import { faWindowClose, faCheck, faPlus, faTimes } from '@fortawesome/free-solid
 import Toggle from 'react-toggle'
 import 'react-toggle/style.css'
 
-class NewPersonPopup extends Component {
+class EditPersonPopup extends Component {
   constructor(props) {
     super(props);
+    console.log(props.person);
     this.state = {
-      givenName: "",
-      familyName: "",
-      otherNames: [],
-      phoneNumbers: [],
-      emailAddresses: [],
-      baptised: false,
-      member: false,
+      givenName: props.person.givenName,
+      familyName: props.person.familyName,
+      otherNames: props.person.otherNames.map(otherName => otherName.name),
+      phoneNumbers: props.person.phoneNumbers.map(phoneNumber => phoneNumber.number),
+      emailAddresses: props.person.emailAddresses.map(emailAddress => emailAddress.email),
+      baptised: props.person.isBaptised,
+      member: props.person.isMember,
+      originalPerson: props.person,
+      qrCodeLink: props.qrCodeLink,
       errors: []
     }
     this.createPerson = this.createPerson.bind(this);
@@ -73,7 +76,7 @@ class NewPersonPopup extends Component {
 
     if (isGivenNameValid && isFamilyNameValid) {
       this.props.createPersonCallback(newPerson);
-      this.props.closeNewPersonPopupCallback();
+      this.props.closeEditPersonPopupCallback();
     } else {
       let givenNameError;
       let familyNameError;
@@ -352,10 +355,18 @@ class NewPersonPopup extends Component {
       <div className="overlay">
         <div className="newPersonForm">
           <div className="heading">
-            <div className="title">Add a new person</div>
+            <div className="title">Update a person</div>
             <div className="clickable"
-                 onClick={this.props.closeNewPersonPopupCallback}>
+                 onClick={this.props.closeEditPersonPopupCallback}>
               <FontAwesomeIcon icon={faWindowClose}/>
+            </div>
+          </div>
+          <div className="formSection">
+            <div>
+              <img src={this.state.qrCodeLink} />
+            </div>
+            <div>
+              Regenerate QR Code
             </div>
           </div>
           <div className="nameForm formSection">
@@ -368,6 +379,7 @@ class NewPersonPopup extends Component {
                   name="given_name"
                   type="text"
                   placeholder="The first/given name of the person"
+                  value={this.state.givenName}
                   onInput={event =>
                       this.setState({givenName: event.target.value, errors: []})}
                   required
@@ -381,6 +393,7 @@ class NewPersonPopup extends Component {
                   name="family_name"
                   type="text"
                   placeholder="The last/family name of the person"
+                  value={this.state.familyName}
                   onInput={event =>
                       this.setState({familyName: event.target.value, errors: []})}
                   required/>
@@ -435,8 +448,8 @@ class NewPersonPopup extends Component {
           </div>
           {errors}
           <div className="createButton"
-               onClick={this.createPerson}>
-            <FontAwesomeIcon icon={faCheck}/> Create
+               onClick={() => console.error("This function has not been implemented yet.")}>
+            <FontAwesomeIcon icon={faCheck}/> Update
           </div>
         </div>
       </div>
@@ -444,4 +457,4 @@ class NewPersonPopup extends Component {
   }
 }
 
-export default NewPersonPopup;
+export default EditPersonPopup;
