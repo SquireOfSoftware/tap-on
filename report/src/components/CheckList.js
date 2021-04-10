@@ -328,9 +328,9 @@ class CheckList extends Component {
     }
   }
 
-  updatePerson = (personId, personToBeEdited, successCallback, errorCallback) => {
+  updatePerson = (personUrl, personToBeEdited, successCallback, errorCallback) => {
     this.putToServer(
-      this.state.serverUrl + "/people-service/people/id/" + personId,
+      personUrl,
       successCallback,
       errorCallback,
       personToBeEdited

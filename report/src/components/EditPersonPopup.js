@@ -77,7 +77,7 @@ class EditPersonPopup extends Component {
 
     if (isGivenNameValid && isFamilyNameValid) {
       this.props.updatePerson(
-        this.state.originalPerson.id,
+        this.getSelfLink(),
         newPerson,
         (event) => this.props.closeEditPersonPopupCallback(),
         (event) => {

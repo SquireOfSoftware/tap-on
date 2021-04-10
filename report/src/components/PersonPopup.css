@@ -103,6 +103,8 @@
 
 .errorMessage {
   background-color: red;
+  overflow-y: scroll;
+  height: 100px;
 }
 
 .qrCode {
