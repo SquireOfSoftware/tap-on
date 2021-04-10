@@ -77,7 +77,7 @@ class EditPersonPopup extends Component {
 
     if (isGivenNameValid && isFamilyNameValid) {
       this.props.updatePerson(
-        this.getSelfLink(),
+        this.state.originalPerson.id,
         newPerson,
         (event) => this.props.closeEditPersonPopupCallback(),
         (event) => {
@@ -345,20 +345,6 @@ class EditPersonPopup extends Component {
           {errors}
         </div>
       );
-    }
-    return undefined;
-  }
-
-  getSelfLink = () => {
-    return this.getLink("self");
-  }
-
-  getLink = (linkName) => {
-    let person = this.state.originalPerson;
-    if (person !== undefined &&
-        person["_links"] !== undefined &&
-        person["_links"][linkName] !== undefined) {
-      return person["_links"][linkName].href;
     }
     return undefined;
   }

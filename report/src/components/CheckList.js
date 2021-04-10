@@ -312,25 +312,22 @@ class CheckList extends Component {
   }
 
   showEditPersonPopup = (partialPerson) => {
-    let selfLink = this.getSelfLink(partialPerson);
-    if (selfLink !== undefined) {
-      this.queryServer(
-          selfLink,
-          (event) => {
-            let person = JSON.parse(event.target.responseText);
-            if (person !== undefined) {
-              this.setState({
-                showEditPersonPopup: true,
-                personToBeEdited: person
-              });
-            }
-          });
-    }
+    this.queryServer(
+        this.state.serverUrl + "/people-service/people/id/" + partialPerson.id,
+        (event) => {
+          let person = JSON.parse(event.target.responseText);
+          if (person !== undefined) {
+            this.setState({
+              showEditPersonPopup: true,
+              personToBeEdited: person
+            });
+          }
+        });
   }
 
-  updatePerson = (personUrl, personToBeEdited, successCallback, errorCallback) => {
+  updatePerson = (personId, personToBeEdited, successCallback, errorCallback) => {
     this.putToServer(
-      personUrl,
+      this.state.serverUrl + "/people-service/people/id/" + personId,
       successCallback,
       errorCallback,
       personToBeEdited
