@@ -104,3 +104,12 @@
 .errorMessage {
   background-color: red;
 }
+
+.qrCode {
+  height: 250px;
+  width: 250px;
+}
+
+.warningLabel {
+  background-color: yellow;
+}

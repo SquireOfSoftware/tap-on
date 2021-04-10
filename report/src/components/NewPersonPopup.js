@@ -200,7 +200,7 @@ class NewPersonPopup extends Component {
     let phoneNumbers = [];
     for (let i = 0; i < this.state.phoneNumbers.length; i++) {
       let id = "phone_number" + i;
-      let value = this.state.phoneNumbers[i].name;
+      let value = this.state.phoneNumbers[i].number;
       phoneNumbers.push(
             <div key={id} className="phoneNumberField">
               <input
@@ -273,7 +273,7 @@ class NewPersonPopup extends Component {
     let emailAddresses = [];
     for (let i = 0; i < this.state.emailAddresses.length; i++) {
       let id = "email_address" + i;
-      let value = this.state.emailAddresses[i].name;
+      let value = this.state.emailAddresses[i].email;
       emailAddresses.push(
             <div key={id} className="emailAddressField">
               <input

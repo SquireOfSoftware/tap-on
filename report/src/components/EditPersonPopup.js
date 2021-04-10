@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 
 import './PersonPopup.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faWindowClose, faCheck, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faWindowClose, faCheck, faPlus, faTimes, faSyncAlt } from '@fortawesome/free-solid-svg-icons'
+import moment from 'moment'
 
 import Toggle from 'react-toggle'
 import 'react-toggle/style.css'
@@ -14,23 +15,23 @@ class EditPersonPopup extends Component {
     this.state = {
       givenName: props.person.givenName,
       familyName: props.person.familyName,
-      otherNames: props.person.otherNames.map(otherName => otherName.name),
-      phoneNumbers: props.person.phoneNumbers.map(phoneNumber => phoneNumber.number),
-      emailAddresses: props.person.emailAddresses.map(emailAddress => emailAddress.email),
+      otherNames: props.person.otherNames,
+      phoneNumbers: props.person.phoneNumbers,
+      emailAddresses: props.person.emailAddresses,
       baptised: props.person.isBaptised,
       member: props.person.isMember,
+      qrCodeLink: props.person["_links"]["qr_code"].href,
       originalPerson: props.person,
-      qrCodeLink: props.qrCodeLink,
       errors: []
     }
-    this.createPerson = this.createPerson.bind(this);
+    this.updatePerson = this.updatePerson.bind(this);
     this.addOtherName = this.addOtherName.bind(this);
     this.removeOtherName = this.removeOtherName.bind(this);
     this.toggleMember = this.toggleMember.bind(this);
     this.toggleBaptised = this.toggleBaptised.bind(this);
   }
 
-  createPerson = () => {
+  updatePerson = () => {
     // extract the values from the form and pass it to the callback
 
     let otherNames = [];
@@ -75,8 +76,19 @@ class EditPersonPopup extends Component {
     let isFamilyNameValid = this.nameIsValid(this.state.familyName);
 
     if (isGivenNameValid && isFamilyNameValid) {
-      this.props.createPersonCallback(newPerson);
-      this.props.closeEditPersonPopupCallback();
+      this.props.updatePerson(
+        this.state.originalPerson.id,
+        newPerson,
+        (event) => this.props.closeEditPersonPopupCallback(),
+        (event) => {
+          let errorMessage = "There was a problem with updating this person, please reload and try again";
+          this.setState({
+            errors: [errorMessage, event.target.responseText]
+          });
+          console.error(errorMessage);
+        }
+      );
+
     } else {
       let givenNameError;
       let familyNameError;
@@ -203,7 +215,7 @@ class EditPersonPopup extends Component {
     let phoneNumbers = [];
     for (let i = 0; i < this.state.phoneNumbers.length; i++) {
       let id = "phone_number" + i;
-      let value = this.state.phoneNumbers[i].name;
+      let value = this.state.phoneNumbers[i].number;
       phoneNumbers.push(
             <div key={id} className="phoneNumberField">
               <input
@@ -276,7 +288,7 @@ class EditPersonPopup extends Component {
     let emailAddresses = [];
     for (let i = 0; i < this.state.emailAddresses.length; i++) {
       let id = "email_address" + i;
-      let value = this.state.emailAddresses[i].name;
+      let value = this.state.emailAddresses[i].email;
       emailAddresses.push(
             <div key={id} className="emailAddressField">
               <input
@@ -337,6 +349,32 @@ class EditPersonPopup extends Component {
     return undefined;
   }
 
+  getSelfLink = () => {
+    return this.getLink("self");
+  }
+
+  getLink = (linkName) => {
+    let person = this.state.originalPerson;
+    if (person !== undefined &&
+        person["_links"] !== undefined &&
+        person["_links"][linkName] !== undefined) {
+      return person["_links"][linkName].href;
+    }
+    return undefined;
+  }
+
+  regenerateQrCode = () => {
+    this.props.regenerateQrCode(
+      this.state.originalPerson.id,
+      (event) => {
+        // we add a date string at the end to force the img src link to reload
+        this.setState({
+          qrCodeLink: this.state.originalPerson["_links"]["qr_code"].href + "?randomHash=" + moment()
+        });
+      }
+    );
+  }
+
   render() {
     // build a list of other names
     let otherNames = this.buildOtherNameList();
@@ -350,6 +388,7 @@ class EditPersonPopup extends Component {
     let isFamilyNameFieldValid = this.nameIsValid(this.state.familyName);
 
     let errors = this.buildErrors();
+    let qrCodeLink = this.state.qrCodeLink;
 
     return (
       <div className="overlay">
@@ -363,10 +402,14 @@ class EditPersonPopup extends Component {
           </div>
           <div className="formSection">
             <div>
-              <img src={this.state.qrCodeLink} />
+              <img className="qrCode" src={qrCodeLink}/>
             </div>
-            <div>
-              Regenerate QR Code
+            <span className="clickable" onClick={this.regenerateQrCode}>
+              <FontAwesomeIcon icon={faSyncAlt} />
+              <span> Regenerate</span>
+            </span>
+            <div className="warningLabel">
+              Please take note that QR code regeneration cannot be reversed
             </div>
           </div>
           <div className="nameForm formSection">
@@ -448,7 +491,7 @@ class EditPersonPopup extends Component {
           </div>
           {errors}
           <div className="createButton"
-               onClick={() => console.error("This function has not been implemented yet.")}>
+               onClick={this.updatePerson}>
             <FontAwesomeIcon icon={faCheck}/> Update
           </div>
         </div>

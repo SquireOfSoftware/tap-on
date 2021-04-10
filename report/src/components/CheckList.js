@@ -116,11 +116,19 @@ class CheckList extends Component {
   }
 
   postToServer = (url, successCallback, userErrorCallback, postBody) => {
+    return this.uploadToServer("POST", url, successCallback, userErrorCallback, postBody);
+  }
+
+  putToServer = (url, successCallback, userErrorCallback, putBody) => {
+    return this.uploadToServer("PUT", url, successCallback, userErrorCallback, putBody);
+  }
+
+  uploadToServer = (method, url, successCallback, userErrorCallback, body) => {
     this.setState({
       serverState: ServerStates.CHECKING
     });
 
-    let successPOST = (event) => {
+    let successfulRequest = (event) => {
       if (event.target.status === 200) {
         this.setState({
           serverState: ServerStates.UP
@@ -141,7 +149,7 @@ class CheckList extends Component {
       }
     }
 
-    let failedPOST = (event) => {
+    let failedRequest = (event) => {
       console.error("An error occurred while checking the server health.");
       this.setState({
         serverState: ServerStates.DOWN
@@ -149,21 +157,21 @@ class CheckList extends Component {
       this.props.updateServerState(this.state.serverState);
     }
 
-    let postRequest = new XMLHttpRequest();
+    let request = new XMLHttpRequest();
 
-    postRequest.addEventListener("load", successPOST);
-    postRequest.addEventListener("error", failedPOST);
+    request.addEventListener("load", successfulRequest);
+    request.addEventListener("error", failedRequest);
     console.debug(url);
-    postRequest.open("POST", url, true);
-    postRequest.setRequestHeader("Access-Control-Allow-Headers", "*");
-    postRequest.setRequestHeader("Content-Type", "application/json");
-    if (postBody !== undefined || postBody !== null) {
-      postRequest.send(JSON.stringify(postBody));
+    request.open(method, url, true);
+    request.setRequestHeader("Access-Control-Allow-Headers", "*");
+    request.setRequestHeader("Content-Type", "application/json");
+    if (body !== undefined || body !== null) {
+      request.send(JSON.stringify(body));
     } else {
-      postRequest.send();
+      request.send();
     }
 
-    console.debug(postRequest);
+    console.debug(request);
   }
 
   loadTodaysSignins = () => {
@@ -288,10 +296,6 @@ class CheckList extends Component {
     return this.getLink(partialPerson, "self");
   }
 
-  getQrCodeLink = (partialPerson) => {
-    return this.getLink(partialPerson, "qr_code");
-  }
-
   getLink = (partialPerson, linkName) => {
     if (partialPerson !== undefined &&
         partialPerson.links !== undefined &&
@@ -309,7 +313,6 @@ class CheckList extends Component {
 
   showEditPersonPopup = (partialPerson) => {
     let selfLink = this.getSelfLink(partialPerson);
-    let qrCodeLink = this.getQrCodeLink(partialPerson);
     if (selfLink !== undefined) {
       this.queryServer(
           selfLink,
@@ -318,12 +321,20 @@ class CheckList extends Component {
             if (person !== undefined) {
               this.setState({
                 showEditPersonPopup: true,
-                personToBeEdited: person,
-                qrCodeLink: qrCodeLink
+                personToBeEdited: person
               });
             }
           });
     }
+  }
+
+  updatePerson = (personId, personToBeEdited, successCallback, errorCallback) => {
+    this.putToServer(
+      this.state.serverUrl + "/people-service/people/id/" + personId,
+      successCallback,
+      errorCallback,
+      personToBeEdited
+    )
   }
 
   closeEditPersonPopupCallback = () => {
@@ -331,6 +342,19 @@ class CheckList extends Component {
       showEditPersonPopup: false,
       personToBeEdited: undefined
     });
+    this.loadPeople();
+  }
+
+  regenerateQrCode = (personId, callback) => {
+    this.postToServer(
+      this.state.serverUrl + "/people-service/people/id/" + personId + "/qrcode:recreate",
+      callback,
+      event => {
+        console.error("There was an issue with regenerating the QR code");
+        let error = JSON.parse(event.target.responseText);
+        console.error(error.message);
+      }
+    );
   }
 
   render() {
@@ -434,8 +458,9 @@ class CheckList extends Component {
                                     closeNewPersonPopupCallback={this.closeNewPersonPopupCallback}/>
     } else if (this.state.showEditPersonPopup) {
       personPopup = <EditPersonPopup person={this.state.personToBeEdited}
-                                     qrCodeLink={this.state.qrCodeLink}
-                                     closeEditPersonPopupCallback={this.closeEditPersonPopupCallback} />
+                                     updatePerson={this.updatePerson}
+                                     closeEditPersonPopupCallback={this.closeEditPersonPopupCallback}
+                                     regenerateQrCode={this.regenerateQrCode}/>
     }
 
     return (
