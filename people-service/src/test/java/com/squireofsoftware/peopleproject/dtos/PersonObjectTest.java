@@ -246,7 +246,7 @@ class PersonObjectTest {
         PersonCSV dummyPersonCSV = PersonCSV.builder()
                 .givenName("test")
                 .familyName("test")
-                .alternativeNames("Test|English|Chinese")
+                .otherNames("Test|English|Chinese")
                 .build();
 
         List<NameObject> expectedNames = Arrays.asList(
@@ -278,7 +278,7 @@ class PersonObjectTest {
         PersonCSV dummyPersonCSV = PersonCSV.builder()
                 .givenName("test")
                 .familyName("test")
-                .alternativeNames("Test|English|Chinese")
+                .otherNames("Test|English|Chinese")
                 .build();
 
         List<NameObject> expectedNames = Arrays.asList(
@@ -310,7 +310,7 @@ class PersonObjectTest {
         PersonCSV dummyPersonCSV = PersonCSV.builder()
                 .givenName("test")
                 .familyName("test")
-                .alternativeNames("Test|English|人")
+                .otherNames("Test|English|人")
                 .build();
 
         List<NameObject> expectedNames = Arrays.asList(

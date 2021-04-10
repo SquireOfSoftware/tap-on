@@ -30,8 +30,8 @@ public class PersonCSV {
     private String emailAddresses;
     @CsvBindByName(column = "PhoneNumbers")
     private String phoneNumbers;
-    @CsvBindByName(column = "AlternativeNames")
-    private String alternativeNames;
+    @CsvBindByName(column = "OtherNames")
+    private String otherNames;
 
     public List<String> getEmailAddresses() {
         return StringUtils.isNotBlank(emailAddresses) ?
@@ -45,9 +45,9 @@ public class PersonCSV {
                 Collections.emptyList();
     }
 
-    public List<String> getAlternativeNames() {
-        return StringUtils.isNotBlank(alternativeNames) ?
-                Arrays.asList(alternativeNames.split("\\|")) :
+    public List<String> getOtherNames() {
+        return StringUtils.isNotBlank(otherNames) ?
+                Arrays.asList(otherNames.split("\\|")) :
                 Collections.emptyList();
     }
 }

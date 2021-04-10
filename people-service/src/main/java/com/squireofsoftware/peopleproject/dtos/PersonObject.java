@@ -91,7 +91,7 @@ public class PersonObject extends RepresentationModel<PersonObject>
                             )
                             .collect(Collectors.toList())
                     )
-                    .otherNames(personCSV.getAlternativeNames().stream()
+                    .otherNames(personCSV.getOtherNames().stream()
                             .map(name -> {
                                 String language = "English";
                                 if (Character.UnicodeBlock.of(name.charAt(0)) == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS) {
