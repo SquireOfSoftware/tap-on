@@ -342,9 +342,13 @@ class CheckList extends Component {
     this.loadPeople();
   }
 
+  getQrCodeLink = (personId) => {
+    return this.state.serverUrl + "/people-service/people/id/" + personId + "/qrcode";
+  }
+
   regenerateQrCode = (personId, callback) => {
     this.postToServer(
-      this.state.serverUrl + "/people-service/people/id/" + personId + "/qrcode:recreate",
+      this.getQrCodeLink(personId) + ":recreate",
       callback,
       event => {
         console.error("There was an issue with regenerating the QR code");
@@ -454,9 +458,11 @@ class CheckList extends Component {
       personPopup = <NewPersonPopup createPersonCallback={this.createPersonCallback}
                                     closeNewPersonPopupCallback={this.closeNewPersonPopupCallback}/>
     } else if (this.state.showEditPersonPopup) {
+      let qrCodeLink = this.getQrCodeLink(this.state.personToBeEdited.id);
       personPopup = <EditPersonPopup person={this.state.personToBeEdited}
                                      updatePerson={this.updatePerson}
                                      closeEditPersonPopupCallback={this.closeEditPersonPopupCallback}
+                                     qrCodeLink={qrCodeLink}
                                      regenerateQrCode={this.regenerateQrCode}/>
     }
 

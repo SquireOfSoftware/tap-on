@@ -11,7 +11,6 @@ import 'react-toggle/style.css'
 class EditPersonPopup extends Component {
   constructor(props) {
     super(props);
-    console.log(props.person);
     this.state = {
       givenName: props.person.givenName,
       familyName: props.person.familyName,
@@ -20,7 +19,8 @@ class EditPersonPopup extends Component {
       emailAddresses: props.person.emailAddresses,
       baptised: props.person.isBaptised,
       member: props.person.isMember,
-      qrCodeLink: props.person["_links"]["qr_code"].href,
+      qrCodeImgSrc: props.qrCodeLink,
+      originalQrCodeLink: props.qrCodeLink,
       originalPerson: props.person,
       errors: []
     }
@@ -355,7 +355,7 @@ class EditPersonPopup extends Component {
       (event) => {
         // we add a date string at the end to force the img src link to reload
         this.setState({
-          qrCodeLink: this.state.originalPerson["_links"]["qr_code"].href + "?randomHash=" + moment()
+          qrCodeImgSrc: this.state.originalQrCodeLink + "?time=" + moment()
         });
       }
     );
@@ -374,7 +374,7 @@ class EditPersonPopup extends Component {
     let isFamilyNameFieldValid = this.nameIsValid(this.state.familyName);
 
     let errors = this.buildErrors();
-    let qrCodeLink = this.state.qrCodeLink;
+    let qrCodeImgSrc = this.state.qrCodeImgSrc;
 
     return (
       <div className="overlay">
@@ -388,7 +388,7 @@ class EditPersonPopup extends Component {
           </div>
           <div className="formSection">
             <div>
-              <img className="qrCode" src={qrCodeLink}/>
+              <img className="qrCode" src={qrCodeImgSrc}/>
             </div>
             <span className="clickable" onClick={this.regenerateQrCode}>
               <FontAwesomeIcon icon={faSyncAlt} />
