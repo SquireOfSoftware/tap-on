@@ -4,9 +4,9 @@ import com.opencsv.bean.CsvBindByName;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Builder
 @Setter
@@ -14,10 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 public class PersonCSV {
     @CsvBindByName(column = "GivenName")
-    @Getter
     private String givenName;
     @CsvBindByName(column = "FamilyName")
-    @Getter
     private String familyName;
     @CsvBindByName(column = "Member")
     @Getter
@@ -33,21 +31,60 @@ public class PersonCSV {
     @CsvBindByName(column = "OtherNames")
     private String otherNames;
 
+    @CsvBindByName(column = "OtherEnglishName")
+    private String otherEnglishName;
+    @CsvBindByName(column = "OtherChineseName")
+    private String otherChineseName;
+
+    public String getGivenName() {
+        return trimString(givenName);
+    }
+
+    public String getFamilyName() {
+        return trimString(familyName);
+    }
+
+    private String trimString(String input) {
+        return input != null ? input.trim() : null;
+    }
+
     public List<String> getEmailAddresses() {
-        return StringUtils.isNotBlank(emailAddresses) ?
+        List<String> emails = StringUtils.isNotBlank(emailAddresses) ?
                 Arrays.asList(emailAddresses.split("\\|")) :
                 Collections.emptyList();
+        return emails.stream()
+                .map(this::trimString)
+                .collect(Collectors.toList());
     }
 
     public List<String> getPhoneNumbers() {
-        return StringUtils.isNotBlank(phoneNumbers) ?
+        List<String> numbers = StringUtils.isNotBlank(phoneNumbers) ?
                 Arrays.asList(phoneNumbers.split("\\|")) :
                 Collections.emptyList();
+        return numbers.stream()
+                .map(this::trimString)
+                .collect(Collectors.toList());
     }
 
     public List<String> getOtherNames() {
-        return StringUtils.isNotBlank(otherNames) ?
-                Arrays.asList(otherNames.split("\\|")) :
-                Collections.emptyList();
+        List<String> splitOtherNames = StringUtils.isNotBlank(otherNames) ?
+                Stream.of(otherNames.split("\\|"))
+                        .map(String::trim)
+                        .collect(Collectors.toList()) :
+                null;
+
+        Set<String> names = splitOtherNames != null ?
+                new HashSet<>(splitOtherNames) :
+                new HashSet<>();
+        if (names.size() == 0) {
+            // check the english and chinese name column
+            if (StringUtils.isNotBlank(trimString(otherEnglishName))) {
+                names.add(trimString(otherEnglishName));
+            }
+            if (StringUtils.isNotBlank(trimString(otherChineseName))) {
+                names.add(trimString(otherChineseName));
+            }
+        }
+        return new ArrayList<>(names);
     }
 }

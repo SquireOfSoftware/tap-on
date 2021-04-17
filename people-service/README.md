@@ -46,6 +46,23 @@ There is a Swagger UI that is exposed:
 http://localhost:8080/people-service/swagger-ui/index.html
 ```
 
+## CSV Import notes
+
+Due to how Excel handles CSVs (it exports them as ANSI instead of 
+unicode), it means that chinese characters when converted from XLSX
+over to CSV, the resulting CSV will have underscores in place of the
+chinese characters.
+
+So to do this in Excel you need to first save it as a `UTF-16 Unicode Text`
+and then replace all the tabs with commas and it should just work.
+
+Here is a helpful link with pictures:
+https://my.usgs.gov/confluence/display/biodata/Saving+files+in+a+Unicode+file+format+for+international+character+support
+
+Please take note that the heading `OtherNames` takes priority over 
+`OtherEnglishName` and `OtherChineseName` if `OtherNames` column exists
+then it will take that over the other "OtherName" fields.
+
 ## JiB and docker image build notes
 
 JiB is the docker-less docker image build from Google

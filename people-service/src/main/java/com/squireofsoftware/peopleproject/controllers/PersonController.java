@@ -12,6 +12,7 @@ import com.squireofsoftware.peopleproject.services.PersonService;
 import com.squireofsoftware.peopleproject.services.QrCodeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +34,7 @@ import java.util.stream.Collectors;
 public class PersonController {
     private final PersonService personService;
     private final QrCodeService qrCodeService;
+    static final String CSV_FORMAT = "text/csv";
 
     public PersonController(PersonService personService,
                             QrCodeService qrCodeService) {
@@ -92,34 +94,31 @@ public class PersonController {
     }
 
     @PostMapping("/import")
-    public Set<PersonObject> importFromCSV(@RequestParam("file") MultipartFile file) {
+    public Set<PersonObject> importFromCSV(@RequestParam("file") MultipartFile file) throws Exception {
         if (hasCSVFormat(file)) {
             HeaderColumnNameMappingStrategy<PersonCSV> ms = new HeaderColumnNameMappingStrategy<>();
             ms.setType(PersonCSV.class);
 
             Reader reader;
-            try {
-                reader = new InputStreamReader(file.getInputStream());
-                CSVReader csvReader = new CSVReaderBuilder(reader)
-                        .build();
+            reader = new InputStreamReader(file.getInputStream());
+            CSVReader csvReader = new CSVReaderBuilder(reader)
+                    .build();
 
-                CsvToBean<PersonCSV> beanConverter = new CsvToBeanBuilder<PersonCSV>(csvReader)
-                        .withMappingStrategy(ms)
-                        .withType(PersonCSV.class)
-                        .build();
+            CsvToBean<PersonCSV> beanConverter = new CsvToBeanBuilder<PersonCSV>(csvReader)
+                    .withMappingStrategy(ms)
+                    .withType(PersonCSV.class)
+                    .build();
 
-                return createPersons(beanConverter.parse().stream()
-                        .map(PersonObject::map)
-                        .collect(Collectors.toSet()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            return createPersons(beanConverter.parse().stream()
+                    .map(PersonObject::map)
+                    .collect(Collectors.toSet()));
 
+        } else {
+            throw new InvalidMediaTypeException(CSV_FORMAT, "This endpoint will only support CSVs");
         }
-        return Collections.emptySet();
     }
 
     private boolean hasCSVFormat(MultipartFile file) {
-        return "text/csv".equals(file.getContentType());
+        return CSV_FORMAT.equals(file.getContentType());
     }
 }

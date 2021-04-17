@@ -335,4 +335,52 @@ class PersonObjectTest {
         assertNotNull(result);
         assertEquals(expectedNames, result.getOtherNames());
     }
+
+    @Test
+    void mapCSV_shouldConvertOtherChineseNameToOtherName_whenOtherChineseNameIsProvided() {
+        // given
+        PersonCSV dummyPersonCSV = PersonCSV.builder()
+                .givenName("test")
+                .familyName("test")
+                .otherChineseName("人")
+                .build();
+
+        List<NameObject> expectedNames = Collections.singletonList(
+                NameObject.builder()
+                        .name("人")
+                        .language(Language.Chinese.name())
+                        .build()
+        );
+
+        // when
+        PersonObject result = PersonObject.map(dummyPersonCSV);
+
+        // then
+        assertNotNull(result);
+        assertEquals(expectedNames, result.getOtherNames());
+    }
+
+    @Test
+    void mapCSV_shouldBeAbleToReadOtherChineseNameWithSpaces_whenOtherChineseNameIsProvided() {
+        // given
+        PersonCSV dummyPersonCSV = PersonCSV.builder()
+                .givenName("test")
+                .familyName("test")
+                .otherChineseName("   人   ")
+                .build();
+
+        List<NameObject> expectedNames = Collections.singletonList(
+                NameObject.builder()
+                        .name("人")
+                        .language(Language.Chinese.name())
+                        .build()
+        );
+
+        // when
+        PersonObject result = PersonObject.map(dummyPersonCSV);
+
+        // then
+        assertNotNull(result);
+        assertEquals(expectedNames, result.getOtherNames());
+    }
 }
