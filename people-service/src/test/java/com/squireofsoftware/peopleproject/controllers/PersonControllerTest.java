@@ -76,7 +76,7 @@ class PersonControllerTest {
         MultipartFile dummyFile = new MockMultipartFile("test",
                 "something",
                 CSV_MEDIA_TYPE,
-                ("given_name,family_name,member,baptised,phone_number,email_address\n" +
+                ("given_name,family_name,member,baptised,phone_numbers,email_addresses\n" +
                         "John,Smith,TRUE,TRUE,0400 000 000,test@test.com").getBytes());
 
         PersonObject expectedPerson = PersonObject.builder()
@@ -112,7 +112,7 @@ class PersonControllerTest {
         MultipartFile dummyFile = new MockMultipartFile("test",
                 "something",
                 CSV_MEDIA_TYPE,
-                ("given_name,family_name,member,baptised,phone_number,email_address,other_names\n" +
+                ("given_name,family_name,member,baptised,phone_numbers,email_addresses,other_names\n" +
                         "John,Smith,TRUE,TRUE,0400 000 000,test@test.com,人|Johnny").getBytes());
 
         PersonObject expectedPerson = PersonObject.builder()
@@ -170,7 +170,7 @@ class PersonControllerTest {
         MultipartFile dummyFile = new MockMultipartFile("test",
                 "something",
                 CSV_MEDIA_TYPE,
-                ("given_name,family_name,member,baptised,phone_number,email_address,other_english_name,other_chinese_name\n" +
+                ("given_name,family_name,member,baptised,phone_numbers,email_addresses,other_english_name,other_chinese_name\n" +
                         "John,Smith,TRUE,TRUE,0400 000 000,test@test.com,,人").getBytes());
 
         PersonObject expectedPerson = PersonObject.builder()
@@ -205,25 +205,33 @@ class PersonControllerTest {
     }
 
     @Test
-    void importFromCSV_returnSet_whenCSVFilesAPersonWithOverridingOtherNamesFieldIsSubmitted() throws Exception {
+    void importFromCSV_returnSet_whenCSVFilesAPersonWithMultipleEmailsMultiplePhoneNumbersAndOverridingOtherNamesIsSubmitted() throws Exception {
         // given
         MultipartFile dummyFile = new MockMultipartFile("test",
                 "something",
                 CSV_MEDIA_TYPE,
-                ("given_name,family_name,member,baptised,phone_number,email_address,other_names,other_english_name,other_chinese_name\n" +
-                        "John,Smith,TRUE,TRUE,0400 000 000,test@test.com,some| other| name ,,人").getBytes());
+                ("given_name,family_name,member,baptised,phone_numbers,email_addresses,other_names,other_english_name,other_chinese_name\n" +
+                        "John,Smith,TRUE,TRUE,0400 000 000| 123 123 123 ,test@test.com | other_email@test.com ,some| other| name ,,人").getBytes());
 
         PersonObject expectedPerson = PersonObject.builder()
                 .givenName("John")
                 .familyName("Smith")
                 .isBaptised(true)
                 .isMember(true)
-                .phoneNumbers(Collections.singletonList(PhoneNumberObject.builder()
-                        .number("0400 000 000")
-                        .build()))
-                .emailAddresses(Collections.singletonList(EmailAddressObject.builder()
-                        .email("test@test.com")
-                        .build()))
+                .phoneNumbers(Arrays.asList(
+                        PhoneNumberObject.builder()
+                                .number("0400 000 000")
+                                .build(),
+                        PhoneNumberObject.builder()
+                                .number("123 123 123")
+                                .build()))
+                .emailAddresses(Arrays.asList(
+                        EmailAddressObject.builder()
+                                .email("test@test.com")
+                                .build(),
+                        EmailAddressObject.builder()
+                                .email("other_email@test.com")
+                                .build()))
                 .otherNames(Arrays.asList(
                         NameObject.builder()
                                 .name("some")

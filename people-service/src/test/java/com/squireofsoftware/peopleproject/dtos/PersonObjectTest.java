@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PersonObjectTest {
@@ -208,7 +209,7 @@ class PersonObjectTest {
 
         // then
         assertNotNull(result);
-        assertEquals(expectedEmails, result.getEmailAddresses());
+        assertThat(result.getEmailAddresses()).hasSameElementsAs(expectedEmails);
     }
 
     @Test
@@ -269,7 +270,7 @@ class PersonObjectTest {
 
         // then
         assertNotNull(result);
-        assertEquals(expectedNames, result.getOtherNames());
+        assertThat(result.getOtherNames()).hasSameElementsAs(expectedNames);
     }
 
     @Test
@@ -301,7 +302,7 @@ class PersonObjectTest {
 
         // then
         assertNotNull(result);
-        assertEquals(expectedNames, result.getOtherNames());
+        assertThat(result.getOtherNames()).hasSameElementsAs(expectedNames);
     }
 
     @Test
@@ -333,7 +334,7 @@ class PersonObjectTest {
 
         // then
         assertNotNull(result);
-        assertEquals(expectedNames, result.getOtherNames());
+        assertThat(result.getOtherNames()).hasSameElementsAs(expectedNames);
     }
 
     @Test
