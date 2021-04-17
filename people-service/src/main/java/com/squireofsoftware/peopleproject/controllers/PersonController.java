@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,7 +33,7 @@ import java.util.stream.Collectors;
 public class PersonController {
     private final PersonService personService;
     private final QrCodeService qrCodeService;
-    static final String CSV_FORMAT = "text/csv";
+    static final String CSV_MEDIA_TYPE = "text/csv";
 
     public PersonController(PersonService personService,
                             QrCodeService qrCodeService) {
@@ -114,11 +113,11 @@ public class PersonController {
                     .collect(Collectors.toSet()));
 
         } else {
-            throw new InvalidMediaTypeException(CSV_FORMAT, "This endpoint will only support CSVs");
+            throw new InvalidMediaTypeException(CSV_MEDIA_TYPE, "This endpoint will only support CSVs");
         }
     }
 
     private boolean hasCSVFormat(MultipartFile file) {
-        return CSV_FORMAT.equals(file.getContentType());
+        return CSV_MEDIA_TYPE.equals(file.getContentType());
     }
 }

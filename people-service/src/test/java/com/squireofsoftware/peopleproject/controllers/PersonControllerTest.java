@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 
-import static com.squireofsoftware.peopleproject.controllers.PersonController.CSV_FORMAT;
+import static com.squireofsoftware.peopleproject.controllers.PersonController.CSV_MEDIA_TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -60,7 +60,7 @@ class PersonControllerTest {
         // given
         MultipartFile dummyFile = new MockMultipartFile("test",
                 "something",
-                CSV_FORMAT,
+                CSV_MEDIA_TYPE,
                 "".getBytes());
 
         // when
@@ -75,7 +75,7 @@ class PersonControllerTest {
         // given
         MultipartFile dummyFile = new MockMultipartFile("test",
                 "something",
-                CSV_FORMAT,
+                CSV_MEDIA_TYPE,
                 ("GivenName,FamilyName,Member,Baptised,PhoneNumbers,EmailAddresses\n" +
                         "John,Smith,TRUE,TRUE,0400 000 000,test@test.com").getBytes());
 
@@ -111,7 +111,7 @@ class PersonControllerTest {
         // given
         MultipartFile dummyFile = new MockMultipartFile("test",
                 "something",
-                CSV_FORMAT,
+                CSV_MEDIA_TYPE,
                 ("GivenName,FamilyName,Member,Baptised,PhoneNumbers,EmailAddresses,OtherNames\n" +
                         "John,Smith,TRUE,TRUE,0400 000 000,test@test.com,人|Johnny").getBytes());
 
@@ -169,7 +169,7 @@ class PersonControllerTest {
         // given
         MultipartFile dummyFile = new MockMultipartFile("test",
                 "something",
-                CSV_FORMAT,
+                CSV_MEDIA_TYPE,
                 ("GivenName,FamilyName,Member,Baptised,PhoneNumbers,EmailAddresses,OtherEnglishName,OtherChineseName\n" +
                         "John,Smith,TRUE,TRUE,0400 000 000,test@test.com,,人").getBytes());
 
