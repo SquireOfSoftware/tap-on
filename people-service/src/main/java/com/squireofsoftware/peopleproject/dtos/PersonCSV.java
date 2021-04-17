@@ -13,27 +13,27 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PersonCSV {
-    @CsvBindByName(column = "GivenName")
+    @CsvBindByName(column = "given_name")
     private String givenName;
-    @CsvBindByName(column = "FamilyName")
+    @CsvBindByName(column = "family_name")
     private String familyName;
-    @CsvBindByName(column = "Member")
+    @CsvBindByName(column = "member")
     @Getter
     private boolean member;
-    @CsvBindByName(column = "Baptised")
+    @CsvBindByName(column = "baptised")
     @Getter
     private boolean baptised;
 
-    @CsvBindByName(column = "EmailAddresses")
+    @CsvBindByName(column = "email_address")
     private String emailAddresses;
-    @CsvBindByName(column = "PhoneNumbers")
+    @CsvBindByName(column = "phone_number")
     private String phoneNumbers;
-    @CsvBindByName(column = "OtherNames")
+    @CsvBindByName(column = "other_names")
     private String otherNames;
 
-    @CsvBindByName(column = "OtherEnglishName")
+    @CsvBindByName(column = "other_english_name")
     private String otherEnglishName;
-    @CsvBindByName(column = "OtherChineseName")
+    @CsvBindByName(column = "other_chinese_name")
     private String otherChineseName;
 
     public String getGivenName() {

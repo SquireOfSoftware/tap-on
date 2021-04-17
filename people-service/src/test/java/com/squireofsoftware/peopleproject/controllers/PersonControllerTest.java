@@ -76,7 +76,7 @@ class PersonControllerTest {
         MultipartFile dummyFile = new MockMultipartFile("test",
                 "something",
                 CSV_MEDIA_TYPE,
-                ("GivenName,FamilyName,Member,Baptised,PhoneNumbers,EmailAddresses\n" +
+                ("given_name,family_name,member,baptised,phone_number,email_address\n" +
                         "John,Smith,TRUE,TRUE,0400 000 000,test@test.com").getBytes());
 
         PersonObject expectedPerson = PersonObject.builder()
@@ -112,7 +112,7 @@ class PersonControllerTest {
         MultipartFile dummyFile = new MockMultipartFile("test",
                 "something",
                 CSV_MEDIA_TYPE,
-                ("GivenName,FamilyName,Member,Baptised,PhoneNumbers,EmailAddresses,OtherNames\n" +
+                ("given_name,family_name,member,baptised,phone_number,email_address,other_names\n" +
                         "John,Smith,TRUE,TRUE,0400 000 000,test@test.com,人|Johnny").getBytes());
 
         PersonObject expectedPerson = PersonObject.builder()
@@ -170,7 +170,7 @@ class PersonControllerTest {
         MultipartFile dummyFile = new MockMultipartFile("test",
                 "something",
                 CSV_MEDIA_TYPE,
-                ("GivenName,FamilyName,Member,Baptised,PhoneNumbers,EmailAddresses,OtherEnglishName,OtherChineseName\n" +
+                ("given_name,family_name,member,baptised,phone_number,email_address,other_english_name,other_chinese_name\n" +
                         "John,Smith,TRUE,TRUE,0400 000 000,test@test.com,,人").getBytes());
 
         PersonObject expectedPerson = PersonObject.builder()
@@ -188,6 +188,55 @@ class PersonControllerTest {
                         .name("人")
                         .language(Language.Chinese.name())
                         .build()))
+                .build();
+
+        when(mockPersonService.createPerson(eq(expectedPerson)))
+                .thenReturn(expectedPerson);
+
+        // when
+        Set<PersonObject> response = personController.importFromCSV(dummyFile);
+
+        // then
+        assertNotNull(response);
+        assertEquals(1, response.size());
+
+        verify(mockPersonService, times(1))
+                .createPerson(eq(expectedPerson));
+    }
+
+    @Test
+    void importFromCSV_returnSet_whenCSVFilesAPersonWithOverridingOtherNamesFieldIsSubmitted() throws Exception {
+        // given
+        MultipartFile dummyFile = new MockMultipartFile("test",
+                "something",
+                CSV_MEDIA_TYPE,
+                ("given_name,family_name,member,baptised,phone_number,email_address,other_names,other_english_name,other_chinese_name\n" +
+                        "John,Smith,TRUE,TRUE,0400 000 000,test@test.com,some| other| name ,,人").getBytes());
+
+        PersonObject expectedPerson = PersonObject.builder()
+                .givenName("John")
+                .familyName("Smith")
+                .isBaptised(true)
+                .isMember(true)
+                .phoneNumbers(Collections.singletonList(PhoneNumberObject.builder()
+                        .number("0400 000 000")
+                        .build()))
+                .emailAddresses(Collections.singletonList(EmailAddressObject.builder()
+                        .email("test@test.com")
+                        .build()))
+                .otherNames(Arrays.asList(
+                        NameObject.builder()
+                                .name("some")
+                                .language(Language.English.name())
+                                .build(),
+                        NameObject.builder()
+                                .name("other")
+                                .language(Language.English.name())
+                                .build(),
+                        NameObject.builder()
+                                .name("name")
+                                .language(Language.English.name())
+                                .build()))
                 .build();
 
         when(mockPersonService.createPerson(eq(expectedPerson)))
