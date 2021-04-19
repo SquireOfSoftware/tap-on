@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +30,8 @@ public class PersonObject extends RepresentationModel<PersonObject>
     private Boolean isMember = false;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String hash;
+
+    private LocalDateTime lastModified;
 
     @Builder.Default
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -56,6 +59,10 @@ public class PersonObject extends RepresentationModel<PersonObject>
                     .emailAddresses(person.getEmailAddresses().stream()
                             .map(EmailAddressObject::map)
                             .collect(Collectors.toList()))
+                    .lastModified(person.getLastModified() != null ?
+                            person.getLastModified()
+                                    .toLocalDateTime() :
+                            null)
                     .build();
 
             personObject.addLinks();
