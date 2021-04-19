@@ -6,9 +6,10 @@ import './CheckList.css'
 import ServerStates from './ServerStates.js'
 import NewPersonPopup from './NewPersonPopup.js'
 import EditPersonPopup from './EditPersonPopup.js'
+import ImportPopup from './ImportPopup.js'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSyncAlt, faSignature, faUserEdit, faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import { faSyncAlt, faSignature, faUserEdit, faUserPlus, faFileUpload } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
 
 class CheckList extends Component {
@@ -21,7 +22,8 @@ class CheckList extends Component {
       serverUrl: this.props.initialServerUrl,
       autoRefreshPeople: this.props.initialAutoRefreshPeople,
       showNewPersonPopup: false,
-      showEditPersonPopup: false
+      showEditPersonPopup: false,
+      showImportPopup: false
     }
     this.loadPeople = this.loadPeople.bind(this);
     this.loadTodaysSignins = this.loadTodaysSignins.bind(this);
@@ -358,6 +360,18 @@ class CheckList extends Component {
     );
   }
 
+  showImportPopup = () => {
+    this.setState({
+      showImportPopup: true
+    });
+  }
+
+  closeImportPopupCallback = () => {
+    this.setState({
+      showImportPopup: false
+    });
+  }
+
   render() {
     let columns = [
       {
@@ -453,17 +467,19 @@ class CheckList extends Component {
       bulkSignInHandler={this.bulkSignInHandler}
     />
 
-    let personPopup = undefined;
+    let popup = undefined;
     if (this.state.showNewPersonPopup) {
-      personPopup = <NewPersonPopup createPersonCallback={this.createPersonCallback}
+      popup = <NewPersonPopup createPersonCallback={this.createPersonCallback}
                                     closeNewPersonPopupCallback={this.closeNewPersonPopupCallback}/>
     } else if (this.state.showEditPersonPopup) {
       let qrCodeLink = this.getQrCodeLink(this.state.personToBeEdited.id);
-      personPopup = <EditPersonPopup person={this.state.personToBeEdited}
+      popup = <EditPersonPopup person={this.state.personToBeEdited}
                                      updatePerson={this.updatePerson}
                                      closeEditPersonPopupCallback={this.closeEditPersonPopupCallback}
                                      qrCodeLink={qrCodeLink}
                                      regenerateQrCode={this.regenerateQrCode}/>
+    } else if (this.state.showImportPopup) {
+      popup = <ImportPopup closeImportPopupCallback={this.closeImportPopupCallback}/>
     }
 
     return (
@@ -471,6 +487,9 @@ class CheckList extends Component {
         <div className="adminBar">
           <div className="infoTime">
             Info from: {moment(this.state.startTime).format("hh:mm A")}
+          </div>
+          <div className="clickable adminButton" onClick={() => this.showImportPopup()}>
+            <FontAwesomeIcon icon={faFileUpload}/>
           </div>
           <div className="clickable adminButton" onClick={() => this.showNewPersonPopup()}>
             <FontAwesomeIcon icon={faUserPlus}/>
@@ -480,7 +499,7 @@ class CheckList extends Component {
           </div>
         </div>
         {table}
-        {personPopup}
+        {popup}
       </div>
     )
   }
@@ -552,6 +571,17 @@ function Table({columns, data, bulkSignInHandler}) {
     }
   }
 
+  let bulkSignInButton;
+
+  if (selectedRowIds !== undefined &&
+      Object.keys(selectedRowIds).length > 0) {
+    bulkSignInButton =
+      <div className="clickable bulkSignInButton" onClick={bulkSignIn}>
+        <span>Bulk sign in </span>
+        <FontAwesomeIcon icon={faSignature}/>
+      </div>
+  }
+
   return (
     <div>
       <table {...getTableProps()}>
@@ -581,10 +611,7 @@ function Table({columns, data, bulkSignInHandler}) {
           })}
         </tbody>
       </table>
-      <div className="clickable bulkSignInButton" onClick={bulkSignIn}>
-        <span>Bulk sign in </span>
-        <FontAwesomeIcon icon={faSignature}/>
-      </div>
+      {bulkSignInButton}
     </div>
   )
 }

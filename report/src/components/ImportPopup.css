@@ -1,0 +1,24 @@
+.importButton {
+  cursor: pointer;
+  position: sticky;
+  bottom: 0;
+  background-color: gray;
+}
+
+.importButton:hover {
+  background-color: #696868;
+}
+
+th {
+  color: white;
+}
+
+.overflowWrapper {
+  max-height: 500px;
+  overflow: scroll;
+}
+
+.warningLabel {
+  background-color: yellow;
+  color: black;
+}
