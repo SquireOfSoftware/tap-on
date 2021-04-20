@@ -118,11 +118,11 @@ class CheckList extends Component {
   }
 
   postToServer = (url, successCallback, userErrorCallback, postBody) => {
-    return this.uploadToServer("POST", url, successCallback, userErrorCallback, postBody, [{"Content-Type": "application/json"}], true);
+    return this.uploadToServer("POST", url, successCallback, userErrorCallback, postBody, {"Content-Type": "application/json"}, true);
   }
 
   putToServer = (url, successCallback, userErrorCallback, putBody) => {
-    return this.uploadToServer("PUT", url, successCallback, userErrorCallback, putBody, [{"Content-Type": "application/json"}], true);
+    return this.uploadToServer("PUT", url, successCallback, userErrorCallback, putBody, {"Content-Type": "application/json"}, true);
   }
 
   uploadToServer = (method, url, successCallback, userErrorCallback, body, customHeaders, stringifyBody) => {
