@@ -118,14 +118,14 @@ class CheckList extends Component {
   }
 
   postToServer = (url, successCallback, userErrorCallback, postBody) => {
-    return this.uploadToServer("POST", url, successCallback, userErrorCallback, postBody, [{"Content-Type": "application/json"}]);
+    return this.uploadToServer("POST", url, successCallback, userErrorCallback, postBody, [{"Content-Type": "application/json"}], true);
   }
 
   putToServer = (url, successCallback, userErrorCallback, putBody) => {
-    return this.uploadToServer("PUT", url, successCallback, userErrorCallback, putBody, [{"Content-Type": "application/json"}]);
+    return this.uploadToServer("PUT", url, successCallback, userErrorCallback, putBody, [{"Content-Type": "application/json"}], true);
   }
 
-  uploadToServer = (method, url, successCallback, userErrorCallback, body, customHeaders) => {
+  uploadToServer = (method, url, successCallback, userErrorCallback, body, customHeaders, stringifyBody) => {
     this.setState({
       serverState: ServerStates.CHECKING
     });
@@ -173,7 +173,11 @@ class CheckList extends Component {
     }
 
     if (body !== undefined || body !== null) {
-      request.send(JSON.stringify(body));
+      if (stringifyBody) {
+        request.send(JSON.stringify(body));
+      } else {
+        request.send(body);
+      }
     } else {
       request.send();
     }
@@ -375,35 +379,22 @@ class CheckList extends Component {
     this.setState({
       showImportPopup: false
     });
+    this.loadPeople();
   }
 
   importPeopleCallback = (file, successCallback, errorCallback) => {
-    let CRLF = "\r\n";
-//    let data = (new Buffer(file)).toString('base64');
-//    let reader = new FileReader();
-//    reader.readAsBinaryString(file);
+    let data = new FormData();
+    data.append("file", file);
 
-//    reader.onload = (event) => {
-      let body =
-                "----------------------------017554509374620202790114\r\n" +
-                "Content-Disposition: form-data; name=\"file\"; filename=\"" + file.name+ "\r\n\"" +
-                "Content-Type: text/csv\r\n" +
-                "" +
-                file + "\r\n"
-
-
-      // https://stackoverflow.com/questions/5587973/javascript-upload-file
-      this.uploadToServer(
-        "POST",
-        this.state.serverUrl + "/people-service/people/import",
-        (successEvent) => { successCallback(successEvent); },
-        (errorEvent) => { errorCallback(errorEvent); },
-        body,
-        {
-          "Content-Type": "multipart/form-data; boundary=----------------------------017554509374620202790114"
-        }
-      )
-//    }
+    this.uploadToServer(
+      "POST",
+      this.state.serverUrl + "/people-service/people/import",
+      (successEvent) => { successCallback(successEvent); },
+      (errorEvent) => { errorCallback(errorEvent); },
+      data,
+      {},
+      false
+    );
   }
 
   render() {

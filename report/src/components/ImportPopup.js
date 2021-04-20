@@ -20,9 +20,9 @@ class ImportPopup extends Component {
     }
   }
 
-  importUsers = () => {
+  importUsers = (event) => {
     this.props.importPeopleCallback(
-      this.state.rawData,
+      this.state.inputFile,
       (successEvent) => {
         console.log(successEvent);
         // on success close the popup
@@ -30,6 +30,7 @@ class ImportPopup extends Component {
       },
       (errorEvent) => console.error(errorEvent)
     );
+    event.preventDefault();
   }
 
   readFile = (event) => {
