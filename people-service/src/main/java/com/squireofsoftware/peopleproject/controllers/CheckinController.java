@@ -22,9 +22,9 @@ public class CheckinController {
     private final PersonService personService;
     @Autowired
     private final CheckinLogService checkinLogService;
-    static final String CSV_HEADER = "timestamp,message,person_id,given_name,family_name,\n";
-    static final String CSV_BODY_FORMAT = "%s,%s,%s,%s,%s,";
-    static final String CSV_REQUEST_HEADER = PersonController.CSV_MEDIA_TYPE + "; charset=utf-8";
+    static final String CSV_HEADER = "timestamp,message,person_id,given_name,family_name,other_names,\n";
+    static final String CSV_BODY_FORMAT = "%s,%s,%s,%s,%s,%s";
+    static final String CSV_REQUEST_HEADER = PersonController.CSV_MEDIA_TYPE + "; charset=utf-16";
 
     public CheckinController(PersonService personService,
                              CheckinLogService checkinLogService) {
@@ -105,7 +105,14 @@ public class CheckinController {
                         log.getPerson().getId(),
                         log.getPerson().getGivenName(),
                         log.getPerson().getFamilyName() == null ?
-                            "" : log.getPerson().getFamilyName()))
+                            "" : log.getPerson().getFamilyName(),
+                        log.getPerson().getOtherNames() != null ?
+                            log.getPerson().getOtherNames()
+                                    .stream()
+                                    .map(NameObject::getName)
+                                    .collect(Collectors.joining("|")) :
+                            null
+                        ))
                 .collect(Collectors.joining("\n"));
     }
 }

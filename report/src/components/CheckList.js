@@ -9,7 +9,7 @@ import EditPersonPopup from './EditPersonPopup.js'
 import ImportPopup from './ImportPopup.js'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSyncAlt, faSignature, faUserEdit, faUserPlus, faFileUpload } from '@fortawesome/free-solid-svg-icons'
+import { faSyncAlt, faSignature, faUserEdit, faUserPlus, faFileUpload, faFileDownload } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
 
 class CheckList extends Component {
@@ -514,6 +514,10 @@ class CheckList extends Component {
           <div className="infoTime">
             Info from: {moment(this.state.startTime).format("hh:mm A")}
           </div>
+
+          <a className="clickable adminButton" href={this.state.serverUrl + "/people-service/checkin/signins/from/" + this.state.startTime + "/csv"} target="_blank">
+            <FontAwesomeIcon icon={faFileDownload}/>
+          </a>
           <div className="clickable adminButton" onClick={() => this.showImportPopup()}>
             <FontAwesomeIcon icon={faFileUpload}/>
           </div>
