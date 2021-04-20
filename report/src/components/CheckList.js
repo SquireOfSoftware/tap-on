@@ -23,7 +23,7 @@ class CheckList extends Component {
       autoRefreshPeople: this.props.initialAutoRefreshPeople,
       showNewPersonPopup: false,
       showEditPersonPopup: false,
-      showImportPopup: true
+      showImportPopup: false
     }
     this.loadPeople = this.loadPeople.bind(this);
     this.loadTodaysSignins = this.loadTodaysSignins.bind(this);
