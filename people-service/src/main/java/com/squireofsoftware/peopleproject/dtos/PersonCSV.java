@@ -73,7 +73,8 @@ public class PersonCSV {
                         .collect(Collectors.toList()) :
                 null;
 
-        Set<String> names = splitOtherNames != null ?
+        Set<String> names =
+                splitOtherNames != null ?
                 new HashSet<>(splitOtherNames) :
                 new HashSet<>();
         if (names.size() == 0) {

@@ -23,7 +23,7 @@ class CheckList extends Component {
       autoRefreshPeople: this.props.initialAutoRefreshPeople,
       showNewPersonPopup: false,
       showEditPersonPopup: false,
-      showImportPopup: false
+      showImportPopup: true
     }
     this.loadPeople = this.loadPeople.bind(this);
     this.loadTodaysSignins = this.loadTodaysSignins.bind(this);
@@ -118,14 +118,14 @@ class CheckList extends Component {
   }
 
   postToServer = (url, successCallback, userErrorCallback, postBody) => {
-    return this.uploadToServer("POST", url, successCallback, userErrorCallback, postBody);
+    return this.uploadToServer("POST", url, successCallback, userErrorCallback, postBody, [{"Content-Type": "application/json"}]);
   }
 
   putToServer = (url, successCallback, userErrorCallback, putBody) => {
-    return this.uploadToServer("PUT", url, successCallback, userErrorCallback, putBody);
+    return this.uploadToServer("PUT", url, successCallback, userErrorCallback, putBody, [{"Content-Type": "application/json"}]);
   }
 
-  uploadToServer = (method, url, successCallback, userErrorCallback, body) => {
+  uploadToServer = (method, url, successCallback, userErrorCallback, body, customHeaders) => {
     this.setState({
       serverState: ServerStates.CHECKING
     });
@@ -166,7 +166,12 @@ class CheckList extends Component {
     console.debug(url);
     request.open(method, url, true);
     request.setRequestHeader("Access-Control-Allow-Headers", "*");
-    request.setRequestHeader("Content-Type", "application/json");
+
+    for (let i = 0; i < Object.keys(customHeaders).length; i++) {
+      request.setRequestHeader(Object.keys(customHeaders)[i],
+                               Object.entries(customHeaders)[i][1]);
+    }
+
     if (body !== undefined || body !== null) {
       request.send(JSON.stringify(body));
     } else {
@@ -372,6 +377,35 @@ class CheckList extends Component {
     });
   }
 
+  importPeopleCallback = (file, successCallback, errorCallback) => {
+    let CRLF = "\r\n";
+//    let data = (new Buffer(file)).toString('base64');
+//    let reader = new FileReader();
+//    reader.readAsBinaryString(file);
+
+//    reader.onload = (event) => {
+      let body =
+                "----------------------------017554509374620202790114\r\n" +
+                "Content-Disposition: form-data; name=\"file\"; filename=\"" + file.name+ "\r\n\"" +
+                "Content-Type: text/csv\r\n" +
+                "" +
+                file + "\r\n"
+
+
+      // https://stackoverflow.com/questions/5587973/javascript-upload-file
+      this.uploadToServer(
+        "POST",
+        this.state.serverUrl + "/people-service/people/import",
+        (successEvent) => { successCallback(successEvent); },
+        (errorEvent) => { errorCallback(errorEvent); },
+        body,
+        {
+          "Content-Type": "multipart/form-data; boundary=----------------------------017554509374620202790114"
+        }
+      )
+//    }
+  }
+
   render() {
     let columns = [
       {
@@ -479,7 +513,8 @@ class CheckList extends Component {
                                      qrCodeLink={qrCodeLink}
                                      regenerateQrCode={this.regenerateQrCode}/>
     } else if (this.state.showImportPopup) {
-      popup = <ImportPopup closeImportPopupCallback={this.closeImportPopupCallback}/>
+      popup = <ImportPopup closeImportPopupCallback={this.closeImportPopupCallback}
+                            importPeopleCallback={this.importPeopleCallback}/>
     }
 
     return (

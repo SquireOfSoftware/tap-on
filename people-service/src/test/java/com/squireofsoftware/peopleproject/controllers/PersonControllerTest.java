@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
@@ -77,7 +78,8 @@ class PersonControllerTest {
                 "something",
                 CSV_MEDIA_TYPE,
                 ("given_name,family_name,member,baptised,phone_numbers,email_addresses\n" +
-                        "John,Smith,TRUE,TRUE,0400 000 000,test@test.com").getBytes());
+                        "John,Smith,TRUE,TRUE,0400 000 000,test@test.com")
+                        .getBytes(StandardCharsets.UTF_16));
 
         PersonObject expectedPerson = PersonObject.builder()
                 .givenName("John")
@@ -113,7 +115,8 @@ class PersonControllerTest {
                 "something",
                 CSV_MEDIA_TYPE,
                 ("given_name,family_name,member,baptised,phone_numbers,email_addresses,other_names\n" +
-                        "John,Smith,TRUE,TRUE,0400 000 000,test@test.com,人|Johnny").getBytes());
+                        "John,Smith,TRUE,TRUE,0400 000 000,test@test.com,人|Johnny")
+                        .getBytes(StandardCharsets.UTF_16));
 
         PersonObject expectedPerson = PersonObject.builder()
                 .givenName("John")
@@ -171,7 +174,8 @@ class PersonControllerTest {
                 "something",
                 CSV_MEDIA_TYPE,
                 ("given_name,family_name,member,baptised,phone_numbers,email_addresses,other_english_name,other_chinese_name\n" +
-                        "John,Smith,TRUE,TRUE,0400 000 000,test@test.com,,人").getBytes());
+                        "John,Smith,TRUE,TRUE,0400 000 000,test@test.com,,人")
+                        .getBytes(StandardCharsets.UTF_16));
 
         PersonObject expectedPerson = PersonObject.builder()
                 .givenName("John")
@@ -211,7 +215,8 @@ class PersonControllerTest {
                 "something",
                 CSV_MEDIA_TYPE,
                 ("given_name,family_name,member,baptised,phone_numbers,email_addresses,other_names,other_english_name,other_chinese_name\n" +
-                        "John,Smith,TRUE,TRUE,0400 000 000| 123 123 123 ,test@test.com | other_email@test.com ,some| other| name ,,人").getBytes());
+                        "John,Smith,TRUE,TRUE,0400 000 000| 123 123 123 ,test@test.com | other_email@test.com ,some| other| name ,,人")
+                        .getBytes(StandardCharsets.UTF_16));
 
         PersonObject expectedPerson = PersonObject.builder()
                 .givenName("John")

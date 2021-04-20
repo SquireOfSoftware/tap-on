@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -99,7 +100,7 @@ public class PersonController {
             ms.setType(PersonCSV.class);
 
             Reader reader;
-            reader = new InputStreamReader(file.getInputStream());
+            reader = new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_16);
             CSVReader csvReader = new CSVReaderBuilder(reader)
                     .build();
 
@@ -108,9 +109,11 @@ public class PersonController {
                     .withType(PersonCSV.class)
                     .build();
 
-            return createPersons(beanConverter.parse().stream()
+            Set<PersonObject> people = beanConverter.parse().stream()
                     .map(PersonObject::map)
-                    .collect(Collectors.toSet()));
+                    .collect(Collectors.toSet());
+
+            return createPersons(people);
 
         } else {
             throw new InvalidMediaTypeException(CSV_MEDIA_TYPE, "This endpoint will only support CSVs");

@@ -63,6 +63,9 @@ Please take note that the heading `OtherNames` takes priority over
 `OtherEnglishName` and `OtherChineseName` if `OtherNames` column exists
 then it will take that over the other "OtherName" fields.
 
+Again just want to stress that the CSV import only takes UTF-16, anything else
+will result in some unknown behaviour!
+
 ## JiB and docker image build notes
 
 JiB is the docker-less docker image build from Google

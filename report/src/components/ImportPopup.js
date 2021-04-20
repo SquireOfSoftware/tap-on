@@ -14,14 +14,22 @@ class ImportPopup extends Component {
     this.state = {
       showImportButton: false,
       headerPreview: undefined,
-      dataPreview: undefined
+      dataPreview: undefined,
+      inputFile: undefined,
+      rawData: undefined
     }
   }
 
   importUsers = () => {
-
-    // on success close the popup
-    this.props.closeImportPopupCallback();
+    this.props.importPeopleCallback(
+      this.state.rawData,
+      (successEvent) => {
+        console.log(successEvent);
+        // on success close the popup
+        this.props.closeImportPopupCallback();
+      },
+      (errorEvent) => console.error(errorEvent)
+    );
   }
 
   readFile = (event) => {
@@ -46,7 +54,9 @@ class ImportPopup extends Component {
         this.setState({
           headerPreview: this.formHeader(header),
           dataPreview: parsedData,
-          showImportButton: true
+          showImportButton: true,
+          inputFile: file,
+          rawData: csv
         });
       }
     };
@@ -55,7 +65,9 @@ class ImportPopup extends Component {
       this.setState({
         headerPreview: undefined,
         dataPreview: undefined,
-        showImportButton: false
+        showImportButton: false,
+        inputFile: undefined,
+        rawData: undefined
       });
     };
   }
