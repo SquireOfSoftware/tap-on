@@ -129,6 +129,9 @@ class App extends Component {
                       processScan={this.processScan}
                       updateDelayRate={newDelayRate => this.updateDelayRate = newDelayRate}
                       updateCamera={newCamera => this.updateCamera = newCamera}/>
+          <div className="warningLabel">
+            This information will only be used for attendance and will not be shared with any other services.
+          </div>
           <ScanLog logs={this.state.logs}
                     initialServerSetting={this.state.serverSetting}
                     processScan={newScan => this.processScan = newScan}

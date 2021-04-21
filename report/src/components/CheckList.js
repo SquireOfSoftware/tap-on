@@ -23,7 +23,8 @@ class CheckList extends Component {
       autoRefreshPeople: this.props.initialAutoRefreshPeople,
       showNewPersonPopup: false,
       showEditPersonPopup: false,
-      showImportPopup: false
+      showImportPopup: false,
+      signInCount: 0
     }
     this.loadPeople = this.loadPeople.bind(this);
     this.loadTodaysSignins = this.loadTodaysSignins.bind(this);
@@ -203,6 +204,7 @@ class CheckList extends Component {
         let newPeopleMap = this.state.peopleMap;
 
         if (newPeopleMap !== undefined && newPeopleMap.size > 0) {
+          let signInCount = 0;
           checkinLogs.forEach(log => {
             let person = log.person;
             // find the person in the state via the peopleMap
@@ -211,12 +213,14 @@ class CheckList extends Component {
               personEntry.hasSignedIn = "true";
               personEntry.firstSignIn = moment(log.timestamp).format("hh:mm:ss A");
               newPeopleMap[person.id] = personEntry;
+              signInCount++;
             }
           });
 
           this.setState({
             ...this.state,
-            peopleMap: newPeopleMap
+            peopleMap: newPeopleMap,
+            signInCount: signInCount
           });
         }
       });
@@ -511,10 +515,6 @@ class CheckList extends Component {
     return (
       <div>
         <div className="adminBar">
-          <div className="infoTime">
-            Info from: {moment(this.state.startTime).format("hh:mm A")}
-          </div>
-
           <a className="clickable adminButton" href={this.state.serverUrl + "/people-service/checkin/signins/from/" + this.state.startTime + "/csv"} target="_blank">
             <FontAwesomeIcon icon={faFileDownload}/>
           </a>
@@ -526,6 +526,29 @@ class CheckList extends Component {
           </div>
           <div className="clickable adminButton" onClick={() => this.loadPeople()}>
             <FontAwesomeIcon icon={faSyncAlt}/>
+          </div>
+        </div>
+        <div>
+          <div className="quickStats">
+            <div className="signInCounter">
+              <div className="counter">
+                {this.state.signInCount}
+              </div>
+              <div className="counterBlurb">
+                {this.state.signInCount === 1 ? "Person" : "People"} signed in
+              </div>
+            </div>
+            <div className="totalCounter">
+              <div className="counter">
+                {this.state.peopleMap !== undefined ? this.state.peopleMap.size : 0}
+              </div>
+              <div className="counterBlurb">
+                Total people
+              </div>
+            </div>
+          </div>
+          <div className="infoTime">
+            Info from: {moment(this.state.startTime).format("hh:mm A")}
           </div>
         </div>
         {table}

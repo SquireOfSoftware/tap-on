@@ -351,6 +351,9 @@ class NewPersonPopup extends Component {
     return (
       <div className="overlay">
         <div className="newPersonForm">
+          <div className="warningLabel">
+            This information will only be used for attendance and will not be shared with any other services.
+          </div>
           <div className="heading">
             <div className="title">Add a new person</div>
             <div className="clickable"

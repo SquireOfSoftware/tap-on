@@ -4,6 +4,7 @@
 
 .adminBar {
   display: flex;
+  justify-content: flex-end;
 }
 
 .infoTime {
@@ -12,6 +13,7 @@
 
 .adminButton {
   padding-right: 10px;
+  color: white;
 }
 
 .clickable {
@@ -44,4 +46,25 @@ tr:last-child > th.infoColumn {
 
 .otherNameColumn {
   width: 150px;
+}
+
+.counter {
+  font-size: 2em;
+}
+
+.infoTime {
+  font-size: 0.5em;
+}
+
+.quickStats {
+  display: flex;
+  justify-content: center;
+}
+
+.signInCounter {
+  flex: 1;
+}
+
+.totalCounter {
+  flex: 1;
 }
