@@ -3,9 +3,9 @@ import React, {Component} from 'react';
 import './PersonPopup.css'
 import './ImportPopup.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faWindowClose, faCheck, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faWindowClose, faCheck } from '@fortawesome/free-solid-svg-icons'
 
-import { useTable, useRowSelect } from 'react-table'
+import { useTable } from 'react-table'
 
 
 class ImportPopup extends Component {

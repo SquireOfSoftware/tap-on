@@ -388,7 +388,7 @@ class EditPersonPopup extends Component {
           </div>
           <div className="formSection">
             <div>
-              <img className="qrCode" src={qrCodeImgSrc}/>
+              <img className="qrCode" alt={"qr code for " + this.state.givenName} src={qrCodeImgSrc}/>
             </div>
             <span className="clickable" onClick={this.regenerateQrCode}>
               <FontAwesomeIcon icon={faSyncAlt} />

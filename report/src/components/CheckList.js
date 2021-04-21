@@ -173,7 +173,7 @@ class CheckList extends Component {
                                Object.entries(customHeaders)[i][1]);
     }
 
-    if (body !== undefined || body !== null) {
+    if (body !== undefined && body !== null) {
       if (stringifyBody) {
         request.send(JSON.stringify(body));
       } else {
@@ -307,25 +307,6 @@ class CheckList extends Component {
     )
   }
 
-  getSelfLink = (partialPerson) => {
-    return this.getLink(partialPerson, "self");
-  }
-
-  getLink = (partialPerson, linkName) => {
-    if (partialPerson !== undefined &&
-        partialPerson.links !== undefined &&
-        partialPerson.links.length > 0) {
-      for (let i = 0; i < partialPerson.links.length; i++) {
-        let link = partialPerson.links[i];
-        if (link !== undefined &&
-            link.rel === linkName) {
-          return link.href;
-        }
-      }
-    }
-    return undefined;
-  }
-
   showEditPersonPopup = (partialPerson) => {
     this.queryServer(
         this.state.serverUrl + "/people-service/people/id/" + partialPerson.id,
@@ -448,18 +429,12 @@ class CheckList extends Component {
             accessor: 'manualSignIn',
             className: "infoColumn",
             Cell: ({row}) => {
-              let signInLink = row.original.links.find(link => link.rel === 'sign_in_request');
-
               let clickPostCallback = (event) => {
-                if (signInLink !== undefined ||
-                    signInLink !== null ||
-                    signInLink.length > 0) {
-                  this.postToServer(
-                    signInLink.href + "?message=manual sign in",
-                    (event) => {
-                      this.loadTodaysSignins();
-                    });
-                }
+                this.postToServer(
+                  this.state.serverUrl + "/people-service/checkin/signin/hash/" + row.original.hash + "?message=manual sign in",
+                  (event) => {
+                    this.loadTodaysSignins();
+                  });
               }
 
               return (
@@ -515,7 +490,8 @@ class CheckList extends Component {
     return (
       <div>
         <div className="adminBar">
-          <a className="clickable adminButton" href={this.state.serverUrl + "/people-service/checkin/signins/from/" + this.state.startTime + "/csv"} target="_blank">
+          <a className="clickable adminButton" href={this.state.serverUrl + "/people-service/checkin/signins/from/" + this.state.startTime + "/csv"}
+            target="_blank" rel="noreferrer">
             <FontAwesomeIcon icon={faFileDownload}/>
           </a>
           <div className="clickable adminButton" onClick={() => this.showImportPopup()}>

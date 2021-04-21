@@ -23,7 +23,7 @@ class App extends Component {
     let parsedStartDate = moment.utc(startTime).startOf('day');
     let todaysDate = moment.utc().startOf('day');
     if (!todaysDate.isSame(parsedStartDate)) {
-      startTime = moment().hour(9).minute(0).second(0).format('YYYY-MM-DDTHH:mm:ss');
+      startTime = moment().hour(7).minute(0).second(0).format('YYYY-MM-DDTHH:mm:ss');
       window.localStorage.setItem("startTime", startTime);
     }
 
