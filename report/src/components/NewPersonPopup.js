@@ -74,6 +74,7 @@ class NewPersonPopup extends Component {
     if (isGivenNameValid && isFamilyNameValid) {
       this.props.createPersonCallback(newPerson);
       this.props.closeNewPersonPopupCallback();
+      this.props.reloadPeople();
     } else {
       let givenNameError;
       let familyNameError;
@@ -201,6 +202,7 @@ class NewPersonPopup extends Component {
     for (let i = 0; i < this.state.phoneNumbers.length; i++) {
       let id = "phone_number" + i;
       let value = this.state.phoneNumbers[i].number;
+      let description = this.state.phoneNumbers[i].description;
       phoneNumbers.push(
             <div key={id} className="phoneNumberField">
               <input
@@ -217,7 +219,7 @@ class NewPersonPopup extends Component {
                   className="field"
                   name="phone_number_label"
                   type="text"
-                  value={value}
+                  value={description}
                   placeholder="Description of the number"
                   onInput={(event) => this.updatePhoneNumberDescription(i, event)}/>
               <div className="clickable" onClick={() => this.removePhoneNumber(i)}>
@@ -274,6 +276,7 @@ class NewPersonPopup extends Component {
     for (let i = 0; i < this.state.emailAddresses.length; i++) {
       let id = "email_address" + i;
       let value = this.state.emailAddresses[i].email;
+      let description = this.state.emailAddresses[i].description;
       emailAddresses.push(
             <div key={id} className="emailAddressField">
               <input
@@ -290,7 +293,7 @@ class NewPersonPopup extends Component {
                   className="field"
                   name="email_address_label"
                   type="text"
-                  value={value}
+                  value={description}
                   placeholder="Description of the email"
                   onInput={(event) => this.updateEmailAddressDescription(i, event)}/>
               <div className="clickable" onClick={() => this.removeEmailAddress(i)}>

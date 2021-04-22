@@ -335,7 +335,6 @@ class CheckList extends Component {
       showEditPersonPopup: false,
       personToBeEdited: undefined
     });
-    this.loadPeople();
   }
 
   getQrCodeLink = (personId) => {
@@ -474,12 +473,14 @@ class CheckList extends Component {
     let popup = undefined;
     if (this.state.showNewPersonPopup) {
       popup = <NewPersonPopup createPersonCallback={this.createPersonCallback}
+                                    reloadPeople={this.loadPeople}
                                     closeNewPersonPopupCallback={this.closeNewPersonPopupCallback}/>
     } else if (this.state.showEditPersonPopup) {
       let qrCodeLink = this.getQrCodeLink(this.state.personToBeEdited.id);
       popup = <EditPersonPopup person={this.state.personToBeEdited}
                                      updatePerson={this.updatePerson}
                                      closeEditPersonPopupCallback={this.closeEditPersonPopupCallback}
+                                     reloadPeople={this.loadPeople}
                                      qrCodeLink={qrCodeLink}
                                      regenerateQrCode={this.regenerateQrCode}/>
     } else if (this.state.showImportPopup) {

@@ -79,7 +79,10 @@ class EditPersonPopup extends Component {
       this.props.updatePerson(
         this.state.originalPerson.id,
         newPerson,
-        (event) => this.props.closeEditPersonPopupCallback(),
+        (event) => {
+          this.props.closeEditPersonPopupCallback();
+          this.props.reloadPeople();
+        },
         (event) => {
           let errorMessage = "There was a problem with updating this person, please reload and try again";
           this.setState({
@@ -216,6 +219,7 @@ class EditPersonPopup extends Component {
     for (let i = 0; i < this.state.phoneNumbers.length; i++) {
       let id = "phone_number" + i;
       let value = this.state.phoneNumbers[i].number;
+      let description = this.state.phoneNumbers[i].description;
       phoneNumbers.push(
             <div key={id} className="phoneNumberField">
               <input
@@ -232,7 +236,7 @@ class EditPersonPopup extends Component {
                   className="field"
                   name="phone_number_label"
                   type="text"
-                  value={value}
+                  value={description}
                   placeholder="Description of the number"
                   onInput={(event) => this.updatePhoneNumberDescription(i, event)}/>
               <div className="clickable" onClick={() => this.removePhoneNumber(i)}>
@@ -289,6 +293,7 @@ class EditPersonPopup extends Component {
     for (let i = 0; i < this.state.emailAddresses.length; i++) {
       let id = "email_address" + i;
       let value = this.state.emailAddresses[i].email;
+      let description = this.state.emailAddresses[i].description;
       emailAddresses.push(
             <div key={id} className="emailAddressField">
               <input
@@ -305,7 +310,7 @@ class EditPersonPopup extends Component {
                   className="field"
                   name="email_address_label"
                   type="text"
-                  value={value}
+                  value={description}
                   placeholder="Description of the email"
                   onInput={(event) => this.updateEmailAddressDescription(i, event)}/>
               <div className="clickable" onClick={() => this.removeEmailAddress(i)}>
