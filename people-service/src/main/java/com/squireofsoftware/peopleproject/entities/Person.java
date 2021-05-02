@@ -22,10 +22,13 @@ public class Person {
     @NotNull
     private String givenName;
     private String familyName;
-    @Column(columnDefinition = "bool default false")
+    @Column(columnDefinition = "bool default false", nullable = false)
     private Boolean isBaptised;
-    @Column(columnDefinition = "bool default false")
+    @Column(columnDefinition = "bool default false", nullable = false)
     private Boolean isMember;
+    @Column(columnDefinition = "bool default false", nullable = false)
+    private Boolean isVisitor;
+
     private Timestamp creationDate;
     private Timestamp lastModified;
     @NotNull

@@ -28,6 +28,8 @@ public class PersonObject extends RepresentationModel<PersonObject>
     private Boolean isBaptised = false;
     @Builder.Default
     private Boolean isMember = false;
+    @Builder.Default
+    private Boolean isVisitor = false;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String hash;
 
@@ -48,6 +50,7 @@ public class PersonObject extends RepresentationModel<PersonObject>
                     .givenName(person.getGivenName())
                     .isMember(person.getIsMember())
                     .isBaptised(person.getIsBaptised())
+                    .isVisitor(person.getIsVisitor())
                     .hash(person.getHash())
                     .otherNames(person.getOtherNames()
                             .stream()
@@ -84,6 +87,7 @@ public class PersonObject extends RepresentationModel<PersonObject>
                     .givenName(personCSV.getGivenName())
                     .isBaptised(personCSV.isBaptised())
                     .isMember(personCSV.isMember())
+                    .isVisitor(personCSV.isVisitor())
                     .emailAddresses(personCSV.getEmailAddresses().stream()
                             .map(email -> EmailAddressObject.builder()
                                     .email(email)

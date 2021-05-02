@@ -102,7 +102,8 @@ class CheckinControllerTest {
                                         "",
                                         3,
                                         "Test",
-                                        "Boy")
+                                        "Boy",
+                                        "")
                 ),
                 Arguments.of(
                         Arrays.asList(
@@ -136,18 +137,21 @@ class CheckinControllerTest {
                                         "",
                                         3,
                                         "Test",
-                                        "Boy") + "\n" +
+                                        "Boy",
+                                        "") + "\n" +
                                 String.format(CSV_BODY_FORMAT,
                                         now,
                                         "",
                                         7,
                                         "Another",
-                                        "Test") + "\n" +
+                                        "Test",
+                                        "") + "\n" +
                                 String.format(CSV_BODY_FORMAT,
                                         now.minusHours(1L),
                                         "",
                                         2,
                                         "人",
+                                        "",
                                         "")
                 )
         );

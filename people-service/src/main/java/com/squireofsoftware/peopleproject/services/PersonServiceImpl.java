@@ -52,6 +52,7 @@ public class PersonServiceImpl implements PersonService {
                 .familyName(personObject.getFamilyName())
                 .isBaptised(personObject.getIsBaptised())
                 .isMember(personObject.getIsMember())
+                .isVisitor(personObject.getIsVisitor())
                 .creationDate(now)
                 .lastModified(now)
                 .hash(UUID.randomUUID().toString())
@@ -161,6 +162,7 @@ public class PersonServiceImpl implements PersonService {
         personToBeUpdated.setFamilyName(updatedPerson.getFamilyName());
         personToBeUpdated.setIsBaptised(updatedPerson.getIsBaptised());
         personToBeUpdated.setIsMember(updatedPerson.getIsMember());
+        personToBeUpdated.setIsVisitor(updatedPerson.getIsVisitor());
         personToBeUpdated.setLastModified(new Timestamp(System.currentTimeMillis()));
 
         jpaPerson.save(personToBeUpdated);

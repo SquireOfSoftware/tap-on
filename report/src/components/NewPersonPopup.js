@@ -4,8 +4,7 @@ import './PersonPopup.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faWindowClose, faCheck, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons'
 
-import Toggle from 'react-toggle'
-import 'react-toggle/style.css'
+import SliderOption from './SliderOption.js'
 
 class NewPersonPopup extends Component {
   constructor(props) {
@@ -18,13 +17,12 @@ class NewPersonPopup extends Component {
       emailAddresses: [],
       baptised: false,
       member: false,
+      visitor: false,
       errors: []
     }
     this.createPerson = this.createPerson.bind(this);
     this.addOtherName = this.addOtherName.bind(this);
     this.removeOtherName = this.removeOtherName.bind(this);
-    this.toggleMember = this.toggleMember.bind(this);
-    this.toggleBaptised = this.toggleBaptised.bind(this);
   }
 
   createPerson = () => {
@@ -64,7 +62,8 @@ class NewPersonPopup extends Component {
       phoneNumbers: phoneNumbers,
       emailAddresses: emailAddresses,
       isBaptised: this.state.baptised,
-      isMember: this.state.member
+      isMember: this.state.member,
+      isVisitor: this.state.visitor
     };
 
     // make sure you sanitise the inputs here!!!!
@@ -305,18 +304,6 @@ class NewPersonPopup extends Component {
     return emailAddresses;
   }
 
-  toggleBaptised = () => {
-    this.setState({
-      baptised: !this.state.baptised
-    });
-  }
-
-  toggleMember = () => {
-    this.setState({
-      member: !this.state.member
-    });
-  }
-
   buildErrors = () => {
     if (this.state.errors.length > 0) {
       let errors = [];
@@ -342,9 +329,6 @@ class NewPersonPopup extends Component {
     let otherNames = this.buildOtherNameList();
     let phoneNumbers = this.buildPhoneNumberList();
     let emailAddresses = this.buildEmailAddressList();
-
-    let isBaptised = this.state.baptised ? "baptised" : "not baptised";
-    let isMember = this.state.member ? "a member" : "not a member";
 
     let isGivenNameFieldValid = this.nameIsValid(this.state.givenName);
     let isFamilyNameFieldValid = this.nameIsValid(this.state.familyName);
@@ -424,20 +408,33 @@ class NewPersonPopup extends Component {
           </div>
           <div className="contactForm formSection">
             <div className="collapsibleTitle">Other</div>
-            <div className="inputField baptisedField">
-              <label htmlFor="baptised_status" className="fieldLabel">Is Baptised?</label>
-              <Toggle id="baptised_status"
-                    defaultChecked={this.state.baptised}
-                    onChange={() => this.toggleBaptised()}/>
-              <label htmlFor="baptised_status" className="toggleLabel">This person is {isBaptised}</label>
-            </div>
-            <div className="inputField memberField">
-              <label htmlFor="member_status" className="fieldLabel">Is a Member?</label>
-              <Toggle id="member_status"
-                    defaultChecked={this.state.member}
-                    onChange={() => this.toggleMember()}/>
-              <label htmlFor="member_status" className="toggleLabel">This person is {isMember}</label>
-            </div>
+            <SliderOption defaultValue={false}
+                          sliderHtmlId="baptised_status"
+                          sliderClassName="baptisedField"
+                          fieldLabel="Is Baptised?"
+                          generateContentLabel={value => {return "This person is " + (value ? "baptised" : "not baptised")}}
+                          changeValue={newValue => {
+                            this.setState({baptised: newValue});
+                          }}
+            />
+            <SliderOption defaultValue={false}
+                          sliderHtmlId="member_status"
+                          sliderClassName="memberField"
+                          fieldLabel="Is a Member?"
+                          generateContentLabel={value => {return "This person is " + (value ? "a member" : "not a member")}}
+                          changeValue={newValue => {
+                            this.setState({member: newValue});
+                          }}
+            />
+            <SliderOption defaultValue={false}
+                          sliderHtmlId="visitor_status"
+                          sliderClassName="visitorField"
+                          fieldLabel="Is a Visitor?"
+                          generateContentLabel={value => {return "This person is " + (value ? "a visitor" : "not a visitor")}}
+                          changeValue={newValue => {
+                            this.setState({visitor: newValue});
+                          }}
+            />
           </div>
           {errors}
           <div className="createButton"

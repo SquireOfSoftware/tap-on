@@ -23,6 +23,9 @@ public class PersonCSV {
     @CsvBindByName(column = "baptised")
     @Getter
     private boolean baptised;
+    @CsvBindByName(column = "visitor")
+    @Getter
+    private boolean visitor;
 
     @CsvBindByName(column = "email_addresses")
     private String emailAddresses;
