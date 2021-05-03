@@ -1,0 +1,8 @@
+.regenerateButtonText {
+  margin-left: 10px;
+}
+
+.expandable {
+  cursor: pointer;
+  user-select: none;
+}

@@ -6,6 +6,7 @@ import { faWindowClose, faCheck, faPlus, faTimes, faSyncAlt } from '@fortawesome
 import moment from 'moment'
 
 import SliderOption from './SliderOption.js'
+import RegenerateQrCodeButton from './RegenerateQrCodeButton.js'
 
 class EditPersonPopup extends Component {
   constructor(props) {
@@ -392,14 +393,8 @@ class EditPersonPopup extends Component {
             <div>
               <img className="qrCode" alt={"qr code for " + this.state.givenName} src={qrCodeImgSrc}/>
             </div>
-            <span className="clickable" onClick={this.regenerateQrCode}>
-              <FontAwesomeIcon icon={faSyncAlt} />
-              <span> Regenerate</span>
-            </span>
-            <div className="warningLabel">
-              Please take note that QR code regeneration cannot be reversed
-            </div>
           </div>
+          <RegenerateQrCodeButton regenerateQrCode={this.regenerateQrCode}/>
           <div className="nameForm formSection">
             <div className="collapsibleTitle">Name</div>
             <div className="inputField">

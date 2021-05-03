@@ -30,7 +30,7 @@
   background-color: gray;
 }
 
-.createButton:hover {
+.createButton:hover, .regenerateButton:hover {
   background-color: #696868;
 }
 
@@ -114,4 +114,8 @@
 
 .warningLabel {
   background-color: yellow;
+}
+
+.hidden {
+  display: none;
 }
