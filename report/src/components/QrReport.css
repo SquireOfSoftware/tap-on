@@ -20,6 +20,15 @@
 
   .qrReportPopup {
     height: auto;
+    width: 100%;
+  }
+
+  .overlay {
+    position: relative;
+  }
+
+  .table, .stats, .adminBar {
+    display: none;
   }
 }
 

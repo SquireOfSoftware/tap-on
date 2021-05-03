@@ -534,7 +534,7 @@ class CheckList extends Component {
             <FontAwesomeIcon icon={faSyncAlt}/>
           </div>
         </div>
-        <div>
+        <div className="stats">
           <div className="quickStats">
             <div className="signInCounter">
               <div className="counter">
@@ -642,7 +642,7 @@ function Table({columns, data, bulkSignInHandler}) {
   }
 
   return (
-    <div>
+    <div className="table">
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
