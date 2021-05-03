@@ -12,7 +12,7 @@ services:
       - /Users/JarvisWalker/pg_data_test:/var/lib/postgresql/data
 
   person-service:
-    image: rhinoflower/checkin-service:0.10.0
+    image: rhinoflower/checkin-service:0.11.0
     container_name: person-service
     depends_on:
       - db
@@ -22,7 +22,7 @@ services:
 #      - "SPRING_PROFILES_ACTIVE=initialiser"
 
   ui:
-    image: rhinoflower/checkin-ui:0.14.3
+    image: rhinoflower/checkin-ui:0.15.0
     container_name: ui
     ports:
       - 8000:8000

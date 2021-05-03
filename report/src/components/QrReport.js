@@ -33,10 +33,10 @@ class QrReport extends Component {
       if (person.otherNames !== undefined &&
           person.otherNames.length > 0) {
         let otherNames = [];
-        person.otherNames.forEach(name => {
+        person.otherNames.forEach((name, index) => {
           if (name !== undefined) {
             otherNames.push(
-              <span key={person.hash}>{name.name}</span>
+              <span key={person.hash + index}>{name.name}</span>
             );
           }
         });
@@ -53,7 +53,7 @@ class QrReport extends Component {
             {otherNamesSection}
           </div>
           <div className="qrCodeSection">
-            <img src={this.props.getQrCodeLink(person.id)} />
+            <img src={this.props.getQrCodeLink(person.id)} alt={givenName + "'s qr code"}/>
           </div>
         </div>
       );
