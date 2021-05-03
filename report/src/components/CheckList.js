@@ -7,9 +7,12 @@ import ServerStates from './ServerStates.js'
 import NewPersonPopup from './NewPersonPopup.js'
 import EditPersonPopup from './EditPersonPopup.js'
 import ImportPopup from './ImportPopup.js'
+import QrReport from './QrReport.js'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSyncAlt, faSignature, faUserEdit, faUserPlus, faFileUpload, faFileDownload } from '@fortawesome/free-solid-svg-icons'
+import { faSyncAlt, faSignature, faUserEdit,
+         faUserPlus, faFileUpload, faFileDownload,
+         faIdCard } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
 
 class CheckList extends Component {
@@ -24,6 +27,7 @@ class CheckList extends Component {
       showNewPersonPopup: false,
       showEditPersonPopup: false,
       showImportPopup: false,
+      showQrReport: false,
       signInCount: 0
     }
     this.loadPeople = this.loadPeople.bind(this);
@@ -381,6 +385,18 @@ class CheckList extends Component {
     );
   }
 
+  showQrReport = () => {
+    this.setState({
+      showQrReport: true
+    });
+  }
+
+  closeQrReportCallback = () => {
+    this.setState({
+      showQrReport: false
+    });
+  }
+
   render() {
     let columns = [
       {
@@ -486,11 +502,24 @@ class CheckList extends Component {
     } else if (this.state.showImportPopup) {
       popup = <ImportPopup closeImportPopupCallback={this.closeImportPopupCallback}
                             importPeopleCallback={this.importPeopleCallback}/>
+    } else if (this.state.showQrReport && this.state.peopleMap !== undefined) {
+      popup = <QrReport peopleMap={this.state.peopleMap}
+                        closeQrReportCallback={this.closeQrReportCallback}
+                        getQrCodeLink={this.getQrCodeLink}/>
     }
 
     return (
       <div>
         <div className="adminBar">
+          <div className={this.state.peopleMap !== undefined ? "clickable adminButton" : "disabled adminButton"}
+               onClick={() => {
+                if (this.state.peopleMap !== undefined) {
+                  this.showQrReport()
+                }
+               }
+             }>
+            <FontAwesomeIcon icon={faIdCard}/>
+          </div>
           <a className="clickable adminButton" href={this.state.serverUrl + "/people-service/checkin/signins/from/" + this.state.startTime + "/csv"}
             target="_blank" rel="noreferrer">
             <FontAwesomeIcon icon={faFileDownload}/>

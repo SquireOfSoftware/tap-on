@@ -1,0 +1,44 @@
+.idBlock {
+  display: flex;
+}
+
+.qrReportPopup {
+  overflow: scroll;
+  background-color: white;
+}
+
+.qrReportHeading {
+  position: sticky;
+  top: 0;
+  background-color: white;
+}
+
+@media print {
+  .qrReportHeading {
+    display: none;
+  }
+
+  .qrReportPopup {
+    height: auto;
+  }
+}
+
+.nameSection {
+  flex: 1;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.givenName {
+  margin-right: 10px;
+}
+
+.givenName, .familyName {
+  font-size: 2em;
+}
+
+.otherNames > span {
+  margin-right: 10px;
+}

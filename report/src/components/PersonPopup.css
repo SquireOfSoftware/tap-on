@@ -11,7 +11,7 @@
   justify-content: center;
 }
 
-.newPersonForm {
+.newPersonForm, .qrReportPopup {
   width: 80%;
 }
 
