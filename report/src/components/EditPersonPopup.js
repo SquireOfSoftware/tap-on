@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 import './PersonPopup.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faWindowClose, faCheck, faPlus, faTimes, faSyncAlt } from '@fortawesome/free-solid-svg-icons'
+import { faWindowClose, faCheck, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
 
 import SliderOption from './SliderOption.js'
@@ -342,7 +342,7 @@ class EditPersonPopup extends Component {
     return undefined;
   }
 
-  regenerateQrCode = () => {
+  regenerateQrCode = (callback) => {
     this.props.regenerateQrCode(
       this.state.originalPerson.id,
       (event) => {
@@ -350,6 +350,7 @@ class EditPersonPopup extends Component {
         this.setState({
           qrCodeImgSrc: this.state.originalQrCodeLink + "?time=" + moment()
         });
+        callback();
       }
     );
   }

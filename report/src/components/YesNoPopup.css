@@ -1,0 +1,48 @@
+.yesNoOverlay {
+  z-index: 20;
+  align-items: center;
+  background-color: #989898d1;
+}
+
+.yesNoPopup {
+  width: 50%;
+  flex-direction: column;
+  background-color: aliceblue;
+  padding: 5px;
+}
+
+.yesNoPopup, .buttons {
+  display: flex;
+}
+
+.buttons {
+  align-self: center;
+  justify-content: space-between;
+  min-width: 25%;
+}
+
+.yesOption {
+  background-color: red;
+  color: white;
+}
+
+.noOption {
+  background-color: gray;
+  color: white;
+}
+
+.loadingFrame {
+  animation-name: spin;
+  animation-duration: 5000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes spin {
+  from {
+    transform:rotate(0deg);
+  }
+  to {
+    transform:rotate(360deg);
+  }
+}
