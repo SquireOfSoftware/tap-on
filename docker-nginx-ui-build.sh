@@ -1,1 +1,1 @@
-docker build -t rhinoflower/checkin-ui:0.15.0 .
+docker build -t rhinoflower/checkin-ui:0.16.0 .
