@@ -22,7 +22,7 @@ services:
 #      - "SPRING_PROFILES_ACTIVE=initialiser"
 
   ui:
-    image: rhinoflower/checkin-ui:0.16.0
+    image: rhinoflower/checkin-ui:0.17.0
     container_name: ui
     ports:
       - 8000:8000

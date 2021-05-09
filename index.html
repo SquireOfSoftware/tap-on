@@ -1,5 +1,41 @@
-<html>
-    <header>
-        <meta http-equiv="refresh" content="0; url=https://squireofsoftware.github.io/check-in/ui/src/index.html" />
-    </header>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#000000" />
+        <meta
+                name="description"
+                content="This is the base index file for linking certificates"
+        />
+        <title>Check in basics</title>
+        <style>
+            .warning {
+                background-color: yellow;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>README</h2>
+        <p>To use this system you can access:</p>
+        <ul>
+            <li>
+                <p><a href="/qr-scanner">Scanner</a></p>
+                <p>This is for when you want to scan people in.</p>
+                <p class="warning">Please take note that the camera relies on the web certificates. <br>
+                As such you will need to install the self signed certificate here: <a href="/certs/serverCA.pem" target="_blank">Download certificate</a></p>
+                <p>You will need to follow some instructions to install the certificate, once installed, you will need to allow for the browser to let you visit the page despite the security warning.</p>
+                <p class="warning">You may also need the web certificate for the domain. <br>
+                As such you may need to install the certificate for the application: <a href="/certs/server.crt" target="_blank">Download certificate</a></p>
+                <p>Once the certificates are installed, try visiting this link: <a id="ssl-link" href="" target="_blank">"secure" scanner link</a></p>
+            </li>
+            <li>
+                <p><a href="/checkin-report">Report</a></p>
+                <p>This is for when you want to look at the report of signed in people or if you want to manually sign someone in.</p>
+            </li>
+        </ul>
+        <script>
+            document.getElementById("ssl-link").href = "https://" + window.location.hostname + "/qr-scanner";
+        </script>
+    </body>
 </html>

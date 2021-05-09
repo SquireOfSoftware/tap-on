@@ -47,6 +47,8 @@ RUN ls -l /usr/share/nginx/html
 # Copy from stage 2
 COPY --from=report-builder /checkin-report/build /usr/share/nginx/html/checkin-report
 
+COPY index.html /usr/share/nginx/html/
+
 RUN ls -l /usr/share/nginx/html
 
 RUN chown nginx:nginx /usr/share/nginx/html/*

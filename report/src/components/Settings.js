@@ -5,7 +5,7 @@ import Toggle from 'react-toggle'
 import 'react-toggle/style.css'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCog, faSyncAlt } from '@fortawesome/free-solid-svg-icons'
+import { faCog, faSyncAlt, faQrcode } from '@fortawesome/free-solid-svg-icons'
 import ServerStates from './ServerStates.js';
 
 class Settings extends Component {
@@ -145,6 +145,7 @@ class Settings extends Component {
             </div>
             <div>
               <a className="qrScannerLink" href="/qr-scanner" target="_self">
+                <FontAwesomeIcon icon={faQrcode}/>
                 QR Scanner
               </a>
             </div>
