@@ -151,7 +151,7 @@ App.defaultProps = {
  currentCamera: 'environment',
  delayRate: 300,
  maxLogs: 100,
- serverSetting: 'https://localhost:8000'
+ serverSetting: '//' + window.location.hostname + ':8000'
 }
 
 export default App;

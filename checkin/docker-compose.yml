@@ -37,7 +37,7 @@ services:
       #- C:\Users\<username>\Desktop\certs\server.crt:/etc/certs/server.crt
       #- C:\Users\<username>\Desktop\certs\server.key:/etc/certs/server.key
       # this is to install the root certificate onto the mobile device
-      - /Users/JarvisWalker/certs/myCA.pem:/usr/share/nginx/html/certs/myCA.pem
+      - /Users/JarvisWalker/certs/myCA.pem:/usr/share/nginx/html/certs/serverCA.pem
       - /Users/JarvisWalker/certs/server.crt:/usr/share/nginx/html/certs/server.crt
-#      - C:\Users\<username>\Desktop\certs\myCA.pem:/usr/share/nginx/html/certs/myCA.pem
+#      - C:\Users\<username>\Desktop\certs\myCA.pem:/usr/share/nginx/html/certs/serverCA.pem
 #      - C:\Users\<username>\Desktop\certs\server.crt:/usr/share/nginx/html/certs/server.crt

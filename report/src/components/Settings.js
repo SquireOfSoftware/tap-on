@@ -117,7 +117,7 @@ class Settings extends Component {
           </div>
           <div className="settings_body">
             <div className="server_settings">
-              <label>Server name</label>
+              <label>Server Url</label>
               <input
                 id="server_setting"
                 type="url"
@@ -144,7 +144,9 @@ class Settings extends Component {
                 onChange={this.handleAutoRefreshPeople} />
             </div>
             <div>
-              <a href="/qr-scanner" target="_self">QR Scanner</a>
+              <a className="qrScannerLink" href="/qr-scanner" target="_self">
+                QR Scanner
+              </a>
             </div>
             <div>
               Version {process.env.REACT_APP_VERSION}

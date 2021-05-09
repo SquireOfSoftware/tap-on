@@ -25,12 +25,10 @@ class QrScanner extends Component {
   }
 
   handleError = (event) => {
-//    console.log(event);
   }
 
   handleScan = (event) => {
     // log the scan attempt
-//    console.log(event);
     let scannedResult = {
       value: event,
       timestamp: new Date()

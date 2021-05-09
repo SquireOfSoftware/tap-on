@@ -3,7 +3,7 @@ import './Settings.css'
 import { slide as Menu } from 'react-burger-menu'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCog, faSyncAlt } from '@fortawesome/free-solid-svg-icons'
+import { faCog, faSyncAlt, faClipboard } from '@fortawesome/free-solid-svg-icons'
 
 import ServerStates from './ServerStates.js';
 
@@ -20,7 +20,7 @@ class Settings extends Component {
 
     this.verifyServerGETRequest();
 
-    this.changeServerSetting = this.changeServerSetting.bind(this);
+    this.changeServerUrl = this.changeServerUrl.bind(this);
   }
 
   componentDidMount() {
@@ -44,12 +44,12 @@ class Settings extends Component {
     this.props.changeCamera(camera);
   }
 
-  changeServerSetting = (event) => {
-    let serverSetting = event.target.value;
+  changeServerUrl = (event) => {
+    let serverUrl = event.target.value;
     this.setState({
-      serverSetting: serverSetting
+      serverUrl: serverUrl
     });
-    this.props.changeServerSetting(serverSetting);
+    this.props.changeServerSetting(serverUrl);
   }
 
   setServerUp = () => {
@@ -102,7 +102,7 @@ class Settings extends Component {
     getRequest.send();
     console.log("trying to ping the service");
 
-    console.log(getRequest);
+    console.debug(getRequest);
   }
 
   render() {
@@ -114,6 +114,18 @@ class Settings extends Component {
             Settings
           </div>
           <div className="settings_body">
+            <div className="server_settings">
+              <label>Server Url</label>
+              <input
+                id="server_setting"
+                type="url"
+                value={this.state.serverUrl}
+                onChange={this.changeServerUrl} />
+            </div>
+            <div onClick={() => this.verifyServerGETRequest()}>
+              Server is: {this.state.serverGETState.name}
+              <FontAwesomeIcon icon={faSyncAlt}/>
+            </div>
             <div className="camera_settings">
               <label>Camera</label>
               <select
@@ -125,27 +137,18 @@ class Settings extends Component {
               </select>
             </div>
             <div className="scan_rate_settings">
-              <label>Scan rate</label>
+              <label>Scan rate (scans per second)</label>
               <input
                 id="delay_rate"
                 type="number"
                 value={this.state.delayRate}
                 onChange={this.changeDelayRate} />
             </div>
-            <div className="server_settings">
-              <label>Server name</label>
-              <input
-                id="server_setting"
-                type="url"
-                value={this.props.initialServerSetting}
-                onChange={this.changeServerSetting} />
-            </div>
-            <div onClick={() => this.verifyServerGETRequest()}>
-              Server is: {this.state.serverGETState.name}
-              <FontAwesomeIcon icon={faSyncAlt}/>
-            </div>
             <div>
-              <a href="/checkin-report" target="_self">Report</a>
+              <a className="reportLink" href="/checkin-report" target="_self">
+                <FontAwesomeIcon icon={faClipboard}/>
+                Report
+              </a>
             </div>
             <div>
               Version {process.env.REACT_APP_VERSION}

@@ -125,8 +125,8 @@ class App extends Component {
 }
 
 App.defaultProps = {
-  serverSetting: 'https://localhost:8000',
-  startTime: new moment().hour(9).minute(0).second(0).format('YYYY-MM-DDTHH:mm:ss'),
+  serverSetting: '//' + window.location.hostname + ':8000',
+  startTime: new moment().hour(7).minute(0).second(0).format('YYYY-MM-DDTHH:mm:ss'),
   autoRefreshPeople: true
 }
 
