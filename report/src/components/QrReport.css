@@ -3,13 +3,10 @@
 }
 
 .qrReportPopup {
-  overflow: scroll;
   background-color: white;
 }
 
 .qrReportHeading {
-  position: sticky;
-  top: 0;
   background-color: white;
 }
 

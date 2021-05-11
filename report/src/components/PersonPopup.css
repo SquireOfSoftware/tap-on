@@ -13,10 +13,14 @@
 
 .newPersonForm, .qrReportPopup {
   width: 80%;
+  overflow: scroll;
 }
 
 .heading {
   display: flex;
+  position: sticky;
+  top: 0;
+  background-color: gray;
 }
 
 .title {
