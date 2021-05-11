@@ -43,6 +43,7 @@ class CheckList extends Component {
   componentDidMount() {
     this.props.disableAutoRefreshPeople(this.disableAutoRefreshPeople);
     this.props.enableAutoRefreshPeople(this.enableAutoRefreshPeople);
+    this.props.changeStartTime(this.changeStartTime);
 
     if (this.state.autoRefreshPeople === true) {
       this.enableAutoRefreshPeople();
@@ -56,6 +57,12 @@ class CheckList extends Component {
       clearInterval(this.timer);
     }
     this.timer = null;
+  }
+
+  changeStartTime = (startTime) => {
+    this.setState({
+      startTime: startTime
+    });
   }
 
   enableAutoRefreshPeople = () => {

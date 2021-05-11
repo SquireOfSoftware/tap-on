@@ -44,6 +44,7 @@ class Settings extends Component {
       startTime: startTime
     });
     console.log("Changing the reporting time to: " + startTime);
+    window.localStorage.setItem("startTime", startTime);
     this.props.changeStartTime(startTime);
   }
 
@@ -121,7 +122,7 @@ class Settings extends Component {
               <input
                 id="server_setting"
                 type="url"
-                value={this.props.initialServerUrl}
+                value={this.state.serverUrl}
                 onChange={this.changeServerSetting} />
             </div>
             <div className="server_settings">
@@ -129,7 +130,7 @@ class Settings extends Component {
               <input
                 id="start_time"
                 type="datetime-local"
-                value={this.props.initialStartTime}
+                value={this.state.startTime}
                 onChange={this.changeStartTime} />
             </div>
             <div onClick={() => this.verifyServerGETRequest()}>

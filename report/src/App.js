@@ -48,13 +48,6 @@ class App extends Component {
     window.localStorage.setItem("serverSetting", changedServerSetting);
   }
 
-  changeStartTime = (changedStartTime) => {
-    this.setState({
-      startTime: changedStartTime
-    });
-    window.localStorage.setItem("startTime", changedStartTime);
-  }
-
   serverIsUp = () => {
     this.setState({
       serverState: ServerStates.UP
@@ -108,7 +101,8 @@ class App extends Component {
                       serverIsUp={serverIsUp => this.setServerSettingUp = serverIsUp}
                       disableAutoRefreshPeople={disableAutoRefreshPeople => this.disableAutoRefreshPeople = disableAutoRefreshPeople}
                       enableAutoRefreshPeople={enableAutoRefreshPeople => this.enableAutoRefreshPeople = enableAutoRefreshPeople}
-                      updateServerState={this.updateServerState}/>
+                      updateServerState={this.updateServerState}
+                      changeStartTime={changeStartTime => this.changeStartTime = changeStartTime}/>
           <Settings initialServerUrl={this.state.serverSetting}
                     initialStartTime={this.state.startTime}
                     initialAutoRefreshPeople={this.state.autoRefreshPeople}
