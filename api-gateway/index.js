@@ -5,7 +5,8 @@ const port = 4000;
 
 const gateway = new ApolloGateway({
   serviceList: [
-    { name: "people", url: "http://localhost:4001" }
+    { name: "people", url: "http://localhost:4001" },
+    { name: "films", url: "http://localhost:4002" }
   ]
 });
 

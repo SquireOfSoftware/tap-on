@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "concurrently -k npm:dev:*",
     "dev:people": "nodemon -r esm ./people/index.js",
+    "dev:films": "nodemon -r esm ./films/index.js",
     "dev:gateway": "wait-on tcp:4001 && nodemon -r esm ./index.js"
   },
   "dependencies": {
