@@ -7,16 +7,14 @@ const port = 4002;
 
 const typeDefs = gql`
   type Film {
-    id: ID!
+    id: Int!
     title: String
     actors: [Person]
     director: Person
   }
 
-  extend type Person @key(fields: "id") {
-    id: ID! @external
-    appearedIn: [Film]
-    directed: [Film]
+  type Person @key(fields: "id") @extends {
+    id: Int! @external
   }
 
   extend type Query {

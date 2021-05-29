@@ -5,7 +5,7 @@ const port = 4000;
 
 const gateway = new ApolloGateway({
   serviceList: [
-    { name: "people", url: "http://localhost:4001" },
+    { name: "person", url: "http://localhost:8080/people-service/graphql" },
     { name: "films", url: "http://localhost:4002" }
   ]
 });

@@ -29,3 +29,5 @@ Here are some stuff to help me get started:
 - https://hasura.io/learn/graphql/intro-graphql/graphql-mutations/
 - https://graphql.org/learn/queries/
 - https://netflix.github.io/dgs/
+- https://medium.com/pipedrive-engineering/journey-to-federated-graphql-2a6f2eecc6a4
+- https://github.com/graphql-compose/graphql-compose
