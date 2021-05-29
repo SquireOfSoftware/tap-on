@@ -9,11 +9,11 @@ const typeDefs = gql`
   type Film {
     id: Int!
     title: String
-    actors: [Person]
-    director: Person
+    actors: [Person] @provides(fields: "id")
+    director: Person @provides(fields: "id")
   }
 
-  type Person @key(fields: "id") @extends {
+  extend type Person @key(fields: "id") {
     id: Int! @external
   }
 
