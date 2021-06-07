@@ -3,6 +3,10 @@
 I will be trying to tinker with Apollo Federation in getting an API gateway
 working for signins and displaying varying degrees granularity from it.
 
+To start the api gateway, just run `yarn dev` and it will spin up two services:
+1. The actual API ApolloServer gateway (nodejs server)
+2. A dummy graphql Apollo server that returns dummy film information
+
 Once the gateway is up you should be able to visit:
 http://localhost:4000/graphql
 
