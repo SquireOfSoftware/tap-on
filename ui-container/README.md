@@ -6,4 +6,7 @@ So a few things need to happen for the ui-container to work:
    commented them out (babel-loader and webpack were a real pain in the butt)
 2. The next thing that you want to fix is that you want to copy out the luigi-core and
    luigi-client libraries out into the public folder. This is for dev purposes, otherwise
-   the React luigi wrapper does not work.
+   the React luigi wrapper does not work. I have symlinked them across for now
+
+Readings:
+- https://medium.com/swlh/luigi-micro-fronteds-orchestrator-8c0eca710151
